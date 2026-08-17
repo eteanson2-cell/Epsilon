@@ -10,6 +10,7 @@ import epsilon.model.entities.figures.Point;
 public class LaserBarrier{
     private final Point laserPointA;
     private final Point laserPointB;
+    private boolean isActive;
     private DynamicQueue laserMovements;
     private LaserMovement lastMovement;
     private int numberCommand;
@@ -23,6 +24,7 @@ public class LaserBarrier{
         numberCommand = 0;
         laserMovements = new DynamicQueue();
         lastMovement = null;
+        isActive = true;
     }
     public Point getPointA(){
         return laserPointA;
@@ -74,6 +76,9 @@ public class LaserBarrier{
     public void addMovement(LaserMovement laserMovement){
         laserMovements.add(laserMovement);
     }
+    public void addBoolean(boolean bool){
+        laserMovements.add(bool);
+    }
     public Line getLine(){
         return new Line(laserPointA, laserPointB);
     }
@@ -99,6 +104,9 @@ public class LaserBarrier{
                         numberCommand = integer;
                         update();
                     }
+                    case Boolean bool -> {
+                        isActive = bool;
+                    }
                     default -> {
                     }
                 }
@@ -112,23 +120,28 @@ public class LaserBarrier{
     public boolean hasMovements(){
         return !laserMovements.isEmpty();
     }
+    public boolean isActive(){
+        return isActive;
+    }
     public void draw(Graphics2D g2d, LaserBarrier killerLaser){
-        Line laserLine = getLine();
-        Point intersectionPoint = laserLine.getIntersectionPoint(killerLaser.getLine());
-        if(intersectionPoint != null){
-            Point highestPoint;
-            if(laserPointA.getY() < laserPointB.getY()){
-                highestPoint = laserPointA;
+        if(isActive){
+            Line laserLine = getLine();
+            Point intersectionPoint = laserLine.getIntersectionPoint(killerLaser.getLine());
+            if(intersectionPoint != null){
+                Point highestPoint;
+                if(laserPointA.getY() < laserPointB.getY()){
+                    highestPoint = laserPointA;
+                }
+                else{
+                    highestPoint = laserPointB;
+                }
+                g2d.setColor(new Color(0, 255, 0));
+                g2d.drawLine((int)highestPoint.getX(), (int)highestPoint.getY(), 
+                (int)intersectionPoint.getX(), (int)intersectionPoint.getY());
             }
             else{
-                highestPoint = laserPointB;
+                draw(g2d);
             }
-            g2d.setColor(new Color(0, 255, 0));
-            g2d.drawLine((int)highestPoint.getX(), (int)highestPoint.getY(), 
-            (int)intersectionPoint.getX(), (int)intersectionPoint.getY());
-        }
-        else{
-            draw(g2d);
         }
     }
     public void draw(Graphics2D g2d){

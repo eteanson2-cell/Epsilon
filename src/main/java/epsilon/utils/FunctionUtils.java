@@ -215,8 +215,21 @@ public class FunctionUtils{
 			return (byte)objectString1.compareToIgnoreCase(objectString2);
 		}
 	}
-	public double euclideanDistance(Point pointA, Point pointB){
+	public static double euclideanDistance(Point pointA, Point pointB){
 		return Math.sqrt(Math.pow(pointB.getX()-pointA.getX(), 2) + 
 						 Math.pow(pointB.getY()-pointA.getY(), 2));
 	}
+	public static int getSign(Number num){
+		double dec = num.doubleValue();
+		if(dec > 0){
+			return 1;
+		}
+		else if(dec < 0){
+			return -1;
+		}
+		else{
+			return 0;
+		}
+	}
+
 }

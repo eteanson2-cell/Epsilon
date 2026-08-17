@@ -10,6 +10,7 @@ import epsilon.controller.gameState.game3.gameAssets.chunks.HorizontalChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserShooterChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserSystemChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.ObstacleChunk;
+import epsilon.controller.gameState.game3.gameAssets.chunks.RotatingPipesChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.RowsChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.SpinningChunk;
 import epsilon.controller.gameState.game3.menu.GameOverMenu;
@@ -48,7 +49,7 @@ public class MagnetClimbState implements GameState{
         isOver = false;
         player = new Player();
         xOffset = 350;
-        player.circle.move(xOffset, -40000);
+        player.circle.move(xOffset, 0);
         rocks = new LinkedList();
         lasers = new LinkedList();
         killerLaser = new LaserBarrier(0, 500, 700, 500);
@@ -94,14 +95,14 @@ public class MagnetClimbState implements GameState{
                 return 1;
             });
             if(player.circle.getYCenter() < benchMark+ySpawn){
-                int randomChunk = randomNumber(1, 6);
-                //randomChunk = 3;
+                int randomChunk = randomNumber(1, 7);
+                //randomChunk = 6;
                 generateChunk(randomChunk);
             }
             lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
                 LaserBarrier currentLaser = (LaserBarrier)obj1;
                 currentLaser.update();
-                if(player.circle.intersects(currentLaser.getLine())){
+                if(currentLaser.isActive() && player.circle.intersects(currentLaser.getLine())){
                     gameOver();
                 }
                 LaserBarrier killerLaser1 = (LaserBarrier)obj2;
@@ -121,6 +122,7 @@ public class MagnetClimbState implements GameState{
             case 3 -> newChunk = new HorizontalChunk(benchMark, randomSeed);
             case 4 -> newChunk = new LaserSystemChunk(benchMark, randomSeed);
             case 5 -> newChunk = new LaserShooterChunk(benchMark, randomSeed);
+            case 6 -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
             default -> newChunk = new LaserSystemChunk(benchMark, randomSeed);
         }
         pullChunk(newChunk);

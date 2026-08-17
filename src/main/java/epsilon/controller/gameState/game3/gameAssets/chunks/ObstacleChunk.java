@@ -62,6 +62,7 @@ public abstract class ObstacleChunk{
                         newLaser.addMovement(lm);
                     }
                     case Number number -> newLaser.addNumber(number.intValue());
+                    case Boolean bool -> newLaser.addBoolean(bool);
                     default -> {}
                 }
             });

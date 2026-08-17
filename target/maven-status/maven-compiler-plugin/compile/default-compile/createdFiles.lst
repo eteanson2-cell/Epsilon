@@ -26,6 +26,7 @@ epsilon\model\dataStructure\linearStructure\dynamic\DynamicQueue.class
 epsilon\program\game3Physics.class
 epsilon\visual\panels\BoardPanel.class
 epsilon\controller\interfaces\IMenu.class
+epsilon\controller\gameState\game3\gameAssets\chunks\RotatingPipesChunk.class
 epsilon\model\entities\figures\Oval.class
 epsilon\controller\gameState\game2\menu\OptionsMenu.class
 epsilon\controller\gameState\game2\menu\MainMenu.class

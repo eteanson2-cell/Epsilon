@@ -45,12 +45,14 @@ C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\TreeNode
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\Comparator.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\DataBatch.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\DataList.java
+C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\HashFunction.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\Iterator.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\dynamic\DynamicQueue.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\dynamic\DynamicStack.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\dynamic\LinkedList.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\dynamic\NumericList.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\statik\Array.java
+C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\statik\HashTable.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\statik\NumericArray.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\statik\Queue.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\linearStructure\statik\Set.java
@@ -81,6 +83,7 @@ C:\Project E\epsilon\src\main\java\epsilon\model\enums\StretchingPoint.java
 C:\Project E\epsilon\src\main\java\epsilon\model\enums\TreeTraversal.java
 C:\Project E\epsilon\src\main\java\epsilon\program\chunkGeneratorTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\game3Physics.java
+C:\Project E\epsilon\src\main\java\epsilon\program\hashTableTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\Structures.java
 C:\Project E\epsilon\src\main\java\epsilon\program\treeMapTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\treeTest.java

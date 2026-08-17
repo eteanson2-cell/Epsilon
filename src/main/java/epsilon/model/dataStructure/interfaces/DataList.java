@@ -8,10 +8,12 @@ public interface DataList{
     Object find(Object object, Comparator comparator);
     Object remove();
     Object remove(Object object);
+    Object remove(Object object, Comparator comparator);
     void reverse();
     boolean addList(DataList dataList);
     int size();
     int count(Object object);
+    int count(Object object, Comparator comparator);
     boolean equals(DataList dataList);
     DataList copy();
     boolean replace(DataList dataList);
@@ -23,4 +25,5 @@ public interface DataList{
     boolean validIterator();
     Object getIterator();
     boolean modifyIterator(Object object);
+    void iterateList(Iterator iterator);
 }

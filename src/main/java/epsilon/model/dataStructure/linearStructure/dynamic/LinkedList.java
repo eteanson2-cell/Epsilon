@@ -245,6 +245,7 @@ public class LinkedList implements DataList{
     public Object remove(Object object){
         return remove(object, new BaseObjectComparator());
     }
+    @Override
     public Object remove(Object object, Comparator comparator){
         Node tempNode = getNode(object, comparator);
         return removeNode(tempNode);
@@ -280,6 +281,7 @@ public class LinkedList implements DataList{
             return null;
         }
     }
+    @SuppressWarnings("unused")
     private void recalibrateLastNode(){
         Node tempNode = first;
         while(tempNode.getRightNode() != null){
@@ -306,6 +308,7 @@ public class LinkedList implements DataList{
         }
         return arrayList;
     }
+    @Override
     public void iterateList(Iterator iterator){
         Node temp = first;
         while(temp != null){
@@ -331,28 +334,14 @@ public class LinkedList implements DataList{
     }
     @Override
     public boolean addList(DataList dataList){
-        if(dataList instanceof Array array){
-            for (int i = 0; i < array.size(); i++) {
-                add(array.get(i));
-            }
-            return true;
-        }
-        else if(dataList instanceof LinkedList list){
-            list.initializeIterator();
-            while (list.validIterator()) { 
-                add(list.getIterator());
-                list.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+        dataList.iterateList(this::add);
+        return true;
     }
     @Override
     public int count(Object object){
         return count(object, new BaseObjectComparator());
     }
+    @Override
     public int count(Object object, Comparator comparator){
         int counter = 0;
         Node tempNode = first;
@@ -406,25 +395,9 @@ public class LinkedList implements DataList{
     }
     @Override
     public boolean replace(DataList dataList){
-        if(dataList instanceof Array array){
-            clear();
-            for (int index = 0; index < array.size(); index++) {
-                add(array.get(index));
-            }
-            return true;
-        }
-        else if (dataList instanceof LinkedList list) {
-            clear();
-            list.initializeIterator();
-            while (list.validIterator()) { 
-                add(list.getIterator());
-                list.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+        clear();
+        dataList.iterateList(this::add);
+        return true;
     }
     @Override
     public void initializeIterator(){

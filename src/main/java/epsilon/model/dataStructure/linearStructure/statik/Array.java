@@ -1,10 +1,11 @@
 package epsilon.model.dataStructure.linearStructure.statik;
 
+import epsilon.model.dataStructure.auxiliar.BaseObjectComparator;
+import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
+import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
-import epsilon.model.dataStructure.interfaces.Comparator;
-import epsilon.model.dataStructure.auxiliar.BaseObjectComparator;
 import static epsilon.utils.FunctionUtils.getMin;
 import static epsilon.utils.FunctionUtils.isInRange;
 
@@ -70,6 +71,7 @@ public class Array implements DataList{
     }
     public boolean push(Object object){
         if(isFilled()){
+            data[upperIndex-1] = object;
             return true;
         }
         else{
@@ -133,6 +135,16 @@ public class Array implements DataList{
         }
     }
     @Override
+    public Object remove(Object object, Comparator comparator) {
+        int objectIndex = (int)find(object, comparator);
+        if(objectIndex >= 0){
+            return remove(objectIndex);
+        }
+        else{
+            return null;
+        }
+    }
+    @Override
     public void clear(){
         upperIndex = -1;
     }
@@ -163,6 +175,16 @@ public class Array implements DataList{
         int counter = 0;
         for (int i = 0; i < size(); i++) {
             if(object.toString().equalsIgnoreCase(data[i].toString())){
+                counter++;
+            }
+        }
+        return counter;
+    }
+    @Override
+    public int count(Object object, Comparator comparator) {
+        int counter = 0;
+        for (int i = 0; i < size(); i++) {
+            if(comparator.compare(object, data[i]) == 0){
                 counter++;
             }
         }
@@ -241,23 +263,8 @@ public class Array implements DataList{
     }
     @Override
     public boolean addList(DataList dataList){
-        if(dataList instanceof Array array){
-            for (int i = 0; i < array.size() && isFilled() == false; i++) {
-                add(array.get(i));
-            }
-            return true;
-        }
-        else if(dataList instanceof LinkedList list){
-            list.initializeIterator();
-            while (list.validIterator() && isFilled() == false) { 
-                add(list.getIterator());
-                list.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+        dataList.iterateList(this::add);
+        return true;
     }
     public boolean addBatch(DataBatch batch){
         if(isFilled() == true){
@@ -296,25 +303,9 @@ public class Array implements DataList{
     }
     @Override
     public boolean replace(DataList dataList){
-        if(dataList instanceof Array array){
-            clear();
-            for (int index = 0; index < array.size(); index++) {
-                add(array.get(index));
-            }
-            return true;
-        }
-        else if (dataList instanceof LinkedList list) {
-            clear();
-            list.initializeIterator();
-            while (list.validIterator()) { 
-                add(list.getIterator());
-                list.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+        clear();
+        dataList.iterateList(this::add);
+        return true;
     }
     @Override
     public void initializeIterator(){
@@ -354,6 +345,12 @@ public class Array implements DataList{
             return false;
         }
     }
+    @Override
+    public void iterateList(Iterator iterator) {
+        for (int i = 0; i < size(); i++) {
+            iterator.iterate(data[i]);
+        }
+    }
     protected boolean validIndex(int index){
         return isEmpty() == false && isInRange(0,upperIndex,index);
     }
@@ -370,5 +367,5 @@ public class Array implements DataList{
             arrayString += "]";
             return arrayString;
         }
-    }
+    }    
 }

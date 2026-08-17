@@ -1,5 +1,7 @@
 package epsilon.model.dataStructure.linearStructure.dynamic;
 
+import epsilon.model.dataStructure.auxiliar.BaseObjectComparator;
+import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
@@ -50,10 +52,14 @@ public class DynamicStack implements DataBatch{
     }
     @Override
     public boolean hasObject(Object object){
+        return hasObject(object, new BaseObjectComparator());
+    }
+    @Override
+    public boolean hasObject(Object object, Comparator comparator) {
         if(isEmpty() == false){
             data.initializeIterator();
             while(data.validIterator() == true){
-                if(object.toString().equalsIgnoreCase(data.getIterator().toString()) == true){
+                if(comparator.compare(object, data.getIterator()) == 0){
                     return true;
                 }
                 data.moveIteratorToRight();
@@ -69,23 +75,8 @@ public class DynamicStack implements DataBatch{
     }
     @Override
     public boolean addList(DataList list){
-        if(list instanceof Array array){
-            for (int i = 0; i < array.size(); i++) {
-                add(array.get(i));
-            }
-            return true;
-        }
-        else if(list instanceof LinkedList linkedList){
-            linkedList.initializeIterator();
-            while (linkedList.validIterator()) { 
-                add(linkedList.getIterator());
-                linkedList.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+        list.iterateList(this::add);
+        return true;
     }
     public boolean addBatch(DataBatch batch){
         while(batch.isEmpty() == false){
@@ -112,4 +103,6 @@ public class DynamicStack implements DataBatch{
         }
         return copy;
     }
+
+    
 }

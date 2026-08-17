@@ -7,6 +7,7 @@ public interface DataBatch{
     boolean add(Object object);
     boolean addList(DataList list);
     boolean hasObject(Object object);
+    boolean hasObject(Object object, Comparator comparator);
     Object remove();
     void print();
     Object getTop();

@@ -101,6 +101,15 @@ public class NumericArray extends Array{
             return false;
         }
     }
+    @Override
+    public boolean modifyIterator(Object object){
+        if(isNumeric(object)){
+            return super.modifyIterator(object);
+        }
+        else{
+            return false;
+        }
+    }
     public boolean addScalar(Number scalar){
         return scalarOperation(scalar, Operation.ADITTION);
     }

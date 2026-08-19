@@ -22,6 +22,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 	protected boolean running;
 	protected final int FPS = 60;
 	protected final long targetTime = 1000 / FPS;
+    protected long FrameCounter;
     protected BufferedImage image;
 	protected Graphics2D g2d;
     protected GameStateManager gsm;
@@ -53,7 +54,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 		g2d = (Graphics2D) image.getGraphics();
 
 		running = true;
-
+        FrameCounter = 60;
 		gsm = new GameStateManager();
 
 	}
@@ -82,9 +83,10 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 			elapsed = System.nanoTime() - start;
 
 			wait = targetTime - elapsed / 1000000;
-			if (wait < 0)
+			if (wait < 0){
 				wait = 5;
-
+            }
+            FrameCounter = FPS - ((int)(elapsed/1000000)/targetTime);
 			try {
 				Thread.sleep(wait);
 			} catch (InterruptedException e) {
@@ -96,6 +98,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 	}
 	private void draw() {
 		gsm.draw(g2d);
+        g2d.drawString("FPS: " + FrameCounter, 20, 70);
 	}
     private void drawToScreen() {
 		Graphics g2 = getGraphics();

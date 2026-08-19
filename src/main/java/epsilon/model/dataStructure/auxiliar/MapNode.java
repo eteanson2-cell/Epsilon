@@ -42,11 +42,19 @@ public class MapNode extends BinaryNode{
         }
     }
     @Override
+    public void addData(Object newData, Comparator comparator) {
+        addData(newData);
+    }
+    @Override
     public void addData(Object newData){
         ((LinkedList)data).add(newData);
     }
     public void clearData(){
         ((LinkedList)data).clear();
+    }
+    public Object removeData(){
+        Object removedObject = ((LinkedList)data).remove();
+        return removedObject;
     }
     public boolean addKey(Object newKey, Comparator comparator){
         int comparation = comparator.compare(key, newKey);
@@ -92,11 +100,6 @@ public class MapNode extends BinaryNode{
         copy.leftBranch = leftBranch;
         copy.data = ((LinkedList)data).copy();
         return copy;
-    }
-
-    @Override
-    public void addData(Object newData, Comparator comparator) {
-        addData(newData);
     }
     @Override
     public Object remove(){

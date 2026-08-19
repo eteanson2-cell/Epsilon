@@ -146,6 +146,18 @@ public class HashTable{
             add(nodeObject);
         });
     }
+    public void resize(int newSize, boolean reorganize){
+        if(reorganize == true){
+            resize(newSize);
+        }
+        else{
+            Object[] newData = new Object[newSize];
+            for (int i = 0; i < data.length && i < newSize; i++) {
+                newData[i] = data[i];
+            }
+            data = newData;
+        }
+    }
     public void reorganize(){
         LinkedList storedData = new LinkedList();
         for (int i = 0; i < data.length; i++) {

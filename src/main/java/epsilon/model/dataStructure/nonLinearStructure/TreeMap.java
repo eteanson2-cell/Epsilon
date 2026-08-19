@@ -95,6 +95,11 @@ public class TreeMap{
             return null;
         }
     }
+    public Object removeFromList(Object key){
+        DynamicStack nodes = findNode(key);
+        MapNode currentNode = (MapNode)nodes.remove();
+        return currentNode.removeData();
+    }
     public LinkedList removeKey(Object key){
         DynamicStack nodes = findNode(key);
         if(nodes != null){
@@ -183,6 +188,30 @@ public class TreeMap{
             System.out.print("Key: " + tempNode.getKey());
             System.out.println(", Data: " + tempNode.getData());
         }, treeTraversal);
+    }
+    public void initializeIterator(){
+        iterator = root;
+    }
+    public void moveIteratorToLeft(){
+        if(validIterator()){
+            iterator = (MapNode)iterator.getLeftBranch();
+        }
+    }
+    public void moveIteratorToRight(){
+        if(validIterator()){
+            iterator = (MapNode)iterator.getRightBranch();
+        }
+    }
+    public boolean validIterator(){
+        return iterator != null;
+    }
+    public Object getIterator(){
+        if(validIterator()){
+            return iterator.getData();
+        }
+        else{
+            return null;
+        }
     }
     protected DataBatch selectBatch(TreeTraversal treeTraversal){
         DataBatch batch;

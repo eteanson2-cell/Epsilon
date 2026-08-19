@@ -1,6 +1,7 @@
 package epsilon.controller.gameState.game3.gameAssets.chunks;
 
 import epsilon.controller.gameState.game3.gameAssets.LaserMovement;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Point;
 import static epsilon.utils.FunctionUtils.degreeCosine;
@@ -21,6 +22,7 @@ public class RotatingPipesChunk extends ObstacleChunk{
         for (int y = 100; y < height; y += 200) {
             lasers.addKey(new Line(-10, y+width, 20, y+width));
             lasers.addKey(new Line(-10, y-width, 20, y-width));
+            Array savedSeeds = new Array(2);
             for (int x = 120; x < 640; x += 200) {
                 Point center = new Point(x, y);
                 switch (seed%5) {
@@ -30,15 +32,22 @@ public class RotatingPipesChunk extends ObstacleChunk{
                     case 3 -> generateCorner(center, fixAngle((int)(seed*3.6)));
                     case 4 -> generateT(center, fixAngle((int)(seed*3.6)));
                 }
-                reRollSeed();
+                savedSeeds.add(seed%5);
+                do { 
+                    reRollSeed();
+                } while ((int)savedSeeds.find(seed%5) >= 0);
                 rockPoints.add(center);
                 if(y == 100){
                     rockPoints.add(new Point(x,-25));
+                    if(benchmark > -20000){
+                        rockPoints.add(new Point(x, height + 25));
+                    }
                 }
             }
             lasers.addKey(new Line(620, y+width, 650, y+width));
             lasers.addKey(new Line(620, y-width, 650, y-width));
         }
+        height += 50;
     }
 
     public void setWidth(){
@@ -52,7 +61,10 @@ public class RotatingPipesChunk extends ObstacleChunk{
     }
 
     public void setHeight(){
-        height = 400;
+        height = 200;
+        if(benchmark < -10000){
+            height = 200*((int)(benchmark/-5000));
+        }
     }
     public int fixAngle(int angle){
         int residual = angle%90;

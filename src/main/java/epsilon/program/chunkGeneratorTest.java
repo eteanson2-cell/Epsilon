@@ -1,11 +1,8 @@
 package epsilon.program;
 
-import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
-import static epsilon.utils.FunctionUtils.randomNumber;
-
 public class chunkGeneratorTest{
     public static void main(String[] args) {
-        int seed = 0;
+        /*int seed = 0;
         int height = 0;
         LinkedList lines;
         int twists = randomNumber(0, seed);
@@ -20,7 +17,7 @@ public class chunkGeneratorTest{
                 newAngle = randomNumber(0.0, 360);
             } while (Math.abs(newAngle-prevAngle)+180 > 30);
             twists--;
-        }
+        }*/
         
     }
 }

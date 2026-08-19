@@ -37,6 +37,7 @@ public class MagnetClimbState implements GameState{
     private double ySpawn;
     private boolean pause;
     private boolean isOver;
+    private boolean restart;
     private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
     public MagnetClimbState(GameStateManager gsm){
@@ -47,6 +48,7 @@ public class MagnetClimbState implements GameState{
     public void init() {
         pause = false;
         isOver = false;
+        restart = false;
         player = new Player();
         xOffset = 350;
         player.circle.move(xOffset, 0);
@@ -67,7 +69,7 @@ public class MagnetClimbState implements GameState{
             pause = false;
         });
         pauseOptions.add((ActionMenu) () -> {
-            init();
+            restart();
         });
         pauseOptions.add((ActionMenu) () -> {
             System.exit(0);
@@ -112,6 +114,9 @@ public class MagnetClimbState implements GameState{
                 return 1;
             });
         }
+        if(restart == true){
+            init();
+        }
     }
     private void generateChunk(int chunk){
         int randomSeed = randomNumber(0, 100);
@@ -144,6 +149,9 @@ public class MagnetClimbState implements GameState{
     public void gameOver(){
         isOver = true;
         gameOverMenu.init();
+    }
+    public void restart(){
+        restart = true;
     }
     @Override
     public void draw(Graphics2D g2d) {

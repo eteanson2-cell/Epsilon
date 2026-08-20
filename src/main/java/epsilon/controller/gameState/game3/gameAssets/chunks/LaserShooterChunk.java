@@ -44,7 +44,11 @@ public class LaserShooterChunk extends ObstacleChunk{
             Number currentAngle = (Number)angles.get(seed%columns);
             double currentXPoint = (height-i) * Math.cos(currentAngle.doubleValue());
             rockPoints.add(new Point(320 + currentXPoint, i));
-            reRollSeed();
+            int prevSeed = seed%columns;
+            do { 
+                reRollSeed();
+            } while (prevSeed == seed%columns);
+            
         }
         Line blast = new Line(320,height,320,height);
         lasers.addKey(blast);

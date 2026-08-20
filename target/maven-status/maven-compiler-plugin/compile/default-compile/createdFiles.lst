@@ -31,6 +31,7 @@ epsilon\model\entities\figures\Oval.class
 epsilon\controller\gameState\game2\menu\OptionsMenu.class
 epsilon\model\dataStructure\interfaces\HashFunction.class
 epsilon\controller\gameState\game2\menu\MainMenu.class
+epsilon\controller\gameState\game3\gameAssets\chunks\HighwayChunk.class
 epsilon\model\entities\figures\Point.class
 epsilon\App.class
 epsilon\controller\gameState\game3\gameAssets\chunks\LaserShooterChunk.class

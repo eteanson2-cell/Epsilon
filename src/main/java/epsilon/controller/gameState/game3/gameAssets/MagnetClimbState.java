@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import epsilon.controller.GameStateManager;
+import epsilon.controller.gameState.game3.gameAssets.chunks.HighwayChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.HorizontalChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserShooterChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserSystemChunk;
@@ -26,6 +27,7 @@ import static epsilon.utils.FunctionUtils.isInRange;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
 public class MagnetClimbState implements GameState{
+    @SuppressWarnings("unused")
     private final GameStateManager gsm;
     private Player player;
     private double xOffset;
@@ -97,8 +99,8 @@ public class MagnetClimbState implements GameState{
                 return 1;
             });
             if(player.circle.getYCenter() < benchMark+ySpawn){
-                int randomChunk = randomNumber(1, 7);
-                //randomChunk = 6;
+                int randomChunk = randomNumber(1, 8);
+                //randomChunk = 7;
                 generateChunk(randomChunk);
             }
             lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
@@ -128,7 +130,8 @@ public class MagnetClimbState implements GameState{
             case 4 -> newChunk = new LaserSystemChunk(benchMark, randomSeed);
             case 5 -> newChunk = new LaserShooterChunk(benchMark, randomSeed);
             case 6 -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
-            default -> newChunk = new LaserSystemChunk(benchMark, randomSeed);
+            case 7 -> newChunk = new HighwayChunk(benchMark,randomSeed);
+            default -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
         }
         pullChunk(newChunk);
     }

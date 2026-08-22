@@ -100,7 +100,7 @@ public class MagnetClimbState implements GameState{
             });
             if(player.circle.getYCenter() < benchMark+ySpawn){
                 int randomChunk = randomNumber(1, 8);
-                //randomChunk = 7;
+                //randomChunk = 4;
                 generateChunk(randomChunk);
             }
             lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
@@ -178,7 +178,6 @@ public class MagnetClimbState implements GameState{
         });
         player.draw(g2d);
         killerLaser.draw(g2d);
-        //drawLasers(g2d);
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);
@@ -279,7 +278,10 @@ public class MagnetClimbState implements GameState{
 
     @Override
     public void mouseMoved(int x, int y) {
-
+        System.out.println(y);
+        if(y > 200){
+            yOffset = y;
+        }
     }
 
 }

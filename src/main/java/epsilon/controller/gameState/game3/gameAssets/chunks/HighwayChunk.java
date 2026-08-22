@@ -53,8 +53,8 @@ public class HighwayChunk extends ObstacleChunk{
     }
     public void setHeight(){
         height = 150;
-        if(benchmark <-10000){
-            height -= 50 * (int)(benchmark/10000);
+        if(benchmark <-7500){
+            height -= 50 * (int)(benchmark/7500);
             if(height > 650){
                 height = 650;
             }

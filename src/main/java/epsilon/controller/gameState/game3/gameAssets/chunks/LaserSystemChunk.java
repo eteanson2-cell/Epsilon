@@ -56,19 +56,19 @@ public class LaserSystemChunk extends ObstacleChunk{
                     yCenter + (degreeSine(180+angle)*radix));
                 rockPoints.add(rockA);
                 rockPoints.add(rockB);
-                double angle2 = seed*3.6;
-                Point smallCenter = new Point(
-                    xCenter + (degreeCosine(angle2)*radix), 
-                    yCenter + (degreeSine(angle2)*radix));
                 if(benchmark < -2000){
-                    generateCircle(centerPoint, smallCenter);
+                    double angle2 = seed*3.6;
+                    Point smallCenter = new Point(
+                        xCenter + (degreeCosine(angle2)*radix), 
+                        yCenter + (degreeSine(angle2)*radix)
+                    );
+                    generateCircle(centerPoint, smallCenter,1/Math.pow(i,0.25));
                 }
             }
             else{
                 i--;
                 loopCounter++;
                 if(loopCounter > 50){
-                    //System.out.println("Loop: " + prevAngle + "|" + angle);
                     prevAngle = 0;
                     seed = 7;
                 }
@@ -87,16 +87,16 @@ public class LaserSystemChunk extends ObstacleChunk{
     public int setOrbits(){
         return height/200;
     }
-    public void generateCircle(Point bigCenter, Point smallCenter){
+    public void generateCircle(Point bigCenter, Point smallCenter, double speed){
         int radix = 25;
         int numLasers = 6;
         double rotation;
         reRollSeed();
         if(seed < 50){
-            rotation = -1;
+            rotation = -speed;
         }
         else{
-            rotation = 1;
+            rotation = speed;
         }
         for (int i = 0; i < numLasers; i ++) {
             double degree = 360/numLasers;

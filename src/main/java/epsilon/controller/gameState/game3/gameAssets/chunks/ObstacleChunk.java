@@ -34,6 +34,7 @@ public abstract class ObstacleChunk{
             newRocks.add(new MetallicRock(
                 rockPoint.getX(),
                 benchmark-rockPoint.getY()));
+            return true;
         });
         return newRocks;
     }
@@ -65,8 +66,10 @@ public abstract class ObstacleChunk{
                     case Boolean bool -> newLaser.addBoolean(bool);
                     default -> {}
                 }
+                return true;
             });
             newLasers.add(newLaser);
+            return true;
         });
         return newLasers;
     }

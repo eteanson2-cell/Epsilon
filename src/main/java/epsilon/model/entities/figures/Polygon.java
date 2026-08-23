@@ -447,24 +447,26 @@ public class Polygon extends Figure{
 	}
     @Override
     public boolean intersects(IEntity entity) {
-		if(entity instanceof Polygon polygon){
-			return intersects(polygon);
-		}
-		else if(entity instanceof Point point){
-			return intersects(point);
-		}
-		else if(entity instanceof Line line){
-			return intersects(line);
-		}
-		else if (entity instanceof Oval oval) {
-			return oval.intersects(this);
-		}
-		else if (entity instanceof  Rectangle rectangle) {
-			return intersects(rectangle.toPolygon());
-		}
-		else{
-			return false;
-		}
+            switch (entity) {
+                case Polygon polygon -> {
+                    return intersects(polygon);
+                }
+                case Point point -> {
+                    return intersects(point);
+                }
+                case Line line -> {
+                    return intersects(line);
+                }
+                case Oval oval -> {
+                    return oval.intersects(this);
+                }
+                case Rectangle rectangle -> {
+                    return intersects(rectangle.toPolygon());
+                }
+                default -> {
+                    return false;
+                }
+            }
     }
 
     @Override

@@ -42,6 +42,7 @@ C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\BinaryNo
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\BTreeNode.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\MapNode.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\Node.java
+C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\SetNode.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\auxiliar\TreeNode.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\Comparator.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\interfaces\DataBatch.java
@@ -63,6 +64,7 @@ C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructur
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\BinaryTree.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\Graph.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\Matrix.java
+C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\SetTree.java
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\TreeMap.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\Animation.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\Camera.java
@@ -85,6 +87,7 @@ C:\Project E\epsilon\src\main\java\epsilon\model\enums\TreeTraversal.java
 C:\Project E\epsilon\src\main\java\epsilon\program\chunkGeneratorTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\game3Physics.java
 C:\Project E\epsilon\src\main\java\epsilon\program\hashTableTest.java
+C:\Project E\epsilon\src\main\java\epsilon\program\listIterationTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\Structures.java
 C:\Project E\epsilon\src\main\java\epsilon\program\treeMapTest.java
 C:\Project E\epsilon\src\main\java\epsilon\program\treeTest.java

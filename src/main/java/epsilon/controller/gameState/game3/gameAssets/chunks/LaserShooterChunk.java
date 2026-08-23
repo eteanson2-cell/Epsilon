@@ -71,6 +71,7 @@ public class LaserShooterChunk extends ObstacleChunk{
                         -angle, -angle
                     ), nodeObject);
                 }
+                return true;
             });
             prevAngle = angle;
             configureBlast(-degreeCosine(angle-90)*(height/speed), blast, speed);

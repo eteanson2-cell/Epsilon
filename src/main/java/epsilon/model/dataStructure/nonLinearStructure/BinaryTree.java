@@ -41,25 +41,11 @@ public class BinaryTree{
         }
     }
     public boolean addList(DataList dataList){
-        switch (dataList) {
-            case Array array -> {
-                for (int index = 0; index < array.size(); index++) {
-                    add(array.get(index));
-                }
-                return true;
-            }
-            case LinkedList list -> {
-                list.initializeIterator();
-                while (list.validIterator() == true) {
-                    add(list.getIterator());
-                    list.moveIteratorToRight();
-                }
-                return true;
-            }
-            default -> {
-                return false;
-            }
-        }
+        dataList.iterateList((Object nodeObject) -> {
+            add(nodeObject);
+            return true;
+        });
+        return true;
     }
     public boolean addTree(BinaryTree tree){
         return addTree(tree, TreeTraversal.DEPTH_FIRST_SEARCH);
@@ -67,11 +53,10 @@ public class BinaryTree{
     public boolean addTree(BinaryTree tree, TreeTraversal treeTraversal){
         if(tree.isEmpty() == false){
             LinkedList treeList = tree.toList(treeTraversal);
-            treeList.initializeIterator();
-            while (treeList.validIterator()) { 
-                add(treeList.getIterator());
-                treeList.moveIteratorToRight();
-            }
+            treeList.iterateList((Object nodeObject) -> {
+                add(nodeObject);
+                return true;
+            });
             return true;
         }
         else{

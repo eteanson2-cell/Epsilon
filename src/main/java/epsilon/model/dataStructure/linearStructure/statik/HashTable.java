@@ -32,6 +32,7 @@ public class HashTable{
         LinkedList booleans = new LinkedList();
         datalist.iterateList((Object nodeObject) -> {
             booleans.add(add(nodeObject));
+            return true;
         });
         return booleans;
     }
@@ -48,6 +49,7 @@ public class HashTable{
             if(shovedObject != null){
                 removedObjects.add(shovedObject);
             }
+            return true;
         });
         return removedObjects;
     }
@@ -76,6 +78,7 @@ public class HashTable{
             if(shovedObject != null){
                 removedObjects.add(shovedObject);
             }
+            return true;
         });
         return removedObjects;
     }
@@ -144,6 +147,7 @@ public class HashTable{
         data = new Object[newSize];
         storedData.iterateList((Object nodeObject) -> {
             add(nodeObject);
+            return true;
         });
     }
     public void resize(int newSize, boolean reorganize){
@@ -169,6 +173,7 @@ public class HashTable{
         }
         storedData.iterateList((Object nodeObject) -> {
             add(nodeObject);
+            return true;
         });
     }
     public void print(){

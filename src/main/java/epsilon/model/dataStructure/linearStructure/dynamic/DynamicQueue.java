@@ -91,21 +91,13 @@ public class DynamicQueue implements DataBatch{
     }
     public Array toArray(){
         Array array = new Array(size());
-        data.initializeIterator();
-        while (data.validIterator()) { 
-            array.add(data.getIterator());
-            data.moveIteratorToRight();
-        }
+        data.iterateList(array::add);
         return array;
     }
     @Override
     public DataBatch copy(){
         DynamicQueue copy = new DynamicQueue();
-        data.initializeIterator();
-        while (data.validIterator()) { 
-            copy.add(data.getIterator());
-            data.moveIteratorToRight();
-        }
+        data.iterateList(copy::add);
         return copy;
     }
 

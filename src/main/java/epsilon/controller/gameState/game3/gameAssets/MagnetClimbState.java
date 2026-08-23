@@ -164,6 +164,7 @@ public class MagnetClimbState implements GameState{
         rocks.iterateList((Object nodeObject) -> {
             MetallicRock currentRock = (MetallicRock)nodeObject;
             currentRock.draw(g2d);
+            return true;
         });
         lasers.iterateList((Object nodeObject) -> {
             LaserBarrier currentLaser = (LaserBarrier)nodeObject;
@@ -175,6 +176,7 @@ public class MagnetClimbState implements GameState{
             else{
                 currentLaser.draw(g2d, killerLaser);
             }
+            return true;
         });
         player.draw(g2d);
         killerLaser.draw(g2d);
@@ -203,6 +205,9 @@ public class MagnetClimbState implements GameState{
         }
         if(colorSaturation < 10){
             colorSaturation = 10;
+        }
+        else if(colorSaturation > 255){
+            colorSaturation = 255;
         } 
         g2d.setColor(new Color(colorSaturation, colorSaturation, 0));
         Line warningLine = new Line(x, currentLaser.getPointA().getY(),
@@ -216,6 +221,7 @@ public class MagnetClimbState implements GameState{
             laserPoints.add(laser.getPointA());
             laserPoints.add(laser.getPointB());
             laserPoints.addEdge(laser.getPointA(), laser.getPointB());
+            return true;
         });
         
     }
@@ -254,15 +260,14 @@ public class MagnetClimbState implements GameState{
     public void mousePressed(int x, int y, int button) {
         if(player.isHooked() == false){
             Point mousePosition = new Point(x, y + player.circle.getYCenter()-yOffset);
-            rocks.initializeIterator();
-            while (rocks.validIterator()) { 
-                MetallicRock mr = (MetallicRock)rocks.getIterator();
+            rocks.iterateList((Object nodeObject) -> {
+                MetallicRock mr = (MetallicRock)nodeObject;
                 if(mr.intersects(mousePosition)){
                     player.hookRock(mr);
-                    break;
+                    return false;
                 }
-                rocks.moveIteratorToRight();
-            }
+                return true;                
+            });
         }
     }
 

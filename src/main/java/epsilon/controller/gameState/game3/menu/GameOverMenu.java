@@ -10,7 +10,6 @@ import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.entities.figures.Polygon;
 
 public class GameOverMenu extends GameMenu{
-    private long score;
     private final Polygon arrow;
     public GameOverMenu(Array options){
         super(options);
@@ -33,9 +32,6 @@ public class GameOverMenu extends GameMenu{
         super.selectOption();
         changeOption((byte)0);
         isEnabled = false;
-    }
-    public void setScore(long score){
-        this.score = score;
     }
     @Override
     public void KeyPressed(int k) {

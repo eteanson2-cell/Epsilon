@@ -133,30 +133,25 @@ public class FunctionUtils{
         return (object instanceof Number);
     }
 	public static boolean isNumericList(DataList dataList){
-		if(dataList instanceof NumericArray || dataList instanceof NumericList){
-            return true;
-        }
-		else if(dataList instanceof Array array){
-            for (int i = 0; i < array.size(); i++) {
-                if(isNumeric(array.get(i)) == false){
-					return false;
-				}
-            }
-            return true;
-        }
-        else if(dataList instanceof LinkedList list){
-            list.initializeIterator();
-            while (list.validIterator()) { 
-                if(isNumeric(list.getIterator()) == false){
-					return false;
-				}
-                list.moveIteratorToRight();
-            }
-            return true;
-        }
-        else{
-            return false;
-        }
+		if(dataList != null){
+			if(dataList instanceof NumericArray || dataList instanceof NumericList){
+				return true;
+			}
+			else{
+				Array bool = new Array(1);
+				dataList.iterateList((Object nodeObject) -> {
+					if(isNumeric(nodeObject) == false){
+						bool.add(false);
+						return false;
+					}
+					return true;
+				});
+				return bool.add(true);
+			}
+		}
+		else{
+			return false;
+		}
 	}
 	public static Double objectToDouble(Object object){
 		if(isNumeric(object)){

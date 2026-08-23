@@ -312,7 +312,10 @@ public class LinkedList implements DataList{
     public void iterateList(Iterator iterator){
         Node temp = first;
         while(temp != null){
-            iterator.iterate(temp.getData());
+            boolean keepGoing = iterator.iterate(temp.getData());
+            if (keepGoing == false) {
+                break;
+            }
             temp = temp.getRightNode();
         }
     }

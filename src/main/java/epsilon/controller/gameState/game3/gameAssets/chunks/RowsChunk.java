@@ -24,8 +24,8 @@ public class RowsChunk extends ObstacleChunk{
         }
         for (int y = 50; y < height; y += numSpan) {
             double xPoint = getXPoint(y, angle);
-            Line newLaser1 = new Line(0, y, xPoint-width, y);
-            Line newLaser2 = new Line(xPoint+width, y, 640, y);
+            Line newLaser1 = new Line(-20, y, xPoint-width, y);
+            Line newLaser2 = new Line(xPoint+width, y, 660, y);
             lasers.addKey(newLaser1);
             lasers.addKey(newLaser2);
             if(benchmark < -2000 && (int)(Math.abs(benchmark)*seed*xPoint)%2 == 0){

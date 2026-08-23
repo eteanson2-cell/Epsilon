@@ -31,6 +31,7 @@ epsilon\model\entities\figures\Oval.class
 epsilon\controller\gameState\game2\menu\OptionsMenu.class
 epsilon\model\dataStructure\interfaces\HashFunction.class
 epsilon\controller\gameState\game2\menu\MainMenu.class
+epsilon\model\dataStructure\auxiliar\SetNode.class
 epsilon\controller\gameState\game3\gameAssets\chunks\HighwayChunk.class
 epsilon\model\entities\figures\Point.class
 epsilon\App.class
@@ -65,6 +66,7 @@ epsilon\controller\gameState\game3\gameAssets\MetallicRock.class
 epsilon\controller\gameState\game2\gameAssets\BlockType.class
 epsilon\model\entities\figures\Sprite.class
 epsilon\controller\gameState\game3\menu\GameOverMenu.class
+epsilon\program\listIterationTest.class
 epsilon\program\Structures.class
 epsilon\controller\gameState\game3\gameAssets\chunks\SpinningChunk.class
 epsilon\controller\gameState\game1\Player.class
@@ -87,12 +89,14 @@ epsilon\controller\gameState\game2\menu\MenuState.class
 epsilon\model\entities\Stage.class
 epsilon\App2.class
 epsilon\controller\gameState\game3\gameAssets\MagnetClimbState.class
+epsilon\model\dataStructure\nonLinearStructure\SetTree$1.class
 epsilon\model\dataStructure\linearStructure\statik\HashTable.class
 epsilon\model\dataStructure\auxiliar\TreeNode.class
 epsilon\model\dataStructure\linearStructure\dynamic\LinkedList.class
 epsilon\controller\gameState\game2\gameAssets\Board.class
 epsilon\model\dataStructure\nonLinearStructure\BinaryTree$1.class
 epsilon\model\dataStructure\nonLinearStructure\Array2D.class
+epsilon\model\dataStructure\nonLinearStructure\SetTree.class
 epsilon\model\dataStructure\nonLinearStructure\Matrix.class
 epsilon\program\chunkGeneratorTest.class
 epsilon\model\dataStructure\interfaces\Iterator.class

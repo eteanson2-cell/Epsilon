@@ -348,7 +348,10 @@ public class Array implements DataList{
     @Override
     public void iterateList(Iterator iterator) {
         for (int i = 0; i < size(); i++) {
-            iterator.iterate(data[i]);
+            boolean keepGoing = iterator.iterate(data[i]);
+            if(keepGoing == false){
+                break;
+            }
         }
     }
     protected boolean validIndex(int index){

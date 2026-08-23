@@ -1,5 +1,5 @@
 package epsilon.model.dataStructure.interfaces;
 
 public interface Iterator{
-    public void iterate(Object nodeObject);
+    public boolean iterate(Object nodeObject);
 }

@@ -92,24 +92,26 @@ public class Rectangle extends Figure{
 
     @Override
     public boolean intersects(IEntity entity) {
-        if(entity instanceof Rectangle rectangle){
-            boolean intersectanX = getXLeftAxis() < rectangle.getXRightAxis() &&
-                                   getXRightAxis() > rectangle.getXLeftAxis();
-            boolean intersectanY = getYUpperAxis() < rectangle.getYLowerAxis() &&
-                                   getYLowerAxis() > rectangle.getYUpperAxis();
-            return intersectanX && intersectanY;
-        }
-        else if(entity instanceof Line line){
-            return line.intersects(this);
-        }
-        else if (entity instanceof Oval oval) {
-            return oval.intersects(this);
-        }
-        else if (entity instanceof Polygon polygon) {
-            return polygon.intersects(this);
-        }
-        else{
-            return false;
+        switch (entity) {
+            case Rectangle rectangle -> {
+                boolean intersectanX = getXLeftAxis() < rectangle.getXRightAxis() &&
+                        getXRightAxis() > rectangle.getXLeftAxis();
+                boolean intersectanY = getYUpperAxis() < rectangle.getYLowerAxis() &&
+                        getYLowerAxis() > rectangle.getYUpperAxis();
+                return intersectanX && intersectanY;
+            }
+            case Line line -> {
+                return line.intersects(this);
+            }
+            case Oval oval -> {
+                return oval.intersects(this);
+            }
+            case Polygon polygon -> {
+                return polygon.intersects(this);
+            }
+            default -> {
+                return false;
+            }
         }
         
     }

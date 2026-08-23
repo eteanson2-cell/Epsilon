@@ -136,7 +136,10 @@ public class TreeMap{
         batch.add(root);
         while (batch.isEmpty() == false) { 
             MapNode tempNode = (MapNode)batch.remove();
-            iterator.iterate(tempNode);
+            boolean keepGoing = iterator.iterate(tempNode);
+            if(keepGoing == false){
+                break;
+            }
             if(tempNode.getLeftBranch() != null){
                 batch.add(tempNode.getLeftBranch());
             }
@@ -153,6 +156,7 @@ public class TreeMap{
         iteration((Object nodeObject) -> {
             MapNode tempNode = (MapNode)nodeObject;
             keys.add(tempNode.getKey());
+            return true;
         }, treeTraversal);
         return keys;
     }
@@ -187,6 +191,7 @@ public class TreeMap{
             MapNode tempNode = (MapNode)nodeObject;
             System.out.print("Key: " + tempNode.getKey());
             System.out.println(", Data: " + tempNode.getData());
+            return true;
         }, treeTraversal);
     }
     public void initializeIterator(){

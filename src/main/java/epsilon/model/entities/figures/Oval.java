@@ -94,29 +94,31 @@ public class Oval extends Figure{
     }
     @Override
     public boolean intersects(IEntity entity) {
-        if (entity instanceof Point point) {
-            return intersects(point);
-        }
-        else if(entity instanceof Oval oval){
-            return intersects(oval, 3);
-        }
-        else if(entity instanceof Line line){
-            return line.intersects(this);
-        }
-        else if(entity instanceof Rectangle rectangle){
-            return intersects(rectangle.toPolygon());
-        }
-        else if(entity instanceof Polygon polygon){
-            for (int index = 0; index < polygon.getLength(); index++) {
-                Line line = polygon.getLine(index);
-                if(line.intersects(this)){
-                    return true;
-                }
+        switch (entity) {
+            case Point point -> {
+                return intersects(point);
             }
-            return false;
-        }
-        else{
-            return false;
+            case Oval oval -> {
+                return intersects(oval, 3);
+            }
+            case Line line -> {
+                return line.intersects(this);
+            }
+            case Rectangle rectangle -> {
+                return intersects(rectangle.toPolygon());
+            }
+            case Polygon polygon -> {
+                for (int index = 0; index < polygon.getLength(); index++) {
+                    Line line = polygon.getLine(index);
+                    if(line.intersects(this)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            default -> {
+                return false;
+            }
         }
     }
 

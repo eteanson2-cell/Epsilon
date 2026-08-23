@@ -34,11 +34,11 @@ public class hashTableTest{
             else{
                 throw new Error("The object is null");
             }
-        },20000000);
-        int randomNumber = randomNumber(0,20000000);
+        },200000000);
+        int randomNumber = randomNumber(-2000000,20000000);
         while(hashTable.add(randomNumber) == true){
             System.out.println("no collision");
-            randomNumber = randomNumber(0,20000000);
+            randomNumber = randomNumber(-2000000,20000000);
         }
         System.out.print("a collision has ocurred with the number " + randomNumber);
         System.out.println(" at " + hashTable.find(randomNumber));

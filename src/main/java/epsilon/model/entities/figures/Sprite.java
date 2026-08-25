@@ -110,4 +110,10 @@ public class Sprite implements IEntity{
             figure.move(x, y);
         }
     }
+
+    @Override
+    public IEntity copy() {
+        Sprite copy = new Sprite(figures);
+        return copy;
+    }
 } 

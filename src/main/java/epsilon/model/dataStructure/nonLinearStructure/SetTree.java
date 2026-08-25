@@ -49,6 +49,37 @@ public class SetTree {
         }
         return null;
     }
+    public Object remove(Object object){
+        DynamicStack nodes = findNode(object);
+        if(nodes != null){
+            SetNode tempNode = (SetNode)nodes.remove();
+            Object removedObject = tempNode.getData();
+            if(tempNode == root && tempNode.hasNextBranch() == false){
+                root = null;
+            }
+            else{
+                tempNode.remove();
+                if(tempNode.getData() == null){
+                    SetNode prevNode = (SetNode)nodes.remove();
+                    if(tempNode == prevNode.getLeftBranch()){
+                        prevNode.clearLeftBranch();
+                    }
+                    else if(tempNode == prevNode.getRightBranch()){
+                        prevNode.clearRightBranch();
+                    }
+                    prevNode.balanceNode();
+                }    
+            }
+            while (nodes.isEmpty() == false) { 
+                tempNode = (SetNode)nodes.remove();
+                tempNode.balanceNode();
+            }
+            return removedObject;
+        }
+        else{
+            return null;
+        }
+    }
     public void print(){
         print(TreeTraversal.BREADTH_FIRST_SEARCH);
     }

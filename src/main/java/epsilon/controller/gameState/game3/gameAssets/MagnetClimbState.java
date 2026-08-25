@@ -22,7 +22,9 @@ import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.nonLinearStructure.Graph;
 import epsilon.model.entities.figures.Line;
+import epsilon.model.entities.figures.ParticleSpawn;
 import epsilon.model.entities.figures.Point;
+import epsilon.model.entities.figures.Rectangle;
 import static epsilon.utils.FunctionUtils.isInRange;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
@@ -34,6 +36,7 @@ public class MagnetClimbState implements GameState{
     private double yOffset;
     private LinkedList rocks;
     private LinkedList lasers;
+    private LinkedList particles;
     private LaserBarrier killerLaser;
     private double benchMark;
     private double ySpawn;
@@ -56,6 +59,7 @@ public class MagnetClimbState implements GameState{
         player.circle.move(xOffset, 0);
         rocks = new LinkedList();
         lasers = new LinkedList();
+        particles = new LinkedList();
         killerLaser = new LaserBarrier(0, 500, 700, 500);
         killerLaser.addMovement(new LaserMovement(
             new Point(0,-1), new Point(0, -1), true, null, null, null, null));
@@ -100,7 +104,7 @@ public class MagnetClimbState implements GameState{
             });
             if(player.circle.getYCenter() < benchMark+ySpawn){
                 int randomChunk = randomNumber(1, 8);
-                //randomChunk = 4;
+                //randomChunk = 6;
                 generateChunk(randomChunk);
             }
             lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
@@ -111,6 +115,14 @@ public class MagnetClimbState implements GameState{
                 }
                 LaserBarrier killerLaser1 = (LaserBarrier)obj2;
                 if (currentLaser.getPointA().getY() > killerLaser1.getPointA().getY() && currentLaser.getPointB().getY() > killerLaser1.getPointA().getY()) {
+                    return 0;
+                }
+                return 1;
+            });
+            particles.removeAll(killerLaser, (Object obj1, Object obj2) -> {
+                ParticleSpawn currentSpawn = (ParticleSpawn)obj1;
+                currentSpawn.update();
+                if(currentSpawn.origin.getY() > killerLaser.getPointA().getY()){
                     return 0;
                 }
                 return 1;
@@ -145,9 +157,22 @@ public class MagnetClimbState implements GameState{
         for (int i = 0; i < newLasers.getQuantity(); i++) {
             LaserBarrier newLaser = (LaserBarrier)newLasers.get(i);
             lasers.add(newLaser);
+            generateParticleSpawn(newLaser);
         }
         benchMark -= oc.getHeight()+100;
 
+    }
+    public void generateParticleSpawn(LaserBarrier laser){
+        Rectangle smallCube = new Rectangle(0, 0, 5, 5);
+        smallCube.setInsideColor(Color.CYAN);
+        particles.add(new ParticleSpawn(
+            new Point(0,3), 0, 0, laser.getPointA(), 
+                40, smallCube, 10, 2)
+        );
+        particles.add(new ParticleSpawn(
+            new Point(0,3), 0, 0, laser.getPointB(), 
+                40, smallCube, 10, 2)
+        );
     }
     public void gameOver(){
         isOver = true;
@@ -176,6 +201,11 @@ public class MagnetClimbState implements GameState{
             else{
                 currentLaser.draw(g2d, killerLaser);
             }
+            return true;
+        });
+        particles.iterateList((Object nodeObject)->{
+            ParticleSpawn particleSpawn = (ParticleSpawn)nodeObject;
+            particleSpawn.draw(g2d);
             return true;
         });
         player.draw(g2d);

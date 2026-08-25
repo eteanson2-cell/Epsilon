@@ -58,6 +58,19 @@ public class Array implements DataList{
         }
         return -1;
     }
+    public LinkedList getIndexes(Object object){
+        return getIndexes(object, new BaseObjectComparator());
+    }
+    public LinkedList getIndexes(Object object, Comparator comparator){
+        LinkedList indexes = new LinkedList();
+        for (int i = 0; i < size(); i++) {
+            int comparison = comparator.compare(get(i), object);
+            if(comparison == 0){
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
     @Override
     public boolean add(Object object){
         if(isFilled() == false){
@@ -143,6 +156,17 @@ public class Array implements DataList{
         else{
             return null;
         }
+    }
+    public LinkedList removeAll(Object object, Comparator comparator){
+        LinkedList removedList = new LinkedList();
+        for (int i = 0; i < size(); i++) {
+            int comparison = comparator.compare(object, data[i]);
+            if(comparison == 0){
+                removedList.add(remove(i));
+                i--;
+            }
+        }
+        return removedList;
     }
     @Override
     public void clear(){

@@ -10,7 +10,7 @@ import static epsilon.utils.FunctionUtils.getMax;
 import static epsilon.utils.FunctionUtils.getMin;
 
 public class Polygon extends Figure{
-	private double[] xPoints,yPoints;
+	private double[] xPoints, yPoints;
 	private final double[] baseXPoints, baseYPoints;
 	private double angle;
 	//Constructor
@@ -472,5 +472,16 @@ public class Polygon extends Figure{
     @Override
     public void move(double x, double y) {
         moveWithVector(x, y);
+    }
+
+    @Override
+    public IEntity copy() {
+        Polygon copy = new Polygon(baseXPoints, baseYPoints);
+		copy.xPoints = xPoints;
+		copy.yPoints = yPoints;
+		copy.angle = angle;
+		copy.borderColor = borderColor;
+		copy.insideColor = insideColor;
+		return copy;
     }
 }

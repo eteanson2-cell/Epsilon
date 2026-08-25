@@ -1,4 +1,5 @@
 epsilon\visual\windows\TFrame.class
+epsilon\model\entities\figures\ParticleSpawn.class
 epsilon\model\dataStructure\auxiliar\BTreeNode.class
 epsilon\model\entities\Camera.class
 epsilon\controller\gameState\game2\gameAssets\SnakeBoardState.class
@@ -44,6 +45,7 @@ epsilon\controller\gameState\game3\gameAssets\chunks\LineComparator.class
 epsilon\controller\gameState\game2\gameAssets\Block.class
 epsilon\controller\interfaces\ActionMenu.class
 epsilon\model\dataStructure\linearStructure\statik\Queue.class
+epsilon\model\entities\figures\auxiliar\Particle.class
 epsilon\controller\gameState\game3\gameAssets\chunks\HorizontalChunk.class
 epsilon\model\dataStructure\linearStructure\dynamic\DynamicStack.class
 epsilon\controller\interfaces\GameState.class

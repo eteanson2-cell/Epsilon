@@ -128,5 +128,11 @@ public class Camera implements IEntity{
         }
     }
 
+    @Override
+    public IEntity copy() {
+        Camera copy = new Camera(x, y, width, height);
+        return copy;
+    }
+
 
 }

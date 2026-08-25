@@ -192,4 +192,10 @@ public class Line implements IEntity{
     public String toString(){
         return "P1: (x:" + x1 + " y:" + y1 +") P2 (x:" + x2 + " y:" + y2 +")";
     }
+
+    @Override
+    public IEntity copy() {
+        Line copy = new Line(x1, y1, x2, y2);
+        return copy;
+    }
 }

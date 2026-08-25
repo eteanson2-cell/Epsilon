@@ -121,4 +121,12 @@ public class Rectangle extends Figure{
         xCenter += x;
         yCenter += y;
     }
+
+    @Override
+    public IEntity copy() {
+        Rectangle copy = new Rectangle(xCenter, yCenter, width, height);
+        copy.borderColor = borderColor;
+        copy.insideColor = insideColor;
+        return copy;
+    }
 }

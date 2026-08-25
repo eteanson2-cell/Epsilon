@@ -61,6 +61,7 @@ public class Point implements IEntity{
         this.x = x;
         this.y = y;
     }
+    @Override
     public Point copy(){
         Point copy = new Point(x, y);
         return copy;

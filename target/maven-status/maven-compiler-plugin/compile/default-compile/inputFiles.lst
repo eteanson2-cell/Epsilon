@@ -68,11 +68,13 @@ C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructur
 C:\Project E\epsilon\src\main\java\epsilon\model\dataStructure\nonLinearStructure\TreeMap.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\Animation.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\Camera.java
+C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\auxiliar\Particle.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\auxiliar\Pixel.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Figure.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Image.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Line.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Oval.java
+C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\ParticleSpawn.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Point.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Polygon.java
 C:\Project E\epsilon\src\main\java\epsilon\model\entities\figures\Rectangle.java

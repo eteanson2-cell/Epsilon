@@ -173,4 +173,12 @@ public class Image extends Figure{
         this.height = dataPixel.getHeight();
         this.width = dataPixel.getWidth();
     }
+
+    @Override
+    public IEntity copy() {
+        Image copy = new Image(xCenter, yCenter, height, width);
+        copy.dataPixel = dataPixel.copy();
+        copy.image = image;
+        return copy;
+    }
 }

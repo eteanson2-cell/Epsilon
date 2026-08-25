@@ -127,4 +127,12 @@ public class Oval extends Figure{
         xCenter += x;
         yCenter += y;
     }
+
+    @Override
+    public IEntity copy() {
+        Oval copy = new Oval(xCenter, yCenter, width, height);
+        copy.borderColor = borderColor;
+        copy.insideColor = insideColor;
+        return copy;
+    }
 }

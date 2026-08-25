@@ -10,4 +10,5 @@ public interface IEntity{
     void fill(Graphics2D g2d);
     boolean intersects(IEntity entity);
     void move(double x, double y);
+    IEntity copy();
 }

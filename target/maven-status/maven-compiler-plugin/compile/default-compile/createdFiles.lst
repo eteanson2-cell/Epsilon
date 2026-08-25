@@ -91,6 +91,7 @@ epsilon\controller\gameState\game2\menu\MenuState.class
 epsilon\model\entities\Stage.class
 epsilon\App2.class
 epsilon\controller\gameState\game3\gameAssets\MagnetClimbState.class
+epsilon\controller\gameState\game3\gameAssets\chunks\PropellerChunk.class
 epsilon\model\dataStructure\nonLinearStructure\SetTree$1.class
 epsilon\model\dataStructure\linearStructure\statik\HashTable.class
 epsilon\model\dataStructure\auxiliar\TreeNode.class

@@ -11,6 +11,7 @@ import epsilon.controller.gameState.game3.gameAssets.chunks.HorizontalChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserShooterChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserSystemChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.ObstacleChunk;
+import epsilon.controller.gameState.game3.gameAssets.chunks.PropellerChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.RotatingPipesChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.RowsChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.SpinningChunk;
@@ -103,8 +104,8 @@ public class MagnetClimbState implements GameState{
                 return 1;
             });
             if(player.circle.getYCenter() < benchMark+ySpawn){
-                int randomChunk = randomNumber(1, 8);
-                //randomChunk = 6;
+                int randomChunk = randomNumber(1, 9);
+                //randomChunk = 8;
                 generateChunk(randomChunk);
             }
             lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
@@ -143,6 +144,7 @@ public class MagnetClimbState implements GameState{
             case 5 -> newChunk = new LaserShooterChunk(benchMark, randomSeed);
             case 6 -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
             case 7 -> newChunk = new HighwayChunk(benchMark,randomSeed);
+            case 8 -> newChunk = new PropellerChunk(benchMark, randomSeed);
             default -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
         }
         pullChunk(newChunk);
@@ -166,11 +168,11 @@ public class MagnetClimbState implements GameState{
         Rectangle smallCube = new Rectangle(0, 0, 5, 5);
         smallCube.setInsideColor(Color.CYAN);
         particles.add(new ParticleSpawn(
-            new Point(0,3), 0, 0, laser.getPointA(), 
+            new Point(85,95), 0, 0, laser.getPointA(), 
                 40, smallCube, 10, 2)
         );
         particles.add(new ParticleSpawn(
-            new Point(0,3), 0, 0, laser.getPointB(), 
+            new Point(85,95), 0, 0, laser.getPointB(), 
                 40, smallCube, 10, 2)
         );
     }

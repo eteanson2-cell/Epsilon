@@ -10,6 +10,7 @@ import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.enums.TreeTraversal;
+import static epsilon.utils.FunctionUtils.selectBatch;
 
 public class BinaryTree{
     protected TreeNode mainNode;
@@ -292,14 +293,5 @@ public class BinaryTree{
         else{
             return null;
         }
-    }
-    protected DataBatch selectBatch(TreeTraversal treeTraversal){
-        DataBatch batch;
-        switch (treeTraversal) {
-            case DEPTH_FIRST_SEARCH -> batch = new DynamicStack();
-            case BREADTH_FIRST_SEARCH -> batch = new DynamicQueue();
-            default -> throw new AssertionError();
-        }
-        return batch;
     }
 }

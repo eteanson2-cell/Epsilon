@@ -4,10 +4,10 @@ import epsilon.model.dataStructure.auxiliar.MapNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.Iterator;
-import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.enums.TreeTraversal;
+import static epsilon.utils.FunctionUtils.selectBatch;
 
 public class TreeMap{
     protected MapNode root;
@@ -17,6 +17,9 @@ public class TreeMap{
         this.comparator = comparator;
         root = null;
         iterator = null;
+    }
+    public Comparator getComparator(){
+        return comparator;
     }
     public boolean isEmpty(){
         return root == null;
@@ -32,6 +35,14 @@ public class TreeMap{
         }
         else{
             return root.addKey(key, comparator);
+        }
+    }
+    public Object getRootObject(){
+        if(root != null){
+            return root.getKey();
+        }
+        else{
+            return null;
         }
     }
     protected DynamicStack findNode(Object key){
@@ -95,6 +106,10 @@ public class TreeMap{
             return null;
         }
     }
+    public boolean hasKey(Object key){
+        DynamicStack nodes = findNode(key);
+        return nodes != null; 
+    }
     public Object removeFromList(Object key){
         DynamicStack nodes = findNode(key);
         MapNode currentNode = (MapNode)nodes.remove();
@@ -147,6 +162,9 @@ public class TreeMap{
                 batch.add(tempNode.getRightBranch());
             }
         }
+    }
+    public void iteration(Iterator iterator){
+        iteration(iterator, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     public LinkedList getKeys(){
         return getKeys(TreeTraversal.BREADTH_FIRST_SEARCH);
@@ -217,14 +235,5 @@ public class TreeMap{
         else{
             return null;
         }
-    }
-    protected DataBatch selectBatch(TreeTraversal treeTraversal){
-        DataBatch batch;
-        switch (treeTraversal) {
-            case DEPTH_FIRST_SEARCH -> batch = new DynamicStack();
-            case BREADTH_FIRST_SEARCH -> batch = new DynamicQueue();
-            default -> throw new AssertionError();
-        }
-        return batch;
     }
 }

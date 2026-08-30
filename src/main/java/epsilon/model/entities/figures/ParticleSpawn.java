@@ -8,21 +8,23 @@ import epsilon.model.entities.interfaces.IEntity;
 import static epsilon.utils.FunctionUtils.euclideanDistance;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
-public class ParticleSpawn{
+public class ParticleSpawn implements IEntity{
     public Point origin;
-    double range;
+    public double range;
     @SuppressWarnings("unused")
-    int fadeIn;
+    public int fadeIn;
     @SuppressWarnings("unused")
-    int fadeOut;
-    double speed;
-    IEntity shape;
-    int spawnRate;
-    Point angleRange;
-    LinkedList entities;
-    int spawnCounter;
+    public int fadeOut;
+    public double speed;
+    public IEntity shape;
+    public int spawnRate;
+    public double minAngle;
+    public double maxAngle;
+    public LinkedList entities;
+    public int spawnCounter;
     public ParticleSpawn(Point angleRange, int fadeIn, int fadeOut, Point origin, double range, IEntity shape, int spawnRate, double speed) {
-        this.angleRange = angleRange;
+        this.minAngle = angleRange.getX();
+        this.maxAngle = angleRange.getY();
         this.fadeIn = fadeIn;
         this.fadeOut = fadeOut;
         this.origin = origin;
@@ -41,6 +43,9 @@ public class ParticleSpawn{
             if(euclideanDistance(entityCenter, origin1) > range){
                 return 0;
             }
+            if(particle.getEntity() instanceof ParticleSpawn ps){
+                ps.update();
+            }
             particle.move(speed);
             return 1;
         });
@@ -52,18 +57,43 @@ public class ParticleSpawn{
             IEntity copy = shape.copy();
             copy.move(-copy.getCenter().getX(), -copy.getCenter().getY());
             copy.move(origin.getX(), origin.getY());
-            int angle = randomNumber((int)angleRange.getX(),(int)angleRange.getY());
+            int angle = (int)randomNumber(minAngle,maxAngle);
             Particle newParticle = new Particle(copy, origin.copy(), angle);
             entities.add(newParticle);
             spawnCounter = 0;
         }
-        //entities.print();
     }
+    @Override
     public void draw(Graphics2D g2d){
         entities.iterateList((Object nodeObject) ->{
             Particle particle = (Particle)nodeObject;
             particle.draw(g2d);
             return true;
         });
+    }
+    @Override
+    public Point getCenter() {
+        return origin;
+    }
+
+    @Override
+    public void fill(Graphics2D g2d) {
+        draw(g2d);
+    }
+
+    @Override
+    public boolean intersects(IEntity entity) {
+        return origin.intersects(entity);
+    }
+
+    @Override
+    public void move(double x, double y) {
+        origin.move(x, y);
+    }
+
+    @Override
+    public IEntity copy() {
+        ParticleSpawn copy = new ParticleSpawn(new Point(minAngle, maxAngle), fadeIn, fadeOut, origin.copy(), range, shape, spawnRate, speed);
+        return copy;
     }
 }

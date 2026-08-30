@@ -4,8 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Point;
+import epsilon.model.entities.figures.Polygon;
+import static epsilon.utils.FunctionUtils.degreeCosine;
+import static epsilon.utils.FunctionUtils.degreeSine;
 
 public class LaserBarrier{
     private final Point laserPointA;
@@ -124,8 +128,8 @@ public class LaserBarrier{
         return isActive;
     }
     public void draw(Graphics2D g2d, LaserBarrier killerLaser){
+        Line laserLine = getLine();
         if(isActive){
-            Line laserLine = getLine();
             Point intersectionPoint = laserLine.getIntersectionPoint(killerLaser.getLine());
             if(intersectionPoint != null){
                 Point highestPoint;
@@ -135,18 +139,53 @@ public class LaserBarrier{
                 else{
                     highestPoint = laserPointB;
                 }
-                g2d.setColor(new Color(0, 255, 0));
-                g2d.drawLine((int)highestPoint.getX(), (int)highestPoint.getY(), 
-                (int)intersectionPoint.getX(), (int)intersectionPoint.getY());
+                Line cutLine = new Line(
+                    highestPoint.getX(), highestPoint.getY(), 
+                    intersectionPoint.getX(), intersectionPoint.getY()
+                );
+                draw(g2d, cutLine);
             }
             else{
-                draw(g2d);
+                draw(g2d, laserLine);
+            }
+        }
+    }
+    public void draw(Graphics2D g2d, Line mainLine){
+        double angle = Math.toDegrees(mainLine.getAngle());
+        g2d.setColor(new Color(0, 255, 0));
+        mainLine.draw(g2d);
+        //int alpha = 255;
+        Array points = new Array(4);
+        for (int i = 1; i <= 5; i++) {
+            for (int j = -1; j < 2; j+=2) {
+                Point pointA = new Point(
+                    mainLine.getFirstX()+degreeCosine(angle+(j*90))*i, 
+                    mainLine.getFirstY()+degreeSine(angle+(j*90))*i);
+                Point pointB = new Point(
+                    mainLine.getSecondX()+degreeCosine(angle+(j*90))*i, 
+                    mainLine.getSecondY()+degreeSine(angle+(j*90))*i);
+                if(j < 0){
+                    points.add(pointA);
+                    points.add(pointB);
+                }
+                else{
+                    points.add(pointB);
+                    points.add(pointA);
+                }
+            }
+            if(points.isFilled()){
+                Point[] pts = new Point[4];
+                for (int j = 0; j < points.size(); j++) {
+                    pts[j] = (Point)points.get(j);
+                }
+                Polygon grossLine = new Polygon(pts);
+                grossLine.setInsideColor(new Color(0, 255, 0, 255/5));
+                grossLine.fill(g2d);
+                points.clear();
             }
         }
     }
     public void draw(Graphics2D g2d){
-        Line laserLine = getLine();
-        g2d.setColor(new Color(0, 255, 0));
-        laserLine.draw(g2d);
+        draw(g2d, getLine());
     }
 }

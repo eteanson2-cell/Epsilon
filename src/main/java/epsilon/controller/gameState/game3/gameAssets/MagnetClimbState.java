@@ -57,7 +57,7 @@ public class MagnetClimbState implements GameState{
         restart = false;
         player = new Player();
         xOffset = 350;
-        player.circle.move(xOffset, 0);
+        player.circle.move(xOffset-30, 0);
         rocks = new LinkedList();
         lasers = new LinkedList();
         particles = new LinkedList();
@@ -159,22 +159,38 @@ public class MagnetClimbState implements GameState{
         for (int i = 0; i < newLasers.getQuantity(); i++) {
             LaserBarrier newLaser = (LaserBarrier)newLasers.get(i);
             lasers.add(newLaser);
-            generateParticleSpawn(newLaser);
+            //generateParticleSpawn(newLaser);
         }
         benchMark -= oc.getHeight()+100;
 
     }
     public void generateParticleSpawn(LaserBarrier laser){
+        Line laserLine = laser.getLine();
+        double distance = laserLine.getLength();
+        double angle = Math.toDegrees(laserLine.getAngle());
         Rectangle smallCube = new Rectangle(0, 0, 5, 5);
-        smallCube.setInsideColor(Color.CYAN);
-        particles.add(new ParticleSpawn(
-            new Point(85,95), 0, 0, laser.getPointA(), 
-                40, smallCube, 10, 2)
+        smallCube.setInsideColor(Color.GREEN);
+        /*ParticleSpawn particle1 = new ParticleSpawn(
+            new Point(angle+90,angle+91), 0, 0, laser.getPointA(), 15, smallCube, 11, 6
         );
-        particles.add(new ParticleSpawn(
-            new Point(85,95), 0, 0, laser.getPointB(), 
-                40, smallCube, 10, 2)
+        ParticleSpawn particle2 = new ParticleSpawn(
+            new Point(angle-91,angle-90), 0, 0, laser.getPointB(), 15, smallCube, 11, 6
+        );*/
+        if(laser.getPointA().getX() > laser.getPointB().getX()){
+            angle = angle+180;
+        }
+        ParticleSpawn mainParticle1 = new ParticleSpawn(
+            new Point(angle, angle+1), 0, 0, laser.getPointA(), distance, smallCube, 10, 2
         );
+        ParticleSpawn mainParticle2 = new ParticleSpawn(
+            new Point(angle+180, angle+181), 0, 0, laser.getPointB(), distance, smallCube, 10, 2
+        );
+        particles.add(mainParticle1);
+        particles.add(mainParticle2);
+        /*particles.add(new ParticleSpawn(
+            new Point(85,96), 0, 0, laser.getPointB(), 
+                40, smallCube, 1, 2)
+        );*/
     }
     public void gameOver(){
         isOver = true;
@@ -315,10 +331,6 @@ public class MagnetClimbState implements GameState{
 
     @Override
     public void mouseMoved(int x, int y) {
-        System.out.println(y);
-        if(y > 200){
-            yOffset = y;
-        }
     }
 
 }

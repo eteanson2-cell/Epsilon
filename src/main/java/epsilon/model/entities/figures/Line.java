@@ -3,6 +3,7 @@ package epsilon.model.entities.figures;
 import java.awt.Graphics2D;
 
 import epsilon.model.entities.interfaces.IEntity;
+import static epsilon.utils.FunctionUtils.euclideanDistance;
 import static epsilon.utils.FunctionUtils.getMax;
 import static epsilon.utils.FunctionUtils.getMin;
 import static epsilon.utils.FunctionUtils.isInRange;
@@ -168,6 +169,14 @@ public class Line implements IEntity{
             dx = 0.00000000001;
         }
         return dy/dx;
+    }
+    public double getAngle(){
+        double m = getSlope();
+        double radian = Math.atan(m);
+        return radian;
+    }
+    public double getLength(){
+        return euclideanDistance(new Point(x1,y1),new Point(x2,y2));
     }
     public Polygon toPolygon(){
         return new Polygon(new double[]{x1,x2},new double[]{y1,y2});

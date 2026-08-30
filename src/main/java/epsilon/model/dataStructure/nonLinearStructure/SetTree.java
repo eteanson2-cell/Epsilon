@@ -3,10 +3,10 @@ package epsilon.model.dataStructure.nonLinearStructure;
 import epsilon.model.dataStructure.auxiliar.SetNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
-import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.enums.TreeTraversal;
+import static epsilon.utils.FunctionUtils.selectBatch;
 
 public class SetTree {
     SetNode root;
@@ -29,7 +29,12 @@ public class SetTree {
         }
     }
     public boolean hasObject(Object data){
-        return root.hasObject(data, comparator);
+        if(isEmpty() == false){
+            return root.hasObject(data, comparator);
+        }
+        else{
+            return false;
+        }
     }
     protected DynamicStack findNode(Object key){
         DynamicStack nodes = new DynamicStack();
@@ -127,13 +132,5 @@ public class SetTree {
             return null;
         }
     }
-    protected DataBatch selectBatch(TreeTraversal treeTraversal){
-        DataBatch batch;
-        switch (treeTraversal) {
-            case DEPTH_FIRST_SEARCH -> batch = new DynamicStack();
-            case BREADTH_FIRST_SEARCH -> batch = new DynamicQueue();
-            default -> throw new AssertionError();
-        }
-        return batch;
-    }
+
 }

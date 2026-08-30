@@ -1,12 +1,16 @@
 package epsilon.utils;
 
+import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
+import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
+import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.dynamic.NumericList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.auxiliar.Pixel;
+import epsilon.model.enums.TreeTraversal;
 
 public class FunctionUtils{
 	public static double getMax(double a, double b){
@@ -226,5 +230,13 @@ public class FunctionUtils{
 			return 0;
 		}
 	}
-
+	public static DataBatch selectBatch(TreeTraversal treeTraversal){
+        DataBatch batch;
+        switch (treeTraversal) {
+            case DEPTH_FIRST_SEARCH -> batch = new DynamicStack();
+            case BREADTH_FIRST_SEARCH -> batch = new DynamicQueue();
+            default -> throw new AssertionError();
+        }
+        return batch;
+    }
 }

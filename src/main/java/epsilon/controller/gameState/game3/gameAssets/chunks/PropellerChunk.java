@@ -55,8 +55,8 @@ public class PropellerChunk extends ObstacleChunk{
         int sections = 3;
         if(benchmark < -10000){
             sections -= benchmark/10000;
-            if(sections > 20){
-                sections = 20;
+            if(sections > 9){
+                sections = 9;
             }
         }
         return sections;

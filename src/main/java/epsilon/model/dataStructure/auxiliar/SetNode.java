@@ -38,27 +38,28 @@ public class SetNode extends BinaryNode{
     }
     public boolean add(Object newData, Comparator comparator){
         int comparison = comparator.compare(data, newData);
+        boolean validData = false;
         if(comparison > 0){
             if(rightBranch == null){
                 rightBranch = new SetNode(newData);
-                return true;
+                validData = true;
             }
             else{
-                return ((SetNode)rightBranch).add(newData, comparator);
+                validData = ((SetNode)rightBranch).add(newData, comparator);
+                balanceNode();
             }
         }
         else if(comparison < 0){
             if(leftBranch == null){
                 leftBranch = new SetNode(newData);
-                return true;
+                validData = true;
             }
             else{
-                return ((SetNode)leftBranch).add(newData, comparator);
+                validData = ((SetNode)leftBranch).add(newData, comparator);
+                balanceNode();
             }
         }
-        else{
-            return false;
-        }
+        return validData;
     }
     public boolean hasObject(Object setData, Comparator comparator){
         int comparison = comparator.compare(data, setData);

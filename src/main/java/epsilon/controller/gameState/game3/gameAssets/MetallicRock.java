@@ -11,10 +11,11 @@ public final class MetallicRock{
     int angle;
     double pullRate;
     public MetallicRock(double xcenter, double ycenter){
-        circle = new Oval(xcenter, ycenter, 30);
+        circle = new Oval(xcenter, ycenter, 15);
         init();
     }
     public void init(){
+        circle.setInsideColor(Color.RED);
         angle = 0;
         pullRate = 0.5;
     }
@@ -31,8 +32,6 @@ public final class MetallicRock{
         angle = (angle+15)%360;
     }
     public void draw(Graphics2D g2d){
-        Oval graphicCircle = new Oval(circle.getXCenter(),circle.getYCenter(),15);
-        graphicCircle.setInsideColor(new Color(255, 0, 0));
-        graphicCircle.fill(g2d);
+        circle.fill(g2d);
     }
 }

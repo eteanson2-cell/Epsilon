@@ -84,7 +84,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 
 			wait = targetTime - elapsed / 1000000;
 			if (wait < 0){
-				wait = 5;
+				wait = 0;
             }
             FrameCounter = FPS - ((int)(elapsed/1000000)/targetTime);
 			try {

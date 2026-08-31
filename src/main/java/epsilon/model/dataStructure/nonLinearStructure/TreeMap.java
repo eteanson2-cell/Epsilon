@@ -6,27 +6,17 @@ import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.selectBatch;
 
-public class TreeMap{
-    protected MapNode root;
-    protected MapNode iterator;
-    protected Comparator comparator;
+public class TreeMap extends AbstractBinaryTree<MapNode>{
     public TreeMap(Comparator comparator){
-        this.comparator = comparator;
-        root = null;
-        iterator = null;
+        super(comparator);
     }
-    public Comparator getComparator(){
-        return comparator;
-    }
-    public boolean isEmpty(){
-        return root == null;
-    }
-    public void clear(){
-        root = null;
-        iterator = null;
+    @Override
+    public boolean add(Object newData) {
+        return addKey(newData);
     }
     public boolean addKey(Object key){
         if(root == null){
@@ -37,7 +27,10 @@ public class TreeMap{
             return root.addKey(key, comparator);
         }
     }
-    public Object getRootObject(){
+    public Object getRootData(){
+        return getRootObject();
+    }
+    public Object getRootKey(){
         if(root != null){
             return root.getKey();
         }
@@ -45,7 +38,8 @@ public class TreeMap{
             return null;
         }
     }
-    protected DynamicStack findNode(Object key){
+    @Override
+    protected DynamicStack findNode(Object key, Comparator comparator) {
         DynamicStack nodes = new DynamicStack();
         MapNode tempNode = root;
         while(tempNode != null){
@@ -115,6 +109,10 @@ public class TreeMap{
         MapNode currentNode = (MapNode)nodes.remove();
         return currentNode.removeData();
     }
+    @Override
+    public Object remove(Object object) {
+        return removeKey(object);
+    }
     public LinkedList removeKey(Object key){
         DynamicStack nodes = findNode(key);
         if(nodes != null){
@@ -146,12 +144,16 @@ public class TreeMap{
             return null;
         }
     }
+    @Override
     public void iteration(Iterator iterator, TreeTraversal treeTraversal){
         DataBatch batch = selectBatch(treeTraversal);
         batch.add(root);
         while (batch.isEmpty() == false) { 
             MapNode tempNode = (MapNode)batch.remove();
-            boolean keepGoing = iterator.iterate(tempNode);
+            Array nodeData = new Array(2);
+            nodeData.add(tempNode.getKey());
+            nodeData.add(tempNode.getData());
+            boolean keepGoing = iterator.iterate(nodeData);
             if(keepGoing == false){
                 break;
             }
@@ -163,17 +165,14 @@ public class TreeMap{
             }
         }
     }
-    public void iteration(Iterator iterator){
-        iteration(iterator, TreeTraversal.BREADTH_FIRST_SEARCH);
-    }
     public LinkedList getKeys(){
         return getKeys(TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     public LinkedList getKeys(TreeTraversal treeTraversal){
         LinkedList keys = new LinkedList();
         iteration((Object nodeObject) -> {
-            MapNode tempNode = (MapNode)nodeObject;
-            keys.add(tempNode.getKey());
+            Array mapNode = (Array)nodeObject;
+            keys.add(mapNode.get(0));
             return true;
         }, treeTraversal);
         return keys;
@@ -201,36 +200,26 @@ public class TreeMap{
             System.out.print("\n");
         } while (tempNodes.isEmpty() == false);
     }
-    public void print(){
-        print(TreeTraversal.BREADTH_FIRST_SEARCH);
-    }
+    @Override
     public void print(TreeTraversal treeTraversal){
         iteration((Object nodeObject) -> {
-            MapNode tempNode = (MapNode)nodeObject;
-            System.out.print("Key: " + tempNode.getKey());
-            System.out.println(", Data: " + tempNode.getData());
+            Array mapNode = (Array)nodeObject;
+            System.out.print("Key: " + mapNode.get(0));
+            System.out.println(", Data: " + mapNode.get(1));
             return true;
         }, treeTraversal);
     }
-    public void initializeIterator(){
-        iterator = root;
-    }
-    public void moveIteratorToLeft(){
+    public LinkedList getIteratorList(){
         if(validIterator()){
-            iterator = (MapNode)iterator.getLeftBranch();
+            return iterator.getDatalist();
+        }
+        else{
+            return null;
         }
     }
-    public void moveIteratorToRight(){
+    public Object getIteratorKey(){
         if(validIterator()){
-            iterator = (MapNode)iterator.getRightBranch();
-        }
-    }
-    public boolean validIterator(){
-        return iterator != null;
-    }
-    public Object getIterator(){
-        if(validIterator()){
-            return iterator.getData();
+            return iterator.getKey();
         }
         else{
             return null;

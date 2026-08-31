@@ -4,7 +4,6 @@ import epsilon.model.dataStructure.auxiliar.BaseObjectComparator;
 import epsilon.model.dataStructure.auxiliar.TreeNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
-import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
@@ -12,41 +11,28 @@ import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.selectBatch;
 
-public class BinaryTree{
-    protected TreeNode mainNode;
-    protected TreeNode iterator;
-    protected Comparator comparator;
+public class BinaryTree extends AbstractBinaryTree<TreeNode> {
     public BinaryTree(){
         this(new BaseObjectComparator());
     }
     public BinaryTree(Comparator comparator){
-        mainNode = null;
-        iterator = null;
-        this.comparator = comparator;
+        super(comparator);
     }
-    public boolean isEmpty(){
-        return mainNode == null;
-    }
-    public void clear(){
-        mainNode = null;
-        iterator = null;
-    }
-    public void add(Object object){
+
+    @Override
+    public boolean add(Object object){
         if(object != null){
-            if(mainNode == null){
-                mainNode = new TreeNode(object);
+            if(root == null){
+                root = new TreeNode(object);
             }
             else{
-                mainNode.addData(object, comparator);
+                root.addData(object, comparator);
             }
-        }
-    }
-    public boolean addList(DataList dataList){
-        dataList.iterateList((Object nodeObject) -> {
-            add(nodeObject);
             return true;
-        });
-        return true;
+        }
+        else{
+            return false;
+        }
     }
     public boolean addTree(BinaryTree tree){
         return addTree(tree, TreeTraversal.DEPTH_FIRST_SEARCH);
@@ -77,7 +63,7 @@ public class BinaryTree{
     public int size(){
         int counter = 0;
         DynamicStack stack = new DynamicStack();
-        stack.add(mainNode);
+        stack.add(root);
         while (stack.isEmpty() == false) { 
             TreeNode tempNode = (TreeNode)stack.remove();
             if(tempNode.getLeftBranch() != null){
@@ -90,9 +76,10 @@ public class BinaryTree{
         }
         return counter;
     }
-    protected DynamicStack findNode(Object object){
+    @Override
+    protected DynamicStack findNode(Object object, Comparator comparator){
         DynamicStack nodes = new DynamicStack();
-        TreeNode tempNode = mainNode;
+        TreeNode tempNode = (TreeNode)root;
         int comparedValue = 1;
         while(tempNode != null && comparedValue != 0){
             nodes.add(tempNode);
@@ -111,48 +98,17 @@ public class BinaryTree{
             return null;
         }
     }
-    public Object find(Object object){
-        DynamicStack nodes = findNode(object);
-        if(nodes != null){
-            TreeNode tempNode = (TreeNode)nodes.getTop();
-            return tempNode.getData();
-        }
-        else{
-            return null;
-        }
-    }
-    public Object getMinObject(){
-        TreeNode tempNode = mainNode;
-        if(tempNode != null){
-            while(tempNode.getLeftBranch() != null){
-                tempNode = (TreeNode)tempNode.getLeftBranch();
-            }
-            return tempNode.getData();
-        }
-        else{
-            return null;
-        }
-    }
-    public Object getMaxObject(){
-        TreeNode tempNode = mainNode;
-        if(tempNode != null){
-            while(tempNode.getRightBranch() != null){
-                tempNode = (TreeNode)tempNode.getRightBranch();
-            }
-            return tempNode.getData();
-        }
-        else{
-            return null;
-        }
-    }
+    
+    
+    @Override
     public Object remove(Object object){
         DynamicStack nodes = findNode(object);
         if(nodes != null){
             TreeNode tempNode = (TreeNode)nodes.remove();
             Object removedObject = tempNode.getData();
             if(tempNode.getCounter() == 1){
-                if(tempNode == mainNode && tempNode.hasNextBranch() == false){
-                    mainNode = null;
+                if(tempNode == root && tempNode.hasNextBranch() == false){
+                    root = null;
                 }
                 else{
                     tempNode.remove();
@@ -184,7 +140,7 @@ public class BinaryTree{
     }
     public Array getBreadth(int breadth){
         DynamicQueue nodes = new DynamicQueue();
-        nodes.add(mainNode);
+        nodes.add(root);
         int counter = 0;
         while(counter < breadth){
             LinkedList tempNodes = new LinkedList();
@@ -206,7 +162,7 @@ public class BinaryTree{
     public LinkedList toList(TreeTraversal treeTraversal){
         LinkedList list = new LinkedList();
         DataBatch batch = selectBatch(treeTraversal);
-        batch.add(mainNode);
+        batch.add(root);
         while (batch.isEmpty() == false) { 
             TreeNode tempNode = (TreeNode)batch.remove();
             if(tempNode.getLeftBranch() != null){
@@ -221,9 +177,6 @@ public class BinaryTree{
         }
         return list;
     }
-    public int getHeight(){
-        return mainNode.getHeight();
-    }
     public int count(Object object){
         TreeNode tempNode = (TreeNode)findNode(object).remove();
         if(tempNode != null){
@@ -231,67 +184,6 @@ public class BinaryTree{
         }
         else{
             return 0;
-        }
-    }
-    public void linearPrint(TreeTraversal treeTraversal){
-        DataBatch nodes = selectBatch(treeTraversal);
-        nodes.add(mainNode);
-        while (nodes.isEmpty() == false) { 
-            TreeNode tempNode = (TreeNode)nodes.remove();
-            System.out.println(tempNode.getData());
-            if(tempNode.getLeftBranch() != null){
-                nodes.add(tempNode.getLeftBranch());
-            }
-            if(tempNode.getRightBranch() != null){
-                nodes.add(tempNode.getRightBranch());
-            }
-        }
-    }
-    public void print(){
-        print(TreeTraversal.BREADTH_FIRST_SEARCH);
-    }
-    public void print(TreeTraversal treeTraversal){
-        DataBatch nodes = selectBatch(treeTraversal);
-        nodes.add(mainNode);
-        LinkedList tempNodes;
-        do { 
-            tempNodes = new LinkedList();
-            while(nodes.isEmpty() == false){
-                TreeNode tempNode = (TreeNode)nodes.remove();
-                System.out.print(tempNode.getData() + "\t");
-                if(tempNode.getLeftBranch() != null){
-                    tempNodes.add(tempNode.getLeftBranch());
-                }
-                if(tempNode.getRightBranch() != null){
-                    tempNodes.add(tempNode.getRightBranch());
-                }
-            }
-            nodes.addList(tempNodes);
-            System.out.print("\n");
-        } while (tempNodes.isEmpty() == false);
-    }
-    public void initializeIterator(){
-        iterator = mainNode;
-    }
-    public void moveIteratorToLeft(){
-        if(validIterator()){
-            iterator = (TreeNode)iterator.getLeftBranch();
-        }
-    }
-    public void moveIteratorToRight(){
-        if(validIterator()){
-            iterator = (TreeNode)iterator.getRightBranch();
-        }
-    }
-    public boolean validIterator(){
-        return iterator != null;
-    }
-    public Object getIterator(){
-        if(validIterator()){
-            return iterator.getData();
-        }
-        else{
-            return null;
         }
     }
 }

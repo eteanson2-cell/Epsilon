@@ -2,23 +2,13 @@ package epsilon.model.dataStructure.nonLinearStructure;
 
 import epsilon.model.dataStructure.auxiliar.SetNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
-import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
-import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
-import epsilon.model.enums.TreeTraversal;
-import static epsilon.utils.FunctionUtils.selectBatch;
 
-public class SetTree {
-    SetNode root;
-    SetNode iterator;
-    Comparator comparator;
+public class SetTree extends AbstractBinaryTree<SetNode> {
     public SetTree(Comparator comparator){
-        root = null;
-        this.comparator = comparator;
+        super(comparator);
     }
-    public boolean isEmpty(){
-        return root == null;
-    }
+    @Override
     public boolean add(Object newData){
         if(isEmpty() == false){
             return root.add(newData, comparator);
@@ -28,6 +18,7 @@ public class SetTree {
             return true;
         }
     }
+    @Override
     public boolean hasObject(Object data){
         if(isEmpty() == false){
             return root.hasObject(data, comparator);
@@ -36,7 +27,8 @@ public class SetTree {
             return false;
         }
     }
-    protected DynamicStack findNode(Object key){
+    @Override
+    protected DynamicStack findNode(Object key, Comparator comparator){
         DynamicStack nodes = new DynamicStack();
         SetNode tempNode = root;
         while(tempNode != null){
@@ -54,6 +46,16 @@ public class SetTree {
         }
         return null;
     }
+    public void removeAll(Object data, Comparator comparator){
+        DynamicStack nodes = findNode(data, comparator);
+        while(nodes != null && nodes.isEmpty() == false){
+            SetNode tempNode = (SetNode)nodes.remove();
+            remove(tempNode.getData());
+            nodes = findNode(data, comparator);
+        }
+
+    }
+    @Override
     public Object remove(Object object){
         DynamicStack nodes = findNode(object);
         if(nodes != null){
@@ -85,52 +87,4 @@ public class SetTree {
             return null;
         }
     }
-    public void print(){
-        print(TreeTraversal.BREADTH_FIRST_SEARCH);
-    }
-    public void print(TreeTraversal treeTraversal){
-        DataBatch nodes = selectBatch(treeTraversal);
-        nodes.add(root);
-        LinkedList tempNodes;
-        do { 
-            tempNodes = new LinkedList();
-            while(nodes.isEmpty() == false){
-                SetNode tempNode = (SetNode)nodes.remove();
-                System.out.print(tempNode.getData() + "\t");
-                if(tempNode.getLeftBranch() != null){
-                    tempNodes.add(tempNode.getLeftBranch());
-                }
-                if(tempNode.getRightBranch() != null){
-                    tempNodes.add(tempNode.getRightBranch());
-                }
-            }
-            nodes.addList(tempNodes);
-            System.out.print("\n");
-        } while (tempNodes.isEmpty() == false);
-    }
-    public void initializeIterator(){
-        iterator = root;
-    }
-    public void moveIteratorToLeft(){
-        if(validIterator()){
-            iterator = (SetNode)iterator.getLeftBranch();
-        }
-    }
-    public void moveIteratorToRight(){
-        if(validIterator()){
-            iterator = (SetNode)iterator.getRightBranch();
-        }
-    }
-    public boolean validIterator(){
-        return iterator != null;
-    }
-    public Object getIterator(){
-        if(validIterator()){
-            return iterator.getData();
-        }
-        else{
-            return null;
-        }
-    }
-
 }

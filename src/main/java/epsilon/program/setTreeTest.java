@@ -15,7 +15,7 @@ public class setTreeTest{
         set.add("F");
         set.add("g");
         set.print();
-        set.add("G");
+        set.remove("D");
         set.print();
     }
 }

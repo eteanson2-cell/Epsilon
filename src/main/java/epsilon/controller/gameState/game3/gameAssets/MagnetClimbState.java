@@ -28,6 +28,7 @@ import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.Rectangle;
 import static epsilon.utils.FunctionUtils.isInRange;
 import static epsilon.utils.FunctionUtils.randomNumber;
+import static epsilon.utils.FunctionUtils.euclideanDistance;
 
 public class MagnetClimbState implements GameState{
     @SuppressWarnings("unused")
@@ -310,7 +311,7 @@ public class MagnetClimbState implements GameState{
             Point mousePosition = new Point(x, y + player.circle.getYCenter()-yOffset);
             rocks.iterateList((Object nodeObject) -> {
                 MetallicRock mr = (MetallicRock)nodeObject;
-                if(mr.intersects(mousePosition)){
+                if(euclideanDistance(mousePosition, mr.getCircle().getCenter()) <= 30){
                     player.hookRock(mr);
                     return false;
                 }

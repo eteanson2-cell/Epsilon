@@ -226,6 +226,46 @@ public class NumericArray extends Array{
             return 0;
         }
     }
+    public double getHighestNumber(){
+        if(isEmpty() == false){
+            double highest = objectToDouble(get(0));
+            for(int i = 1; i < size(); i++){
+                double tempDouble = objectToDouble(get(i));
+                if(tempDouble > highest){
+                    highest = tempDouble;
+                }
+            }
+            return highest;
+        }
+        else{
+            return 0;
+        }
+    }
+    public double getLowestNumber(){
+        if(isEmpty() == false){
+            double lowest = objectToDouble(get(0));
+            for(int i = 1; i < size(); i++){
+                double tempDouble = objectToDouble(get(i));
+                if(tempDouble < lowest){
+                    lowest = tempDouble;
+                }
+            }
+            return lowest;
+        }
+        else{
+            return 0;
+        }
+    }
+    public NumericArray getDistances(){
+        NumericArray distances = new NumericArray(size());
+        for (int i = 1; i < size(); i++) {
+            double d1 = objectToDouble(get(i-1));
+            double d2 = objectToDouble(get(i));
+            distances.add(d2-d1);
+        }
+        distances.add(objectToDouble(get(0))-objectToDouble(get(upperIndex)));
+        return distances;
+    }
     public double getNorm(){
         NumericArray copy = (NumericArray)copy();
         copy.powScalar(2);

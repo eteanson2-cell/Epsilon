@@ -9,8 +9,8 @@ import static epsilon.utils.FunctionUtils.degreeSine;
 import static epsilon.utils.FunctionUtils.getSign;
 
 public class RotatingPipesChunk extends ObstacleChunk{
-    //int[] angles = {0,45,90,135,180};
     int width;
+    double rad = 100;
     public RotatingPipesChunk(double benchmark, int seed) {
         super(benchmark, seed);
     }
@@ -99,8 +99,8 @@ public class RotatingPipesChunk extends ObstacleChunk{
             new Point(xCenter-(width*xFixer),yCenter-(width*yFixer))
         };
         for (Point currentPoint : points) {
-            Line line1 = new Line(currentPoint,new Point(xCenter+(100*xFixer),currentPoint.getY()));
-            Line line2 = new Line(currentPoint,new Point(currentPoint.getX(),yCenter+(100*yFixer)));
+            Line line1 = new Line(currentPoint,new Point(xCenter+(99.8*xFixer),currentPoint.getY()));
+            Line line2 = new Line(currentPoint,new Point(currentPoint.getX(),yCenter+(99.8*yFixer)));
             addRotations(line1, center, 90/10);
             addRotations(line2, center, 90/10);
         }
@@ -108,8 +108,8 @@ public class RotatingPipesChunk extends ObstacleChunk{
     public void generateColumn(Point center){
         double xCenter = center.getX();
         double yCenter = center.getY();
-        double highY = yCenter+100;
-        double lowY = yCenter-100;
+        double highY = yCenter+99.8;
+        double lowY = yCenter-99.8;
         for (int i = -1; i < 3; i += 2) {
             Line newLine = new Line(
                 xCenter + (width*i),
@@ -123,8 +123,8 @@ public class RotatingPipesChunk extends ObstacleChunk{
     public void generateRow(Point center){
         double xCenter = center.getX();
         double yCenter = center.getY();
-        double highX = xCenter+100;
-        double lowX = xCenter-100;
+        double highX = xCenter+99.8;
+        double lowX = xCenter-99.8;
         for (int i = -1; i < 3; i += 2) {
             Line newLine = new Line(
                 highX,
@@ -145,11 +145,11 @@ public class RotatingPipesChunk extends ObstacleChunk{
             Line lines[] = {
                 new Line(
                     xCenter+(width*xFixer), yCenter+(width*yFixer), 
-                    xCenter+(100*xFixer), yCenter+(width*yFixer)
+                    xCenter+(99.8*xFixer), yCenter+(width*yFixer)
                 ),
                 new Line(
                     xCenter+(width*xFixer), yCenter+(width*yFixer), 
-                    xCenter+(width*xFixer), yCenter+(100*yFixer)
+                    xCenter+(width*xFixer), yCenter+(99.8*yFixer)
                 )
             };
             for (Line currentLine: lines){
@@ -161,14 +161,14 @@ public class RotatingPipesChunk extends ObstacleChunk{
         Line longLine;
         if(tAngle%180 == 0){
             longLine = new Line(
-                xCenter+(100*xFixer), yCenter+(width*yFixer), 
-                xCenter+(-100*xFixer), yCenter+(width*yFixer)
+                xCenter+(99.8*xFixer), yCenter+(width*yFixer), 
+                xCenter+(-99.8*xFixer), yCenter+(width*yFixer)
             );
         }
         else{
             longLine = new Line(
-                xCenter+(width*xFixer), yCenter+(+100*yFixer), 
-                xCenter+(width*xFixer), yCenter+(-100*yFixer)
+                xCenter+(width*xFixer), yCenter+(+99.8*yFixer), 
+                xCenter+(width*xFixer), yCenter+(-99.8*yFixer)
             );
         }
         addRotations(longLine, center, 90/10);
@@ -183,11 +183,11 @@ public class RotatingPipesChunk extends ObstacleChunk{
             Line lines[] = {
                 new Line(
                     xCenter+(width*xFixer), yCenter+(width*yFixer), 
-                    xCenter+(100*xFixer), yCenter+(width*yFixer)
+                    xCenter+(99.8*xFixer), yCenter+(width*yFixer)
                 ),
                 new Line(
                     xCenter+(width*xFixer), yCenter+(width*yFixer), 
-                    xCenter+(width*xFixer), yCenter+(100*yFixer)
+                    xCenter+(width*xFixer), yCenter+(99.8*yFixer)
                 )
             };
             for (Line currentLine: lines){

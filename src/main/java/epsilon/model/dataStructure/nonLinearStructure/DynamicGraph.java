@@ -4,6 +4,7 @@ import epsilon.model.dataStructure.auxiliar.GraphEdge;
 import epsilon.model.dataStructure.auxiliar.MapNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
+import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.selectBatch;
@@ -78,19 +79,19 @@ public class DynamicGraph{
         return find(data, startNode, comparator, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     public Object find(Object data, TreeTraversal treeTraversal, Comparator comparator){
-        return find(data, nodes.getRootObject(), comparator, treeTraversal);
+        return find(data, nodes.getRootKey(), comparator, treeTraversal);
     }
     public Object find(Object data, Object startNode){
         return find(data, startNode, nodes.getComparator());
     }
     public Object find(Object data, TreeTraversal treeTraversal){
-        return find(data, nodes.getRootObject(), treeTraversal);
+        return find(data, nodes.getRootKey(), treeTraversal);
     }
     public Object find(Object data, Comparator comparator){
-        return find(data, nodes.getRootObject(), comparator);
+        return find(data, nodes.getRootKey(), comparator);
     }
     public Object find(Object data){
-        return find(data, nodes.getRootObject());
+        return find(data, nodes.getRootKey());
     }
     public boolean removeNode(Object node){
         if(nodes.hasKey(node)){
@@ -140,6 +141,40 @@ public class DynamicGraph{
         else{
             return null;
         }
+    }
+    public void iterateGraph(Iterator iterator, Object startNode, TreeTraversal treeTraversal){
+        if(nodes.hasKey(startNode)){
+            DataBatch batch = selectBatch(treeTraversal);
+            SetTree scannedNodes = new SetTree(nodes.getComparator());
+            batch.add(startNode);
+            while (batch.isEmpty() == false) { 
+                Object currentNode = batch.remove();
+                boolean keepGoing = iterator.iterate(currentNode);
+                if(keepGoing == false){
+                    break;
+                }
+                LinkedList closeNodes = getConnectedNodes(currentNode);
+                closeNodes.iterateList((Object nodeObject) -> {
+                    if(scannedNodes.hasObject(nodeObject) == false){
+                        batch.add(nodeObject);
+                    }
+                    return true;
+                });
+                scannedNodes.add(currentNode);
+            }
+        }
+    }
+    public void iterateGraph(Iterator iterator, Object startNode){
+        iterateGraph(iterator, startNode, TreeTraversal.BREADTH_FIRST_SEARCH);
+    }
+    public void iterateGraph(Iterator iterator, TreeTraversal treeTraversal){
+        iterateGraph(iterator, nodes.getRootKey(), treeTraversal);
+    }
+    public void iterateGraph(Iterator iterator){
+        iterateGraph(iterator, nodes.getRootKey());
+    }
+    public void iterateNodes(Iterator iterator){
+        nodes.iteration(iterator);
     }
     public void print(){
         nodes.print();

@@ -51,7 +51,22 @@ public class Point implements IEntity{
             return false;
         }
     }
-
+    public double getAngle(Point p2){
+        double dy = p2.getY() - y;
+        double dx = p2.getX() - x;
+        if(dx == 0){
+            dx = 0.00000000001;
+        }
+        double m = dy/dx;
+        double angle = Math.toDegrees(Math.atan(m));
+        if(x > p2.getX()){
+            angle += 180;
+        }
+        if(angle < 0){
+            angle+= 360;
+        }
+        return angle;
+    }
     @Override
     public void move(double x, double y) {
         this.x += x;
@@ -65,5 +80,9 @@ public class Point implements IEntity{
     public Point copy(){
         Point copy = new Point(x, y);
         return copy;
+    }
+    @Override
+    public String toString(){
+        return "x: " + x + "|y: " + y;
     }
 }

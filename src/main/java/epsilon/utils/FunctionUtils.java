@@ -239,4 +239,13 @@ public class FunctionUtils{
         }
         return batch;
     }
+	/*public static NumericArray getDistances(NumericArray array){
+		NumericArray distances = new NumericArray(array.size()-1);
+		for (int i = 1; i < array.size(); i++) {
+			double d1 = (double)array.get(i-1);
+			double d2 = (double)array.get(i);
+			distances.add(d2-d1);
+		}
+		return distances;
+	}*/
 }

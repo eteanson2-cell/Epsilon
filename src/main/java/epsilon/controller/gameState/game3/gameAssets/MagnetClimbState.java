@@ -324,6 +324,9 @@ public class MagnetClimbState implements GameState{
             Array mapNode = (Array)nodeObject;
             Array keyPoint = (Array)mapNode.get(0);
             Point p1 = (Point)keyPoint.get(0);
+            if(p1.getY() > killerLaser.getPointA().getY()){
+                return true;
+            }
             LinkedList connectedEdges = points.getConnectedNodes(keyPoint);
             NumericArray angles = getAngles(p1, connectedEdges);
             Double freeAngle;
@@ -334,13 +337,6 @@ public class MagnetClimbState implements GameState{
                 freeAngle = getEdgeAngle(angles);
             }
             drawEdges(g2d, p1, angles, freeAngle);
-            if(freeAngle != null){
-                int radix = 10;
-                g2d.setColor(Color.CYAN);
-                g2d.drawLine((int)p1.getX(), (int)p1.getY(), 
-                    (int)(p1.getX() + (radix*degreeCosine(freeAngle))), 
-                    (int)(p1.getY() + (radix*degreeSine(freeAngle))));
-            }
             return true;
         });
     }
@@ -388,16 +384,16 @@ public class MagnetClimbState implements GameState{
             return true;
         });
         if(angles.size() > 1){
-            Oval centerCircle = new Oval(edgePoint.getX(), edgePoint.getY(), 5);
+            Oval centerCircle = new Oval(edgePoint.getX(), edgePoint.getY(), 10);
             centerCircle.setInsideColor(Color.RED);
             centerCircle.fill(g2d);
         }
         if(angleEdge != null){
             Point edgeBlaster = new Point(
-                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-3)),
-                edgePoint.getY() + (degreeSine(angleEdge)*(radix-3))
+                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-5)),
+                edgePoint.getY() + (degreeSine(angleEdge)*(radix-5))
             );
-            drawCylinder(edgePoint, angleEdge, radix-3, 5, g2d);
+            drawCylinder(edgePoint, angleEdge, radix-5, 5, g2d);
             drawCylinder(edgeBlaster, angleEdge, 6, 8, g2d);
         }
         else{

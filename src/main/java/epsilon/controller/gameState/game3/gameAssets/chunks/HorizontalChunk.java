@@ -148,7 +148,7 @@ public class HorizontalChunk extends ObstacleChunk{
                 null, new Point(0, ((double)-thickness)/speed), true, null, null, null, null
             );
             LinkedList movements2 = setMovementsList(lm2, lm1, (int)speed);
-            Line newLaser2 = new Line(x, y2, x, center.getY());
+            Line newLaser2 = new Line(x, y2, x, center.getY()-1);
             lasers.addKey(newLaser2);
             lasers.replaceData(movements2, newLaser2);
         }

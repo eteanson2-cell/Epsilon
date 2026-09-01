@@ -24,8 +24,10 @@ import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.dataStructure.nonLinearStructure.DynamicGraph;
 import epsilon.model.entities.figures.Line;
+import epsilon.model.entities.figures.Oval;
 import epsilon.model.entities.figures.ParticleSpawn;
 import epsilon.model.entities.figures.Point;
+import epsilon.model.entities.figures.Polygon;
 import static epsilon.utils.FunctionUtils.degreeCosine;
 import static epsilon.utils.FunctionUtils.degreeSine;
 import static epsilon.utils.FunctionUtils.euclideanDistance;
@@ -331,6 +333,7 @@ public class MagnetClimbState implements GameState{
             else{
                 freeAngle = getEdgeAngle(angles);
             }
+            drawEdges(g2d, p1, angles, freeAngle);
             if(freeAngle != null){
                 int radix = 10;
                 g2d.setColor(Color.CYAN);
@@ -379,6 +382,58 @@ public class MagnetClimbState implements GameState{
     protected void drawEdges(Graphics2D g2d, Point edgePoint, 
                              NumericArray angles, Double angleEdge){
         double radix = 10;
+        angles.iterateList((Object nodeObject) -> {
+            double angle = objectToDouble(nodeObject);
+            drawCylinder(edgePoint, angle, radix, 5, g2d);
+            return true;
+        });
+        if(angles.size() > 1){
+            Oval centerCircle = new Oval(edgePoint.getX(), edgePoint.getY(), 5);
+            centerCircle.setInsideColor(Color.RED);
+            centerCircle.fill(g2d);
+        }
+        if(angleEdge != null){
+            Point edgeBlaster = new Point(
+                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-3)),
+                edgePoint.getY() + (degreeSine(angleEdge)*(radix-3))
+            );
+            drawCylinder(edgePoint, angleEdge, radix-3, 5, g2d);
+            drawCylinder(edgeBlaster, angleEdge, 6, 8, g2d);
+        }
+        else{
+        }
+    }
+    public void drawCylinder(Point edgePoint, double angle, double radix, int width, Graphics2D g2d){
+        int pixelSaturation;
+        Point radixBlaster = new Point(
+            edgePoint.getX() + (degreeCosine(angle)*radix),
+            edgePoint.getY() + (degreeSine(angle)*radix)
+        );
+        Point[] pts = new Point[4];
+        Polygon cylinder;
+        int fixer = 255/(width+1);
+        for (int i = width; i > 0; i--) {
+            pixelSaturation = 255-(fixer*i);
+            pts[0] = new Point(
+                edgePoint.getX() + (degreeCosine(angle+90)*i),
+                edgePoint.getY() + (degreeSine(angle+90)*i)
+            );
+            pts[1] = new Point(
+                edgePoint.getX() + (degreeCosine(angle-90)*i),
+                edgePoint.getY() + (degreeSine(angle-90)*i)
+            );
+            pts[2] = new Point(
+                radixBlaster.getX() + (degreeCosine(angle-90)*i),
+                radixBlaster.getY() + (degreeSine(angle-90)*i)
+            );
+            pts[3] = new Point(
+                radixBlaster.getX() + (degreeCosine(angle+90)*i),
+                radixBlaster.getY() + (degreeSine(angle+90)*i)
+            );
+            cylinder = new Polygon(pts);
+            cylinder.setInsideColor(new Color(pixelSaturation,pixelSaturation,pixelSaturation,255));
+            cylinder.fill(g2d);
+        }
     }
     @Override
     public void keyPressed(int k) {

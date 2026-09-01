@@ -257,14 +257,19 @@ public class NumericArray extends Array{
         }
     }
     public NumericArray getDistances(){
-        NumericArray distances = new NumericArray(size());
-        for (int i = 1; i < size(); i++) {
-            double d1 = objectToDouble(get(i-1));
-            double d2 = objectToDouble(get(i));
-            distances.add(d2-d1);
+        if(isEmpty() == false && size() > 1){
+            NumericArray distances = new NumericArray(size());
+            for (int i = 1; i < size(); i++) {
+                double d1 = objectToDouble(get(i-1));
+                double d2 = objectToDouble(get(i));
+                distances.add(d2-d1);
+            }
+            distances.add(objectToDouble(get(0))-objectToDouble(get(size()-1)));
+            return distances;
         }
-        distances.add(objectToDouble(get(0))-objectToDouble(get(upperIndex)));
-        return distances;
+        else{
+            return null;
+        }
     }
     public double getNorm(){
         NumericArray copy = (NumericArray)copy();

@@ -1,11 +1,11 @@
 package epsilon.model.dataStructure.nonLinearStructure;
 
 import epsilon.model.dataStructure.auxiliar.GraphEdge;
-import epsilon.model.dataStructure.auxiliar.MapNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.selectBatch;
 
@@ -97,8 +97,9 @@ public class DynamicGraph{
         if(nodes.hasKey(node)){
             nodes.removeKey(node);
             nodes.iteration((Object nodeObject) -> {
-                MapNode mapNode = (MapNode)nodeObject;
-                mapNode.getDatalist().removeAll(node, (Object obj1, Object obj2) -> {
+                Array mapNode = (Array)nodeObject;
+                LinkedList dataList = (LinkedList)mapNode.get(1);
+                dataList.removeAll(node, (Object obj1, Object obj2) -> {
                     GraphEdge edge = (GraphEdge)obj1;
                     return nodes.getComparator().compare(edge.getKey(), obj2);
                 });
@@ -174,7 +175,10 @@ public class DynamicGraph{
         iterateGraph(iterator, nodes.getRootKey());
     }
     public void iterateNodes(Iterator iterator){
-        nodes.iteration(iterator);
+        nodes.iteration((Object nodeObject) -> {
+            Array mapNode = (Array)nodeObject;
+            return iterator.iterate(mapNode.get(0));
+        });
     }
     public void print(){
         nodes.print();

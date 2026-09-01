@@ -159,8 +159,8 @@ public abstract class BinaryNode{
         if(hasNextBranch() == true){
             if(rightBranch == null){
                 data = leftBranch.getData();
-                leftBranch = leftBranch.getLeftBranch();
                 rightBranch = leftBranch.getRightBranch();
+                leftBranch = leftBranch.getLeftBranch();
             }
             else if(leftBranch == null){
                 data = rightBranch.getData();

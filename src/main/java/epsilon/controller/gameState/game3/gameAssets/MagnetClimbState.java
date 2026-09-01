@@ -91,7 +91,7 @@ public class MagnetClimbState implements GameState{
                 }
             }
         });
-        killerLaser = new LaserBarrier(0, 500, 700, 500);
+        killerLaser = new LaserBarrier(-10, 100, 650, 100);
         killerLaser.addMovement(new LaserMovement(
             new Point(0,-1), new Point(0, -1), true, null, null, null, null));
         yOffset = 340;
@@ -131,14 +131,7 @@ public class MagnetClimbState implements GameState{
             }
             updateRocks();
             updateLasers();
-            particles.removeAll(killerLaser, (Object obj1, Object obj2) -> {
-                ParticleSpawn currentSpawn = (ParticleSpawn)obj1;
-                currentSpawn.update();
-                if(currentSpawn.origin.getY() > killerLaser.getPointA().getY()){
-                    return 0;
-                }
-                return 1;
-            });
+            removePoints();
         }
         if(restart == true){
             init();
@@ -216,38 +209,35 @@ public class MagnetClimbState implements GameState{
         arr.add(p1.copy());
         return arr;
     }
-    
-
-    /*
-    public void generateParticleSpawn(LaserBarrier laser){
-        Line laserLine = laser.getLine();
-        double distance = laserLine.getLength();
-        double angle = Math.toDegrees(laserLine.getAngle());
-        Rectangle smallCube = new Rectangle(0, 0, 5, 5);
-        smallCube.setInsideColor(Color.GREEN);
-        /*ParticleSpawn particle1 = new ParticleSpawn(
-            new Point(angle+90,angle+91), 0, 0, laser.getPointA(), 15, smallCube, 11, 6
-        );
-        ParticleSpawn particle2 = new ParticleSpawn(
-            new Point(angle-91,angle-90), 0, 0, laser.getPointB(), 15, smallCube, 11, 6
-        );
-        if(laser.getPointA().getX() > laser.getPointB().getX()){
-            angle = angle+180;
-        }
-        ParticleSpawn mainParticle1 = new ParticleSpawn(
-            new Point(angle, angle+1), 0, 0, laser.getPointA(), distance, smallCube, 10, 2
-        );
-        ParticleSpawn mainParticle2 = new ParticleSpawn(
-            new Point(angle+180, angle+181), 0, 0, laser.getPointB(), distance, smallCube, 10, 2
-        );
-        particles.add(mainParticle1);
-        particles.add(mainParticle2);
-        /*particles.add(new ParticleSpawn(
-            new Point(85,96), 0, 0, laser.getPointB(), 
-                40, smallCube, 1, 2)
-        );
+    private void removePoints(){
+        LinkedList pointsToRemove = new LinkedList();
+        points.iterateNodes((Object nodeObject) -> {
+            Array keyPoint = (Array)nodeObject;
+            Point currentPoint = (Point)keyPoint.get(0);
+            if(currentPoint.getY() < killerLaser.getPointA().getY()){
+                return true;
+            }
+            LinkedList asociatedNodes = points.getConnectedNodes(nodeObject);
+            Array boolArray = new Array(1);
+            asociatedNodes.iterateList((Object nodeObject1) -> {
+                Array keyPoint1 = (Array)nodeObject1;
+                Point currentPoint1 = (Point)keyPoint1.get(0);
+                if(currentPoint1.getY() < killerLaser.getPointA().getY()){
+                    boolArray.add(false);
+                    return false;
+                }
+                return true;
+            });
+            if(boolArray.isEmpty()){
+                pointsToRemove.add(keyPoint);
+            }
+            return true;
+        });
+        pointsToRemove.iterateList((Object nodeObject) -> {
+            points.removeNode(nodeObject);
+            return true;
+        });
     }
-    */
     public void gameOver(){
         isOver = true;
         gameOverMenu.init();
@@ -321,11 +311,10 @@ public class MagnetClimbState implements GameState{
     }
     protected void drawEdges(Graphics2D g2d){
         points.iterateNodes((Object nodeObject) -> {
-            Array mapNode = (Array)nodeObject;
-            Array keyPoint = (Array)mapNode.get(0);
+            Array keyPoint = (Array)nodeObject;
             Point p1 = (Point)keyPoint.get(0);
             if(p1.getY() > killerLaser.getPointA().getY()){
-                return true;
+                //return true;
             }
             LinkedList connectedEdges = points.getConnectedNodes(keyPoint);
             NumericArray angles = getAngles(p1, connectedEdges);
@@ -353,6 +342,9 @@ public class MagnetClimbState implements GameState{
     protected Double getEdgeAngle(NumericArray array){
         array.quickSort();
         NumericArray distances = array.getDistances();
+        if(distances == null){
+            return null;
+        }
         distances.remove();
         distances.add((objectToDouble(array.get(0))+360) - objectToDouble(array.get(array.size()-1)));
         double highestRange = objectToDouble(distances.get(0));
@@ -385,15 +377,15 @@ public class MagnetClimbState implements GameState{
         });
         if(angles.size() > 1){
             Oval centerCircle = new Oval(edgePoint.getX(), edgePoint.getY(), 10);
-            centerCircle.setInsideColor(Color.RED);
+            centerCircle.setInsideColor(Color.GRAY);
             centerCircle.fill(g2d);
         }
         if(angleEdge != null){
             Point edgeBlaster = new Point(
-                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-5)),
-                edgePoint.getY() + (degreeSine(angleEdge)*(radix-5))
+                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-7)),
+                edgePoint.getY() + (degreeSine(angleEdge)*(radix-7))
             );
-            drawCylinder(edgePoint, angleEdge, radix-5, 5, g2d);
+            drawCylinder(edgePoint, angleEdge, radix-7, 5, g2d);
             drawCylinder(edgeBlaster, angleEdge, 6, 8, g2d);
         }
         else{

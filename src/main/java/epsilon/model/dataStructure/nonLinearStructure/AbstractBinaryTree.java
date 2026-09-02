@@ -35,7 +35,12 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
         iterator = null;
     }
     public int getHeight(){
-        return root.getHeight();
+        if(isEmpty() == false){
+            return root.getHeight();
+        }
+        else{
+            return 0;
+        }
     }
     public abstract boolean add(Object newData);
     public boolean addList(DataList dataList){
@@ -108,7 +113,9 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
     }
     public void print(TreeTraversal treeTraversal){
         DataBatch nodes = selectBatch(treeTraversal);
-        nodes.add(root);
+        if(isEmpty() == false){
+            nodes.add(root);
+        }
         LinkedList tempNodes;
         do { 
             tempNodes = new LinkedList();
@@ -128,7 +135,9 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
     }
     public void linearPrint(TreeTraversal treeTraversal){
         DataBatch nodes = selectBatch(treeTraversal);
-        nodes.add(root);
+        if(isEmpty() == false){
+            nodes.add(root);
+        }
         while (nodes.isEmpty() == false) { 
             Node tempNode = (Node)nodes.remove();
             System.out.println(tempNode.getData());
@@ -166,7 +175,9 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
     }
     public void iteration(Iterator iterator, TreeTraversal treeTraversal){
         DataBatch batch = selectBatch(treeTraversal);
-        batch.add(root);
+        if(isEmpty() == false){
+            batch.add(root);
+        }
         while (batch.isEmpty() == false) { 
             Node tempNode = (Node)batch.remove();
             boolean keepGoing = iterator.iterate(tempNode.getData());

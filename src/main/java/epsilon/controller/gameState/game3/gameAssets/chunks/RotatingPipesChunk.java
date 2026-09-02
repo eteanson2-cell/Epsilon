@@ -10,7 +10,7 @@ import static epsilon.utils.FunctionUtils.getSign;
 
 public class RotatingPipesChunk extends ObstacleChunk{
     int width;
-    double rad = 100;
+    //double rad = 100;
     public RotatingPipesChunk(double benchmark, int seed) {
         super(benchmark, seed);
     }

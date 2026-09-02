@@ -4,12 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
-import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.Polygon;
-import static epsilon.utils.FunctionUtils.degreeCosine;
-import static epsilon.utils.FunctionUtils.degreeSine;
 
 public class LaserBarrier{
     private final Point laserPointA;
@@ -17,6 +14,7 @@ public class LaserBarrier{
     private boolean isActive;
     private DynamicQueue laserMovements;
     private LaserMovement lastMovement;
+    private double angle;
     private int numberCommand;
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public LaserBarrier(double x1, double y1, double x2, double y2){
@@ -26,6 +24,7 @@ public class LaserBarrier{
     }
     public void init(){
         numberCommand = 0;
+        angle = getLine().getAngle();
         laserMovements = new DynamicQueue();
         lastMovement = null;
         isActive = true;
@@ -38,15 +37,19 @@ public class LaserBarrier{
     }
     public void moveAPoint(double x, double y){
         laserPointA.move(x, y);
+        recalculateAngle();
     }
     public void moveBPoint(double x, double y){
         laserPointB.move(x, y);
+        recalculateAngle();
     }
     public void moveAPointTo(double x, double y){
         laserPointA.moveTo(x, y);
+        recalculateAngle();
     }
     public void moveBPointTo(double x, double y){
         laserPointB.moveTo(x, y);
+        recalculateAngle();
     }
     public void rotateAfromB(double theta){
         rotateAfrom(laserPointB.getX(), laserPointB.getY(), theta);
@@ -58,19 +61,30 @@ public class LaserBarrier{
         double yDistance = laserPointA.getY()-y;
         double xDistance = laserPointA.getX()-x;
         double distance = Math.sqrt(Math.pow(yDistance,2) + Math.pow(xDistance, 2));
-        double angle = Math.atan2(yDistance, xDistance);
-        angle += Math.toRadians(theta);
-        laserPointA.moveTo((distance*Math.cos(angle))+x, 
-                           (distance*Math.sin(angle))+y);
+        double tempAngle = Math.atan2(yDistance, xDistance);
+        tempAngle += Math.toRadians(theta);
+        laserPointA.moveTo((distance*Math.cos(tempAngle))+x, 
+                           (distance*Math.sin(tempAngle))+y);
+        recalculateAngle();
     }
     public void rotateBfrom(double x, double y, double theta){
         double yDistance = laserPointB.getY()-y;
         double xDistance = laserPointB.getX()-x;
         double distance = Math.sqrt(Math.pow(yDistance,2) + Math.pow(xDistance, 2));
-        double angle = Math.atan2(yDistance, xDistance);
-        angle += Math.toRadians(theta);
-        laserPointB.moveTo((distance*Math.cos(angle))+x, 
-                           (distance*Math.sin(angle))+y);
+        double tempAngle = Math.atan2(yDistance, xDistance);
+        tempAngle += Math.toRadians(theta);
+        laserPointB.moveTo((distance*Math.cos(tempAngle))+x, 
+                           (distance*Math.sin(tempAngle))+y);
+        recalculateAngle();
+    }
+    private void recalculateAngle(){
+        double dy = laserPointB.getY() - laserPointA.getY();
+        double dx = laserPointB.getX() - laserPointA.getX();
+        if(dx == 0){
+            dx = 0.00000000001;
+        }
+        double m = dy/dx;
+        angle = Math.atan(m);
     }
     public void addNumber(int number){
         if(number != 0){
@@ -151,38 +165,32 @@ public class LaserBarrier{
         }
     }
     public void draw(Graphics2D g2d, Line mainLine){
-        double angle = Math.toDegrees(mainLine.getAngle());
         g2d.setColor(new Color(0, 255, 0));
         mainLine.draw(g2d);
-        //int alpha = 255;
-        Array points = new Array(4);
         for (int i = 1; i <= 5; i++) {
+            Point pts[] = new Point[4];
             for (int j = -1; j < 2; j+=2) {
+                double tempAngle = angle + (j*1.5708);
+                double cos = i*Math.cos(tempAngle);
+                double sin = i*Math.sin(tempAngle);
                 Point pointA = new Point(
-                    mainLine.getFirstX()+degreeCosine(angle+(j*90))*i, 
-                    mainLine.getFirstY()+degreeSine(angle+(j*90))*i);
+                    mainLine.getFirstX()+cos, 
+                    mainLine.getFirstY()+sin);
                 Point pointB = new Point(
-                    mainLine.getSecondX()+degreeCosine(angle+(j*90))*i, 
-                    mainLine.getSecondY()+degreeSine(angle+(j*90))*i);
+                    mainLine.getSecondX()+cos, 
+                    mainLine.getSecondY()+sin);
                 if(j < 0){
-                    points.add(pointA);
-                    points.add(pointB);
+                    pts[j+1] = pointA;
+                    pts[j+2] = pointB;
                 }
                 else{
-                    points.add(pointB);
-                    points.add(pointA);
+                    pts[j+1] = pointB;
+                    pts[j+2] = pointA;
                 }
             }
-            if(points.isFilled()){
-                Point[] pts = new Point[4];
-                for (int j = 0; j < points.size(); j++) {
-                    pts[j] = (Point)points.get(j);
-                }
-                Polygon grossLine = new Polygon(pts);
-                grossLine.setInsideColor(new Color(0, 255, 0, 255/5));
-                grossLine.fill(g2d);
-                points.clear();
-            }
+            Polygon grossLine = new Polygon(pts);
+            grossLine.setInsideColor(new Color(0, 255, 0, 51));
+            grossLine.fill(g2d);
         }
     }
     public void draw(Graphics2D g2d){

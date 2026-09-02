@@ -25,7 +25,6 @@ import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.dataStructure.nonLinearStructure.DynamicGraph;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Oval;
-import epsilon.model.entities.figures.ParticleSpawn;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.Polygon;
 import static epsilon.utils.FunctionUtils.degreeCosine;
@@ -64,7 +63,7 @@ public class MagnetClimbState implements GameState{
         restart = false;
         player = new Player();
         xOffset = 350;
-        player.circle.move(xOffset-30, 0);
+        player.circle.move(xOffset-30, -200000);
         rocks = new LinkedList();
         lasers = new LinkedList();
         particles = new LinkedList();
@@ -91,7 +90,7 @@ public class MagnetClimbState implements GameState{
                 }
             }
         });
-        killerLaser = new LaserBarrier(-10, 100, 650, 100);
+        killerLaser = new LaserBarrier(-10, 200, 650, 200);
         killerLaser.addMovement(new LaserMovement(
             new Point(0,-1), new Point(0, -1), true, null, null, null, null));
         yOffset = 340;
@@ -255,26 +254,11 @@ public class MagnetClimbState implements GameState{
             currentRock.draw(g2d);
             return true;
         });
-        lasers.iterateList((Object nodeObject) -> {
-            LaserBarrier currentLaser = (LaserBarrier)nodeObject;
-            if(currentLaser.hasMovements() &&
-                    isInRange(0,640,currentLaser.getPointA().getX()) == false &&
-                    isInRange(0,640,currentLaser.getPointB().getX()) == false){
-                generateWarningLine(currentLaser, g2d);
-            }
-            else{
-                currentLaser.draw(g2d, killerLaser);
-            }
-            return true;
-        });
-        particles.iterateList((Object nodeObject)->{
-            ParticleSpawn particleSpawn = (ParticleSpawn)nodeObject;
-            particleSpawn.draw(g2d);
-            return true;
-        });
+        
         player.draw(g2d);
         killerLaser.draw(g2d);
-        drawEdges(g2d);
+        drawLasers(g2d);
+        //drawEdges(g2d);
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);
@@ -309,12 +293,35 @@ public class MagnetClimbState implements GameState{
                                     x, currentLaser.getPointB().getY());
         warningLine.draw(g2d);
     }
+    private void drawLasers(Graphics2D g2d){
+        lasers.iterateList((Object nodeObject) -> {
+            LaserBarrier currentLaser = (LaserBarrier)nodeObject;
+            if((currentLaser.getPointA().getY() > player.circle.getYCenter() + 150 &&
+               currentLaser.getPointB().getY() > player.circle.getYCenter() + 150) ||
+               (currentLaser.getPointA().getY() < player.circle.getYCenter() - 350 &&
+                currentLaser.getPointB().getY() < player.circle.getYCenter() - 350)
+               ){
+                return true;
+            }
+            if(isInRange(0,640,currentLaser.getPointA().getX()) == false &&
+               isInRange(0,640,currentLaser.getPointB().getX()) == false){
+                if(currentLaser.hasMovements()){
+                    generateWarningLine(currentLaser, g2d);
+                }
+            }
+            else{
+                currentLaser.draw(g2d, killerLaser);
+            }
+            return true;
+        });
+    }
     protected void drawEdges(Graphics2D g2d){
         points.iterateNodes((Object nodeObject) -> {
             Array keyPoint = (Array)nodeObject;
             Point p1 = (Point)keyPoint.get(0);
-            if(p1.getY() > killerLaser.getPointA().getY()){
-                //return true;
+            if(p1.getY() > killerLaser.getPointA().getY() 
+            || p1.getY() < player.circle.getYCenter()-150){
+                return true;
             }
             LinkedList connectedEdges = points.getConnectedNodes(keyPoint);
             NumericArray angles = getAngles(p1, connectedEdges);
@@ -370,6 +377,7 @@ public class MagnetClimbState implements GameState{
     protected void drawEdges(Graphics2D g2d, Point edgePoint, 
                              NumericArray angles, Double angleEdge){
         double radix = 10;
+        double radix2 = 10;
         angles.iterateList((Object nodeObject) -> {
             double angle = objectToDouble(nodeObject);
             drawCylinder(edgePoint, angle, radix, 5, g2d);
@@ -380,12 +388,15 @@ public class MagnetClimbState implements GameState{
             centerCircle.setInsideColor(Color.GRAY);
             centerCircle.fill(g2d);
         }
+        else{
+            radix2 = 0;
+        }
         if(angleEdge != null){
             Point edgeBlaster = new Point(
-                edgePoint.getX() + (degreeCosine(angleEdge)*(radix-7)),
-                edgePoint.getY() + (degreeSine(angleEdge)*(radix-7))
+                edgePoint.getX() + (degreeCosine(angleEdge)*(radix2-5)),
+                edgePoint.getY() + (degreeSine(angleEdge)*(radix2-5))
             );
-            drawCylinder(edgePoint, angleEdge, radix-7, 5, g2d);
+            drawCylinder(edgePoint, angleEdge, radix2-5, 5, g2d);
             drawCylinder(edgeBlaster, angleEdge, 6, 8, g2d);
         }
         else{

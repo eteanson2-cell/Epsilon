@@ -42,7 +42,6 @@ public class MagnetClimbState implements GameState{
     private double yOffset;
     private LinkedList rocks;
     private LinkedList lasers;
-    private LinkedList particles;
     private LaserBarrier killerLaser;
     private DynamicGraph points;
     private double benchMark;
@@ -63,10 +62,9 @@ public class MagnetClimbState implements GameState{
         restart = false;
         player = new Player();
         xOffset = 350;
-        player.circle.move(xOffset-30, -200000);
+        player.circle.move(xOffset-30, 0);
         rocks = new LinkedList();
         lasers = new LinkedList();
-        particles = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
             Array arr1 = (Array)obj1;
             Array arr2 = (Array)obj2;
@@ -256,9 +254,9 @@ public class MagnetClimbState implements GameState{
         });
         
         player.draw(g2d);
-        killerLaser.draw(g2d);
         drawLasers(g2d);
-        //drawEdges(g2d);
+        drawEdges(g2d);
+        killerLaser.draw(g2d);
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);
@@ -319,8 +317,9 @@ public class MagnetClimbState implements GameState{
         points.iterateNodes((Object nodeObject) -> {
             Array keyPoint = (Array)nodeObject;
             Point p1 = (Point)keyPoint.get(0);
-            if(p1.getY() > killerLaser.getPointA().getY() 
-            || p1.getY() < player.circle.getYCenter()-150){
+            if(isInRange(-10, 650, p1.getX()) == false
+            || isInRange(player.circle.getYCenter()-350, player.circle.getYCenter()+150, p1.getY()) == false
+            || p1.getY() > killerLaser.getPointA().getY()){
                 return true;
             }
             LinkedList connectedEdges = points.getConnectedNodes(keyPoint);

@@ -14,6 +14,7 @@ public class HighwayChunk extends ObstacleChunk{
 
     @Override
     public void init() {
+        metallicEdges = false;
         setHeight();
         int increment = setIncrement();
         for (int y = 0; y <= height; y += height/2) {

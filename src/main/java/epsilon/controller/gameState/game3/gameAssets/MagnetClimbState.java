@@ -185,8 +185,9 @@ public class MagnetClimbState implements GameState{
         for (int i = 0; i < newLasers.getQuantity(); i++) {
             LaserBarrier newLaser = (LaserBarrier)newLasers.get(i);
             lasers.add(newLaser);
-            if(newLaser.getPointA().getX() != newLaser.getPointB().getX() 
-            || newLaser.getPointA().getY() != newLaser.getPointB().getY()){
+            if(oc.hasMetallicEdges() == true 
+            && (newLaser.getPointA().getX() != newLaser.getPointB().getX() 
+            ||  newLaser.getPointA().getY() != newLaser.getPointB().getY())){
                 addToGraph(newLaser.getPointA(), newLaser.getPointB());
             }
         }

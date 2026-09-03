@@ -13,6 +13,7 @@ import epsilon.model.entities.figures.Point;
 public abstract class ObstacleChunk{
     protected int height;
     protected int seed;
+    protected boolean metallicEdges;
     protected final double benchmark;
     protected LinkedList rockPoints = new LinkedList();
     protected TreeMap lasers;
@@ -20,12 +21,16 @@ public abstract class ObstacleChunk{
     public ObstacleChunk(double benchmark, int seed){
         this.benchmark = benchmark;
         this.seed = seed;
+        metallicEdges = true;
         lasers = new TreeMap(new LineComparator());
         init();
     }
     public abstract void init();
     public int getHeight(){
         return height;
+    }
+    public boolean hasMetallicEdges(){
+        return metallicEdges;
     }
     public Array exportRocks(){
         Array newRocks = new Array(rockPoints.getQuantity());

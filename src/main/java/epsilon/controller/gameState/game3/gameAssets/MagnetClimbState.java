@@ -62,8 +62,8 @@ public class MagnetClimbState implements GameState{
         isOver = false;
         restart = false;
         player = new Player();
-        xOffset = 350;
-        player.circle.move(xOffset-30, -60000);
+        xOffset = 320;
+        player.circle.move(xOffset, -25000);
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -345,10 +345,11 @@ public class MagnetClimbState implements GameState{
             angles.add(p1.getAngle(currentPoint));
             return true;
         });
+        angles.quickSort();
+        //angles.add((double)angles.get(0)+360);
         return angles;
     }
     protected Double getEdgeAngle(NumericArray array){
-        array.quickSort();
         NumericArray distances = array.getDistances();
         if(distances == null){
             return null;
@@ -356,17 +357,18 @@ public class MagnetClimbState implements GameState{
         distances.remove();
         distances.add((objectToDouble(array.get(0))+360) - objectToDouble(array.get(array.size()-1)));
         double highestRange = objectToDouble(distances.get(0));
+        int position1 = 0;
         for (int i = 1; i < distances.size(); i++) {
-            double tempDouble = objectToDouble(distances.get(i));
-            if(tempDouble > highestRange){
-                highestRange = tempDouble;
+            if(objectToDouble(distances.get(i)) > highestRange){
+                highestRange = objectToDouble(distances.get(i));
+                position1 = i;
             }
         }
         if(highestRange <= 120){
             return null;
         }
-        int position1 = (int)distances.find(highestRange);
-        int position2 = (position1+1)%array.size();
+        
+        int position2 = (position1+1)%(array.size());
         double prev = objectToDouble(array.get(position1));
         double next = objectToDouble(array.get(position2));
         if(next < prev){

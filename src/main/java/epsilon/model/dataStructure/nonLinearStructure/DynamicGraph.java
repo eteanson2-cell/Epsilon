@@ -174,11 +174,14 @@ public class DynamicGraph{
     public void iterateGraph(Iterator iterator){
         iterateGraph(iterator, nodes.getRootKey());
     }
-    public void iterateNodes(Iterator iterator){
+    public void iterateNodes(Iterator iterator, TreeTraversal treeTraversal){
         nodes.iteration((Object nodeObject) -> {
             Array mapNode = (Array)nodeObject;
             return iterator.iterate(mapNode.get(0));
-        });
+        }, treeTraversal);
+    }
+    public void iterateNodes(Iterator iterator){
+        iterateNodes(iterator, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     public void print(){
         nodes.print();

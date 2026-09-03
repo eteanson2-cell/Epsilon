@@ -120,7 +120,8 @@ public class HorizontalChunk extends ObstacleChunk{
         double x = center.getX();
         double y1 = center.getY()-thickness;
         double y2 = center.getY()+thickness;
-        Line newLaser1 = new Line(x,y1,x,y2);
+        Line newLaser1;
+        int fixer = 15;
         LaserMovement lm1;
         LaserMovement lm2;
         if(seed < 33){
@@ -130,6 +131,7 @@ public class HorizontalChunk extends ObstacleChunk{
             lm2 = new LaserMovement(
                 new Point(0, ((double)thickness*2)/speed), null, true, null, null, null, null
             );
+            newLaser1 = new Line(x,y1,x,y2+fixer);
         }
         else if(seed > 66){
             lm1 = new LaserMovement(
@@ -138,9 +140,10 @@ public class HorizontalChunk extends ObstacleChunk{
             lm2 = new LaserMovement(
                 null, new Point(0, ((double)-thickness*2)/speed), true, null, null, null, null
             );
+            newLaser1 = new Line(x,y1-fixer,x,y2);
         }
         else{
-            newLaser1.setSecondY(center.getY());
+            newLaser1 = new Line(x,y1-fixer,x,center.getY());
             lm1 = new LaserMovement(
                 null, new Point(0, ((double)thickness)/speed), true, null, null, null, null
             );
@@ -148,7 +151,7 @@ public class HorizontalChunk extends ObstacleChunk{
                 null, new Point(0, ((double)-thickness)/speed), true, null, null, null, null
             );
             LinkedList movements2 = setMovementsList(lm2, lm1, (int)speed);
-            Line newLaser2 = new Line(x, y2, x, center.getY()-1);
+            Line newLaser2 = new Line(x, y2+fixer, x, center.getY()-1);
             lasers.addKey(newLaser2);
             lasers.replaceData(movements2, newLaser2);
         }

@@ -27,6 +27,7 @@ import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Oval;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.Polygon;
+import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.degreeCosine;
 import static epsilon.utils.FunctionUtils.degreeSine;
 import static epsilon.utils.FunctionUtils.euclideanDistance;
@@ -62,7 +63,7 @@ public class MagnetClimbState implements GameState{
         restart = false;
         player = new Player();
         xOffset = 350;
-        player.circle.move(xOffset-30, 0);
+        player.circle.move(xOffset-30, -60000);
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -70,17 +71,17 @@ public class MagnetClimbState implements GameState{
             Array arr2 = (Array)obj2;
             Point p1 = (Point)arr1.get(1);
             Point p2 = (Point)arr2.get(1);
-            if(p1.getX() < p2.getX()){
+            if(p1.getY() < p2.getY()){
                 return -1;
             }
-            else if(p1.getX() > p2.getX()){
+            else if(p1.getY() > p2.getY()){
                 return 1;
             }
             else{
-                if(p1.getY() < p2.getY()){
+                if(p1.getX() < p2.getX()){
                     return -1;
                 }
-                else if(p1.getY() > p2.getY()){
+                else if(p1.getX() > p2.getX()){
                     return 1;
                 }
                 else{
@@ -123,7 +124,7 @@ public class MagnetClimbState implements GameState{
             }
             if(player.circle.getYCenter() < benchMark+ySpawn){
                 int randomChunk = randomNumber(1, 9);
-                //randomChunk = 8;
+                randomChunk = 8;
                 generateChunk(randomChunk);
             }
             updateRocks();
@@ -334,7 +335,7 @@ public class MagnetClimbState implements GameState{
             }
             drawEdges(g2d, p1, angles, freeAngle);
             return true;
-        });
+        }, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     protected NumericArray getAngles(Point p1, LinkedList connectedEdges){
         NumericArray angles = new NumericArray(connectedEdges.size());
@@ -361,7 +362,7 @@ public class MagnetClimbState implements GameState{
                 highestRange = tempDouble;
             }
         }
-        if(highestRange < 180){
+        if(highestRange <= 120){
             return null;
         }
         int position1 = (int)distances.find(highestRange);

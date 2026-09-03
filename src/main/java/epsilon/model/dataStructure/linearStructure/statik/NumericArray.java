@@ -352,8 +352,10 @@ public class NumericArray extends Array{
             }
             obj = get(index);
             clear();
+            leftArray.quickSort();
             addList(leftArray);
             add(obj);
+            rightArray.quickSort();
             addList(rightArray);
         }
     }

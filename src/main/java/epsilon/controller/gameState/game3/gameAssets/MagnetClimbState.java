@@ -63,7 +63,7 @@ public class MagnetClimbState implements GameState{
         restart = false;
         player = new Player();
         xOffset = 320;
-        player.circle.move(xOffset, -25000);
+        player.circle.move(xOffset, 0);
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -124,7 +124,7 @@ public class MagnetClimbState implements GameState{
             }
             if(player.circle.getYCenter() < benchMark+ySpawn){
                 int randomChunk = randomNumber(1, 9);
-                randomChunk = 8;
+                //randomChunk = 8;
                 generateChunk(randomChunk);
             }
             updateRocks();
@@ -248,13 +248,8 @@ public class MagnetClimbState implements GameState{
     public void draw(Graphics2D g2d) {
         g2d.translate(0, yOffset - player.circle.getYCenter()); 
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, (int)Math.round(player.circle.getYCenter()-1000), 640, 2000);
-        rocks.iterateList((Object nodeObject) -> {
-            MetallicRock currentRock = (MetallicRock)nodeObject;
-            currentRock.draw(g2d);
-            return true;
-        });
-        
+        g2d.fillRect(0, (int)Math.round(player.circle.getYCenter()-1000), 640, 2000);   
+        drawRocks(g2d);     
         player.draw(g2d);
         drawLasers(g2d);
         drawEdges(g2d);
@@ -271,27 +266,15 @@ public class MagnetClimbState implements GameState{
         g2d.setFont(new Font("",Font.PLAIN,24));
         g2d.drawString("HIGHSCORE:" + (long)-highScore, 20, 20);
     }
-    protected void generateWarningLine(LaserBarrier currentLaser, Graphics2D g2d){
-        double x;
-        int colorSaturation = 255;
-        if(currentLaser.getPointA().getX() < 0 && currentLaser.getPointB().getX() < 0){
-            x = 5;
-            colorSaturation += (int)currentLaser.getPointA().getX()/10;
-        }
-        else {
-            x = 635;
-            colorSaturation = 255 - ((int)(currentLaser.getPointA().getX()-640)/10);
-        }
-        if(colorSaturation < 10){
-            colorSaturation = 10;
-        }
-        else if(colorSaturation > 255){
-            colorSaturation = 255;
-        } 
-        g2d.setColor(new Color(colorSaturation, colorSaturation, 0));
-        Line warningLine = new Line(x, currentLaser.getPointA().getY(),
-                                    x, currentLaser.getPointB().getY());
-        warningLine.draw(g2d);
+    private void drawRocks(Graphics2D g2d){
+        rocks.iterateList((Object nodeObject) -> {
+            MetallicRock currentRock = (MetallicRock)nodeObject;
+            if(isInRange(player.circle.getYCenter()-350, player.circle.getYCenter()+150, 
+                currentRock.getCircle().getYCenter())){
+                currentRock.draw(g2d);
+            }
+            return true;
+        });
     }
     private void drawLasers(Graphics2D g2d){
         lasers.iterateList((Object nodeObject) -> {
@@ -314,6 +297,28 @@ public class MagnetClimbState implements GameState{
             }
             return true;
         });
+    }
+    protected void generateWarningLine(LaserBarrier currentLaser, Graphics2D g2d){
+        double x;
+        int colorSaturation = 255;
+        if(currentLaser.getPointA().getX() < 0 && currentLaser.getPointB().getX() < 0){
+            x = 5;
+            colorSaturation += (int)currentLaser.getPointA().getX()/10;
+        }
+        else {
+            x = 635;
+            colorSaturation = 255 - ((int)(currentLaser.getPointA().getX()-640)/10);
+        }
+        if(colorSaturation < 10){
+            colorSaturation = 10;
+        }
+        else if(colorSaturation > 255){
+            colorSaturation = 255;
+        } 
+        g2d.setColor(new Color(colorSaturation, colorSaturation, 0));
+        Line warningLine = new Line(x, currentLaser.getPointA().getY(),
+                                    x, currentLaser.getPointB().getY());
+        warningLine.draw(g2d);
     }
     protected void drawEdges(Graphics2D g2d){
         points.iterateNodes((Object nodeObject) -> {
@@ -359,7 +364,7 @@ public class MagnetClimbState implements GameState{
         double highestRange = objectToDouble(distances.get(0));
         int position1 = 0;
         for (int i = 1; i < distances.size(); i++) {
-            if(objectToDouble(distances.get(i)) > highestRange){
+            if(Math.round(objectToDouble(distances.get(i))) > Math.round(highestRange)){
                 highestRange = objectToDouble(distances.get(i));
                 position1 = i;
             }
@@ -495,5 +500,4 @@ public class MagnetClimbState implements GameState{
     @Override
     public void mouseMoved(int x, int y) {
     }
-
 }

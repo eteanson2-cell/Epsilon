@@ -189,7 +189,7 @@ public class LaserBarrier{
                 }
             }
             Polygon grossLine = new Polygon(pts);
-            grossLine.setInsideColor(new Color(0, 255, 0, 51));
+            grossLine.setInsideColor(new Color(0, 255, 0, 40));
             grossLine.fill(g2d);
         }
     }

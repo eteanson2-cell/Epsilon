@@ -11,6 +11,7 @@ import epsilon.controller.gameState.game3.gameAssets.chunks.HorizontalChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserShooterChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserSystemChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.ObstacleChunk;
+import epsilon.controller.gameState.game3.gameAssets.chunks.PinballChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.PropellerChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.RotatingPipesChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.RowsChunk;
@@ -123,8 +124,8 @@ public class MagnetClimbState implements GameState{
                 return;
             }
             if(player.circle.getYCenter() < benchMark+ySpawn){
-                int randomChunk = randomNumber(1, 9);
-                //randomChunk = 8;
+                int randomChunk = randomNumber(1, 10);
+                randomChunk = 9;
                 generateChunk(randomChunk);
             }
             updateRocks();
@@ -172,6 +173,7 @@ public class MagnetClimbState implements GameState{
             case 6 -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
             case 7 -> newChunk = new HighwayChunk(benchMark,randomSeed);
             case 8 -> newChunk = new PropellerChunk(benchMark, randomSeed);
+            case 9 -> newChunk = new PinballChunk(benchMark, randomSeed);
             default -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
         }
         pullChunk(newChunk);
@@ -369,7 +371,7 @@ public class MagnetClimbState implements GameState{
                 position1 = i;
             }
         }
-        if(highestRange <= 120){
+        if(highestRange <= 130){
             return null;
         }
         

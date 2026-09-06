@@ -3,6 +3,7 @@ package epsilon.controller.gameState.game3.gameAssets.chunks;
 import epsilon.controller.gameState.game3.gameAssets.LaserMovement;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Point;
+import static epsilon.utils.FunctionUtils.isInRange;
 
 public class RowsChunk extends ObstacleChunk{
 
@@ -16,7 +17,7 @@ public class RowsChunk extends ObstacleChunk{
         double numSpan = getLaserSpan();
         int increment = getIncrement();
         int width = getWidth();
-        int angle = generateAngle();
+        double angle = generateAngle();
         for (int y = 0; y < height ; y += increment) {
             double xPoint = getXPoint(y, angle);
             Point newRock = new Point(xPoint, y);
@@ -73,36 +74,33 @@ public class RowsChunk extends ObstacleChunk{
         }
         return numSpan;
     }
-    protected double getXPoint(int y, int angle){
-        double xPoint = 320 + ((y-(height/2))/Math.tan(Math.toRadians(angle)));
-        /*if(xPoint < 5){
-            xPoint = 5;
-        }
-        else if(xPoint > 635){
-            xPoint = 635;
-        }*/
+    protected double getXPoint(double y, double angle){
+        double xPoint = 320  + (y-(height/2))/Math.tan(Math.toRadians(angle));
         return xPoint;
     }
-    protected int generateAngle(){
-        int m;
-        if(seed < 50){
-            m = -35;
-        }
-        else{
-            m = 35;
-        }
-        int v = 90 + (int)(Math.sin(Math.toRadians(benchmark/1000))*m);
-        if(Math.abs((height/2)/Math.tan(Math.toRadians(v))) > 310){
-            double radian = 90;
-            if(m > 0){
-                radian = Math.atan2(height/2, 310);
+    protected double generateAngle(){
+        double angle = 90;
+        if(benchmark < -2000){
+            if(seed < 50){
+                angle += benchmark/2000;
             }
-            else if(m < 0){
-                radian = Math.atan2(height/2, -310);
+            else{
+                angle -= benchmark/2000;
             }
-            return (int)Math.round(Math.toDegrees(radian));
         }
-        return v;
+        if(isInRange(10,630,getXPoint(0, angle)) == false){
+            Point p1, p2;
+            if(seed < 50){
+                p1 = new Point(10,0);
+                p2 = new Point(630,height);
+            }
+            else{
+                p1 = new Point(630,0);
+                p2 = new Point(10,height);
+            }
+            angle = p1.getAngle(p2);
+        }
+        return angle;
     }
     protected void setLaserMovements(int width, Line laser1, Line laser2){
         int speed = 45;

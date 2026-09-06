@@ -28,10 +28,11 @@ public class RotatingPipesChunk extends ObstacleChunk{
                 savedSeeds.add(seed%4);
                 switch (seed%4) {
                     case 0 -> {
-                        reRollSeed();
-                        switch (seed%2) {
-                            case 0 -> generateColumn(center);
-                            case 1 -> generateRow(center);
+                        if(seed < 50){
+                            generateColumn(center);
+                        }
+                        else{
+                            generateRow(center);
                         }
                     }
                     case 1 -> generateCross(center);
@@ -40,12 +41,12 @@ public class RotatingPipesChunk extends ObstacleChunk{
                 }
                 int loopCounter = 0;
                 do { 
-                    reRollSeed();
                     loopCounter++;
                     if(loopCounter > 100){
                         seed++;
                         break;
                     }
+                    reRollSeed();
                 } while ((int)savedSeeds.find(seed%4) >= 0);
                 rockPoints.add(center);
                 if(y == 100){

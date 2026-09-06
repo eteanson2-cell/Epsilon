@@ -125,7 +125,7 @@ public class MagnetClimbState implements GameState{
             }
             if(player.circle.getYCenter() < benchMark+ySpawn){
                 int randomChunk = randomNumber(1, 10);
-                randomChunk = 9;
+                //randomChunk = 1;
                 generateChunk(randomChunk);
             }
             updateRocks();
@@ -159,6 +159,35 @@ public class MagnetClimbState implements GameState{
                 return 0;
             }
             return 1;
+        });
+    }
+    private void removePoints(){
+        LinkedList pointsToRemove = new LinkedList();
+        points.iterateNodes((Object nodeObject) -> {
+            Array keyPoint = (Array)nodeObject;
+            Point currentPoint = (Point)keyPoint.get(0);
+            if(currentPoint.getY() < killerLaser.getPointA().getY()){
+                return true;
+            }
+            LinkedList asociatedNodes = points.getConnectedNodes(nodeObject);
+            Array boolArray = new Array(1);
+            asociatedNodes.iterateList((Object nodeObject1) -> {
+                Array keyPoint1 = (Array)nodeObject1;
+                Point currentPoint1 = (Point)keyPoint1.get(0);
+                if(currentPoint1.getY() < killerLaser.getPointA().getY()){
+                    boolArray.add(false);
+                    return false;
+                }
+                return true;
+            });
+            if(boolArray.isEmpty()){
+                pointsToRemove.add(keyPoint);
+            }
+            return true;
+        });
+        pointsToRemove.iterateList((Object nodeObject) -> {
+            points.removeNode(nodeObject);
+            return true;
         });
     }
     private void generateChunk(int chunk){
@@ -209,35 +238,6 @@ public class MagnetClimbState implements GameState{
         arr.add(p1);
         arr.add(p1.copy());
         return arr;
-    }
-    private void removePoints(){
-        LinkedList pointsToRemove = new LinkedList();
-        points.iterateNodes((Object nodeObject) -> {
-            Array keyPoint = (Array)nodeObject;
-            Point currentPoint = (Point)keyPoint.get(0);
-            if(currentPoint.getY() < killerLaser.getPointA().getY()){
-                return true;
-            }
-            LinkedList asociatedNodes = points.getConnectedNodes(nodeObject);
-            Array boolArray = new Array(1);
-            asociatedNodes.iterateList((Object nodeObject1) -> {
-                Array keyPoint1 = (Array)nodeObject1;
-                Point currentPoint1 = (Point)keyPoint1.get(0);
-                if(currentPoint1.getY() < killerLaser.getPointA().getY()){
-                    boolArray.add(false);
-                    return false;
-                }
-                return true;
-            });
-            if(boolArray.isEmpty()){
-                pointsToRemove.add(keyPoint);
-            }
-            return true;
-        });
-        pointsToRemove.iterateList((Object nodeObject) -> {
-            points.removeNode(nodeObject);
-            return true;
-        });
     }
     public void gameOver(){
         isOver = true;

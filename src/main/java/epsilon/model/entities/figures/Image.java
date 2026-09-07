@@ -7,8 +7,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ColorModel;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -34,11 +34,13 @@ public class Image extends Figure{
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public Image(double xCenter, double yCenter, String file){
         try {
-            image = ImageIO.read(new File(this.getClass().getResource(file).getFile()));
+            InputStream is = this.getClass().getResourceAsStream("/" + file);
+            image = ImageIO.read(is);
             this.xCenter = xCenter;
             this.yCenter = yCenter;
             readImage();
         } catch (IOException e) {
+            System.err.println(file + "was not found or there was an error");
             System.exit(1);
         }
     }
@@ -123,6 +125,12 @@ public class Image extends Figure{
             }
         }
         return newImage;
+    }
+    public void rotateRows(int rotations){
+        dataPixel.rotateRows(rotations);
+    }
+    public void rotateColumns(int rotations){
+        dataPixel.rotateColumns(rotations);
     }
     @Override
     public Point getCenter() {

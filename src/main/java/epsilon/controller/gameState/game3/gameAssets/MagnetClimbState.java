@@ -24,6 +24,7 @@ import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.dataStructure.nonLinearStructure.DynamicGraph;
+import epsilon.model.entities.figures.Image;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Oval;
 import epsilon.model.entities.figures.Point;
@@ -45,8 +46,10 @@ public class MagnetClimbState implements GameState{
     private LinkedList rocks;
     private LinkedList lasers;
     private LaserBarrier killerLaser;
+    private Image background;
     private DynamicGraph points;
     private double benchMark;
+    private double bgBenchmark;
     private double ySpawn;
     private boolean pause;
     private boolean isOver;
@@ -65,6 +68,7 @@ public class MagnetClimbState implements GameState{
         player = new Player();
         xOffset = 320;
         player.circle.move(xOffset, 0);
+        background = new Image(0, 0, "cbg1.jpg");
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -96,6 +100,7 @@ public class MagnetClimbState implements GameState{
         yOffset = 340;
         ySpawn = 500;
         benchMark = -150;
+        bgBenchmark = -100;
         configureMenus();
     }
 
@@ -127,6 +132,10 @@ public class MagnetClimbState implements GameState{
                 int randomChunk = randomNumber(1, 10);
                 //randomChunk = 1;
                 generateChunk(randomChunk);
+            }
+            if(player.circle.getYCenter() < bgBenchmark){
+                background.rotateRows(-1);
+                bgBenchmark -= 100;
             }
             updateRocks();
             updateLasers();
@@ -248,9 +257,10 @@ public class MagnetClimbState implements GameState{
     }
     @Override
     public void draw(Graphics2D g2d) {
-        g2d.translate(0, yOffset - player.circle.getYCenter()); 
+        background.draw(g2d); 
+        g2d.translate(0, yOffset - player.circle.getYCenter());
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, (int)Math.round(player.circle.getYCenter()-1000), 640, 2000);   
+        //g2d.fillRect(0, (int)Math.round(player.circle.getYCenter()-1000), 640, 2000);   
         drawRocks(g2d);     
         player.draw(g2d);
         drawLasers(g2d);
@@ -264,6 +274,7 @@ public class MagnetClimbState implements GameState{
             gameOverMenu.draw(g2d);
         }
         double highScore = player.getMaxHeight();
+        
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("",Font.PLAIN,24));
         g2d.drawString("HIGHSCORE:" + (long)-highScore, 20, 20);

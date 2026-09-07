@@ -227,6 +227,43 @@ public class Array2D{
             return null;
         }
     }
+    public void rotateRows(int rotations){
+        if(rotations > 0){
+            for (int i = 0; i < rotations; i++) {
+                Array removedRow = getRow(0);
+                for (int column = 0; column < width; column++) {
+                    for (int row = 0; row < height-1; row++) {
+                        data[row][column] = data[row+1][column];
+                    }
+                }
+                overrideRow(removedRow, height-1);
+            }
+        }
+        else{
+            rotations = Math.abs(rotations);
+            for (int i = 0; i < rotations; i++) {
+                Array removedRow = getRow(height-1);
+                for (int column = width-1; column >= 0; column--) {
+                    for (int row = height-1; row > 0; row--) {
+                        data[row][column] = data[row-1][column];
+                    }
+                }
+                overrideRow(removedRow, 0);
+            }
+        }
+        
+    }
+    public void rotateColumns(int rotations){
+        for (int i = 0; i < rotations; i++) {
+            Array removedColumn = getColumn(0);
+            for (int row = 0; row < height; row++) {
+                for (int column = 0; column < width-1; column++) {
+                    data[row][column] = data[row][column+1];
+                }
+            }
+            overrideRow(removedColumn, width-1);
+        }
+    }
     public boolean overrideColumn(Array newColumn, int column){
         if(validIndex(column, width) && newColumn.getQuantity() == height){
             for (int row = 0; row < height; row++) {

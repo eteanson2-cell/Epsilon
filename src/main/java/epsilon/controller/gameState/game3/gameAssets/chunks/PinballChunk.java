@@ -185,9 +185,9 @@ public class PinballChunk extends ObstacleChunk{
         return bumpers;
     }
     public int getBallDelay(){
-        int delay = 50;
+        int delay = 100;
         if(benchmark < -1000){
-            delay -= benchmark/1000;
+            delay += benchmark/1000;
             if(delay < 20){
                 delay = 20;
             }

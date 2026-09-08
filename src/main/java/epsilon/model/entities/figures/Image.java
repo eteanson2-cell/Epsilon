@@ -44,6 +44,9 @@ public class Image extends Figure{
             System.exit(1);
         }
     }
+    public Array2D getDataPixel(){
+        return dataPixel;
+    }
     protected void readImage(){
         height = image.getHeight();
         width = image.getWidth();

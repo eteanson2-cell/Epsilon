@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 import epsilon.controller.GameStateManager;
 import epsilon.controller.gameState.game3.gameAssets.chunks.HighwayChunk;
@@ -47,6 +48,7 @@ public class MagnetClimbState implements GameState{
     private LinkedList lasers;
     private LaserBarrier killerLaser;
     private Image background;
+    private BufferedImage bgImage;
     private DynamicGraph points;
     private double benchMark;
     private double bgBenchmark;
@@ -57,6 +59,7 @@ public class MagnetClimbState implements GameState{
     private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
     public MagnetClimbState(GameStateManager gsm){
+        background = new Image(0, 0, "cbg1.jpg");
         this.gsm = gsm;
     }
 
@@ -68,7 +71,7 @@ public class MagnetClimbState implements GameState{
         player = new Player();
         xOffset = 320;
         player.circle.move(xOffset, 0);
-        background = new Image(0, 0, "cbg1.jpg");
+        bgImage = background.getBufferedImage();
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -133,10 +136,6 @@ public class MagnetClimbState implements GameState{
                 //randomChunk = 1;
                 generateChunk(randomChunk);
             }
-            if(player.circle.getYCenter() < bgBenchmark){
-                background.rotateRows(-1);
-                bgBenchmark -= 100;
-            }
             updateRocks();
             updateLasers();
             removePoints();
@@ -150,7 +149,7 @@ public class MagnetClimbState implements GameState{
             MetallicRock currentRock = (MetallicRock)obj1;
             currentRock.update();
             LaserBarrier killLaser = (LaserBarrier)obj2;
-            if (currentRock.getCircle().intersects(killLaser.getLine())) {
+            if (currentRock.getCircle().getYCenter() > killLaser.getLine().getFirstY()) {
                 return 0;
             }
             return 1;
@@ -159,7 +158,9 @@ public class MagnetClimbState implements GameState{
     private void updateLasers(){
         lasers.removeAll(killerLaser, (Object obj1, Object obj2) -> {
             LaserBarrier currentLaser = (LaserBarrier)obj1;
-            currentLaser.update();
+            if(currentLaser.getLine().getFirstY() < player.circle.getYCenter() + 2650){
+                currentLaser.update();
+            }
             if(currentLaser.isActive() && player.circle.intersects(currentLaser.getLine())){
                 gameOver();
             }
@@ -257,10 +258,13 @@ public class MagnetClimbState implements GameState{
     }
     @Override
     public void draw(Graphics2D g2d) {
-        background.draw(g2d); 
-        g2d.translate(0, yOffset - player.circle.getYCenter());
-        g2d.setColor(Color.BLACK);
-        //g2d.fillRect(0, (int)Math.round(player.circle.getYCenter()-1000), 640, 2000);   
+        while(player.circle.getYCenter() < bgBenchmark){
+            background.rotateRows(-1);
+            bgBenchmark -= 100;
+            bgImage = background.getBufferedImage();
+        }
+        g2d.drawImage(bgImage, null, 0, 0);
+        g2d.translate(0, yOffset - player.circle.getYCenter());  
         drawRocks(g2d);     
         player.draw(g2d);
         drawLasers(g2d);
@@ -491,7 +495,12 @@ public class MagnetClimbState implements GameState{
             Point mousePosition = new Point(x, y + player.circle.getYCenter()-yOffset);
             rocks.iterateList((Object nodeObject) -> {
                 MetallicRock mr = (MetallicRock)nodeObject;
-                if(euclideanDistance(mousePosition, mr.getCircle().getCenter()) <= 30){
+                if(isInRange(player.circle.getYCenter()-350, 
+                             player.circle.getYCenter()+150, 
+                             mr.getCircle().getYCenter()) == false){
+                    return true;
+                }
+                else if(euclideanDistance(mousePosition, mr.getCircle().getCenter()) <= 30){
                     player.hookRock(mr);
                     return false;
                 }

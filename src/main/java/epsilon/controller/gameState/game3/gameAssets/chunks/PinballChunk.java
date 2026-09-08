@@ -69,7 +69,7 @@ public class PinballChunk extends ObstacleChunk{
             do{
                 double angle1 = 45 + seed*0.9;
                 double angle2 = 135 - (seed%91);
-                int modBenchmark = ((int)benchmark)%seed;
+                int modBenchmark = ((int)benchmark)%(seed+1);
                 if(modBenchmark < 51){
                     angle1 = 135 - (seed%91);
                     angle2 = 45 + seed*0.9;

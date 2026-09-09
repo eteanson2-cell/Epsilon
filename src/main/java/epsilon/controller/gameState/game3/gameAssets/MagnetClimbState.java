@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 import epsilon.controller.GameStateManager;
 import epsilon.controller.gameState.game3.gameAssets.chunks.HighwayChunk;
@@ -47,8 +46,8 @@ public class MagnetClimbState implements GameState{
     private LinkedList rocks;
     private LinkedList lasers;
     private LaserBarrier killerLaser;
-    private Image background;
-    private BufferedImage bgImage;
+    private final Image background;
+    private final Image[] rockSprites;
     private DynamicGraph points;
     private double benchMark;
     private double bgBenchmark;
@@ -60,6 +59,10 @@ public class MagnetClimbState implements GameState{
     private GameOverMenu gameOverMenu;
     public MagnetClimbState(GameStateManager gsm){
         background = new Image(0, 0, "cbg1.jpg");
+        rockSprites = new Image[4];
+        for (int i = 0; i < 4; i++) {
+            rockSprites[i] = new Image(xOffset, yOffset, "rock" + i + ".png");
+        }
         this.gsm = gsm;
     }
 
@@ -71,7 +74,11 @@ public class MagnetClimbState implements GameState{
         player = new Player();
         xOffset = 320;
         player.circle.move(xOffset, 0);
-        bgImage = background.getBufferedImage();
+        background.readImage();
+        background.createNewImage();
+        for (Image image : rockSprites) {
+            image.createNewImage();
+        }
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph((Object obj1, Object obj2) -> {
@@ -261,9 +268,11 @@ public class MagnetClimbState implements GameState{
         while(player.circle.getYCenter() < bgBenchmark){
             background.rotateRows(-1);
             bgBenchmark -= 100;
-            bgImage = background.getBufferedImage();
+            if(player.circle.getYCenter() > bgBenchmark){
+                background.createNewImage();
+            }
         }
-        g2d.drawImage(bgImage, null, 0, 0);
+        background.draw(g2d, false);
         g2d.translate(0, yOffset - player.circle.getYCenter());  
         drawRocks(g2d);     
         player.draw(g2d);
@@ -286,9 +295,12 @@ public class MagnetClimbState implements GameState{
     private void drawRocks(Graphics2D g2d){
         rocks.iterateList((Object nodeObject) -> {
             MetallicRock currentRock = (MetallicRock)nodeObject;
-            if(isInRange(player.circle.getYCenter()-350, player.circle.getYCenter()+150, 
+            if(isInRange(player.circle.getYCenter()-350, player.circle.getYCenter()+170, 
                 currentRock.getCircle().getYCenter())){
-                currentRock.draw(g2d);
+                    g2d.drawImage(rockSprites[currentRock.getRockType()].getBufferedImage(false), null, 
+                        (int)currentRock.getCircle().getXCenter()-22, 
+                        (int)currentRock.getCircle().getYCenter()-22
+                );
             }
             return true;
         });

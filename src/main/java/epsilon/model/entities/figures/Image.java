@@ -1,12 +1,8 @@
 package epsilon.model.entities.figures;
 
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
-import java.awt.image.ColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -18,6 +14,7 @@ import epsilon.model.entities.interfaces.IEntity;
 
 public class Image extends Figure{
     protected BufferedImage image;
+    protected BufferedImage newImage;
     protected Array2D dataPixel;
     protected int height;
     protected int width;
@@ -47,7 +44,7 @@ public class Image extends Figure{
     public Array2D getDataPixel(){
         return dataPixel;
     }
-    protected void readImage(){
+    public void readImage(){
         height = image.getHeight();
         width = image.getWidth();
         dataPixel = new Array2D(height, width);
@@ -55,6 +52,15 @@ public class Image extends Figure{
             for (int x = 0; x < width; x++) {
                 int pixel = image.getRGB(x, y);
                 dataPixel.modify( new Pixel(pixel),y, x);
+            }
+        }
+    }
+    public void createNewImage(){
+        newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Pixel pixel = (Pixel)dataPixel.getObject(y, x);
+                newImage.setRGB(x, y, pixel.toInteger());
             }
         }
     }
@@ -93,39 +99,35 @@ public class Image extends Figure{
     }
     public void addMargin(Pixel color, int thickness){
         thickness = Math.abs(thickness);
-        Array2D newImage = new Array2D(height+(thickness*2), width+(thickness*2));
-        newImage.fill(color);
+        Array2D nImage = new Array2D(height+(thickness*2), width+(thickness*2));
+        nImage.fill(color);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Pixel pixel = (Pixel)dataPixel.getObject(y, x);
-                newImage.modify(pixel, y+thickness, x+thickness);
+                nImage.modify(pixel, y+thickness, x+thickness);
             }
         }
-        dataPixel.redefine(newImage);
+        dataPixel.redefine(nImage);
         reasignValues();
     }
     public void scaleImage(double heightScale, double widthScale){
         changeSize((int)Math.abs(height*heightScale), (int)Math.abs(width*widthScale));
     }
     public void changeSize(int heightScale, int widthScale){
-        Array2D newImage = new Array2D(heightScale,widthScale);
-        newImage.fill(new Pixel(0));
+        Array2D nImage = new Array2D(heightScale,widthScale);
+        nImage.fill(new Pixel(0));
         for (int y = 0; y < heightScale; y++) {
             for (int x = 0; x < widthScale; x++) {
                 int origY = (y*height)/heightScale;
                 int origX =(x*width)/widthScale;
                 Pixel pixel = (Pixel)dataPixel.getObject(origY, origX);
-                newImage.modify(pixel, y, x);
+                nImage.modify(pixel, y, x);
             }
         }
     }
-    public BufferedImage getBufferedImage(){
-        BufferedImage newImage = new BufferedImage(width, height, 1);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Pixel pixel = (Pixel)dataPixel.getObject(y, x);
-                newImage.setRGB(x, y, pixel.toInteger());
-            }
+    public BufferedImage getBufferedImage(boolean create){
+        if(create){
+            createNewImage();
         }
         return newImage;
     }
@@ -142,28 +144,16 @@ public class Image extends Figure{
 
     @Override
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(getBufferedImage(), new BufferedImageOp() {
-            @Override
-            public BufferedImage filter(BufferedImage src, BufferedImage dest) {
-                return src;
-            }
-            @Override
-            public Rectangle2D getBounds2D(BufferedImage src) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-            @Override
-            public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel destCM) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-            @Override
-            public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-            @Override
-            public RenderingHints getRenderingHints() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }, (int)Math.round(xCenter), (int)Math.round(yCenter));
+        draw(g2d,true);
+    }
+    public void draw(Graphics2D g2d, boolean create) {
+        draw(g2d, null, create);
+    }
+    public void draw(Graphics2D g2d, BufferedImageOp op) {
+        draw(g2d, op, true);
+    }
+    public void draw(Graphics2D g2d, BufferedImageOp op, boolean create) {
+        g2d.drawImage(getBufferedImage(create), op, (int)Math.round(xCenter), (int)Math.round(yCenter));
     }
 
     @Override

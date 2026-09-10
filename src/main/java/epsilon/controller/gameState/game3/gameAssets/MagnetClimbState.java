@@ -266,7 +266,7 @@ public class MagnetClimbState implements GameState{
     @Override
     public void draw(Graphics2D g2d) {
         while(player.circle.getYCenter() < bgBenchmark){
-            background.rotateRows(-1);
+            background.rotateRows(1);
             bgBenchmark -= 100;
             if(player.circle.getYCenter() > bgBenchmark){
                 background.createNewImage();
@@ -287,7 +287,6 @@ public class MagnetClimbState implements GameState{
             gameOverMenu.draw(g2d);
         }
         double highScore = player.getMaxHeight();
-        
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("",Font.PLAIN,24));
         g2d.drawString("HIGHSCORE:" + (long)-highScore, 20, 20);
@@ -295,7 +294,7 @@ public class MagnetClimbState implements GameState{
     private void drawRocks(Graphics2D g2d){
         rocks.iterateList((Object nodeObject) -> {
             MetallicRock currentRock = (MetallicRock)nodeObject;
-            if(isInRange(player.circle.getYCenter()-350, player.circle.getYCenter()+170, 
+            if(isInRange(player.circle.getYCenter()-370, player.circle.getYCenter()+170, 
                 currentRock.getCircle().getYCenter())){
                     g2d.drawImage(rockSprites[currentRock.getRockType()].getBufferedImage(false), null, 
                         (int)currentRock.getCircle().getXCenter()-22, 

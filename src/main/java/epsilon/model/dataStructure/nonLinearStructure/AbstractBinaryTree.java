@@ -6,6 +6,7 @@ import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.interfaces.Iterator;
+import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
@@ -57,6 +58,23 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
         });
         return boolArray.isEmpty();
     }
+    public Array getBreadth(int breadth){
+        DynamicQueue nodes = new DynamicQueue();
+        nodes.add(root);
+        int counter = 0;
+        while(counter < breadth){
+            LinkedList tempNodes = new LinkedList();
+            while(nodes.isEmpty() == false){
+                Node tempNode = (Node)nodes.remove();
+                tempNodes.add(tempNode.getLeftBranch());
+                tempNodes.add(tempNode.getRightBranch());
+            }
+            nodes.addList(tempNodes);
+            counter++;
+        }
+        return breadthToArray(nodes);
+    }
+    protected abstract Array breadthToArray(DynamicQueue queue);
     public Object getRootObject(){
         if(root != null){
             return root.getData();

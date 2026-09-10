@@ -2,7 +2,9 @@ package epsilon.model.dataStructure.nonLinearStructure;
 
 import epsilon.model.dataStructure.auxiliar.SetNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
+import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 
 public class SetTree extends AbstractBinaryTree<SetNode> {
     public SetTree(Comparator comparator){
@@ -86,5 +88,14 @@ public class SetTree extends AbstractBinaryTree<SetNode> {
         else{
             return null;
         }
+    }
+    @Override
+    protected Array breadthToArray(DynamicQueue queue) {
+        Array array = new Array(queue.size());
+        while(queue.isEmpty() == false){
+            SetNode node = (SetNode)queue.remove();
+            array.add(node.getData());
+        }
+        return array;
     }
 }

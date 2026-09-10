@@ -465,4 +465,78 @@ public class LinkedList implements DataList{
             return arrayString;
         }
     }
+    @Override
+    public DataList[] slice(int index) {
+        Node post = getNodePos(index);
+        if(post != null){
+            LinkedList firstList = new LinkedList();
+            LinkedList lastList = new LinkedList();
+            Node tempNode = post.getLeftNode();
+            while (tempNode != null) { 
+                firstList.addAtStart(tempNode.getData());
+                tempNode = tempNode.getLeftNode();
+            }
+            tempNode = post;
+            while (tempNode != null) { 
+                lastList.add(tempNode.getData());
+                tempNode = tempNode.getRightNode();
+            }
+            DataList[] lists = {firstList,lastList};
+            return lists;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public LinkedList split(Object object, Comparator comparator) {
+        LinkedList lists = new LinkedList();
+        LinkedList currentLinkedList = new LinkedList();
+        Node tempNode = first;
+        while (tempNode != null) { 
+            Object currentData = tempNode.getData();
+            if(comparator.compare(currentData, object) == 0){
+                if(currentLinkedList.isEmpty() == false){
+                    lists.add(currentLinkedList);
+                    currentLinkedList = new LinkedList();
+                }
+            }
+            else{
+                currentLinkedList.add(currentData);
+            }
+            tempNode = tempNode.getRightNode();
+        }
+        if(currentLinkedList.isEmpty() == false){
+            lists.add(currentLinkedList);
+        }
+        return lists;
+    }
+
+    @Override
+    public LinkedList split(Object object) {
+        return split(object, new BaseObjectComparator());
+    }
+
+    @Override
+    public void rotate(int rotations) {
+        int size = size();
+        if(size > 1){
+            int index = rotations%size;
+            if(index < 0){
+                index += size;
+            }
+            else if(index == 0){
+                return;
+            }
+            Node pos = getNodePos(size-index);
+            Node prevNode = pos.getLeftNode();
+            last.setRightNode(first);
+            first = pos;
+            first.cleanLeft();
+            last = prevNode;
+            last.cleanRight();
+        }
+        
+    }
 }

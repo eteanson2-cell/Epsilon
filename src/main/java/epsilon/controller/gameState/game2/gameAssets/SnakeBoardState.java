@@ -87,7 +87,7 @@ public class SnakeBoardState implements GameState{
     }
     @Override
     public void update() {
-        if(board.isActive() == false){
+        if(board != null && board.isActive() == false){
             pause = true;
             gameOverMenu.init();
             gameOverMenu.setScore(board.getScore());

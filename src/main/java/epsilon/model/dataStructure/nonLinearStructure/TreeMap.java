@@ -4,6 +4,7 @@ import epsilon.model.dataStructure.auxiliar.MapNode;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.Iterator;
+import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
@@ -224,5 +225,14 @@ public class TreeMap extends AbstractBinaryTree<MapNode>{
         else{
             return null;
         }
+    }
+    @Override
+    protected Array breadthToArray(DynamicQueue queue) {
+        Array array = new Array(queue.size());
+        while(queue.isEmpty() == false){
+            MapNode node = (MapNode)queue.remove();
+            array.add(node.getKey());
+        }
+        return array;
     }
 }

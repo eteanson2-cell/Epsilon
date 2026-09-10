@@ -138,27 +138,6 @@ public class BinaryTree extends AbstractBinaryTree<TreeNode> {
             return null;
         }
     }
-    public Array getBreadth(int breadth){
-        DynamicQueue nodes = new DynamicQueue();
-        nodes.add(root);
-        int counter = 0;
-        while(counter < breadth){
-            LinkedList tempNodes = new LinkedList();
-            while(nodes.isEmpty() == false){
-                TreeNode tempNode = (TreeNode)nodes.remove();
-                tempNodes.add(tempNode.getLeftBranch());
-                tempNodes.add(tempNode.getRightBranch());
-            }
-            nodes.addList(tempNodes);
-            counter++;
-        }
-        Array arrayNodes = nodes.toArray();
-        for (int i = 0; i < arrayNodes.size(); i++) {
-            TreeNode tempNode = (TreeNode)arrayNodes.get(i);
-            arrayNodes.modify(tempNode.getData(), i);
-        }
-        return arrayNodes;
-    }
     public LinkedList toList(TreeTraversal treeTraversal){
         LinkedList list = new LinkedList();
         DataBatch batch = selectBatch(treeTraversal);
@@ -185,5 +164,15 @@ public class BinaryTree extends AbstractBinaryTree<TreeNode> {
         else{
             return 0;
         }
+    }
+
+    @Override
+    protected Array breadthToArray(DynamicQueue queue) {
+        Array array = new Array(queue.size());
+        while(queue.isEmpty() == false){
+            TreeNode node = (TreeNode)queue.remove();
+            array.add(node.getData());
+        }
+        return array;
     }
 }

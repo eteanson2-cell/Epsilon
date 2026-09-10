@@ -1,5 +1,6 @@
 package epsilon.model.dataStructure.nonLinearStructure;
 
+import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.Stack;
 import static epsilon.utils.FunctionUtils.getMin;
@@ -105,14 +106,12 @@ public class Array2D{
         }
         redefine(transposed);
     }
-    @SuppressWarnings("ManualArrayToCollectionCopy")
+    //@SuppressWarnings("ManualArrayToCollectionCopy")
     public boolean resize(int height, int width){
         if(height > 0 && width > 0){
             Object[][] newData = new Object[height][width];
             for (int row = 0; row < getMin(this.height,height); row++) {
-                for (int column = 0; column < getMin(this.width,width); column++) {
-                    newData[row][column] = data[row][column];
-                }
+                System.arraycopy(data[row], 0, newData[row], 0, (int)getMin(this.width,width));
             }
             this.height = height;
             this.width = width;
@@ -227,42 +226,41 @@ public class Array2D{
             return null;
         }
     }
-    public void rotateRows(int rotations){
-        if(rotations > 0){
-            for (int i = 0; i < rotations; i++) {
-                Array removedRow = getRow(0);
-                for (int column = 0; column < width; column++) {
-                    for (int row = 0; row < height-1; row++) {
-                        data[row][column] = data[row+1][column];
-                    }
-                }
-                overrideRow(removedRow, height-1);
-            }
+    public boolean rotateColumn(int rotations, int column){
+        Array arrayColumn = getColumn(column);
+        if(arrayColumn != null){
+            arrayColumn.rotate(rotations);
+            overrideRow(arrayColumn, column);
+            return true;
         }
         else{
-            rotations = Math.abs(rotations);
-            for (int i = 0; i < rotations; i++) {
-                Array removedRow = getRow(height-1);
-                for (int column = width-1; column >= 0; column--) {
-                    for (int row = height-1; row > 0; row--) {
-                        data[row][column] = data[row-1][column];
-                    }
-                }
-                overrideRow(removedRow, 0);
-            }
+            return false;
         }
-        
+    }
+    public boolean rotateRow(int rotations, int row){
+        Array arrayRow = getRow(row);
+        if(arrayRow != null){
+            arrayRow.rotate(rotations);
+            overrideRow(arrayRow, row);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     public void rotateColumns(int rotations){
-        for (int i = 0; i < rotations; i++) {
-            Array removedColumn = getColumn(0);
-            for (int row = 0; row < height; row++) {
-                for (int column = 0; column < width-1; column++) {
-                    data[row][column] = data[row][column+1];
-                }
-            }
-            overrideRow(removedColumn, width-1);
-        }
+        for (int row = 0; row < height; row++) {
+            Array currentRow = getRow(row);
+            currentRow.rotate(rotations);
+            overrideRow(currentRow, row);
+        } 
+    }
+    public void rotateRows(int rotations){
+          for (int column = 0; column < width; column++) {
+            Array currentColumn = getColumn(column);
+            currentColumn.rotate(rotations);
+            overrideColumn(currentColumn, column);
+        }     
     }
     public boolean overrideColumn(Array newColumn, int column){
         if(validIndex(column, width) && newColumn.getQuantity() == height){
@@ -341,6 +339,50 @@ public class Array2D{
     public void rotate180(){
         horizontalInvert();
         verticalInvert();
+    }
+    public Array2D getSubArray(int lowRow, int lowColumn, int highRow, int highColumn){
+        if(validIndexes(lowRow, lowColumn) && validIndexes(highRow, highColumn)){
+            if(lowRow > highRow){
+                int temp = highRow;
+                highRow = lowRow;
+                lowRow = temp;
+            }
+            if(lowColumn > highColumn){
+                int temp = highColumn;
+                highColumn = lowColumn;
+                lowColumn = temp;
+            }
+            Array2D subArray = new Array2D(highRow-lowRow+1, highColumn-lowColumn+1);
+            for (int row = lowRow; row <= highRow; row++) {
+                for (int column = lowColumn; column <= highColumn; column++) {
+                    subArray.modify(data[row][column], row-lowRow, column-lowColumn);
+                }
+            }
+            return subArray;
+        }
+        else{
+            return null;
+        }
+    }
+    public void iterateRows(Iterator iterator){
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                boolean keepGoing = iterator.iterate(data[row][column]);
+                if(keepGoing == false){
+                    return;
+                }
+            }
+        }
+    }
+    public void iterateColumns(Iterator iterator){
+        for (int column = 0; column < width; column++) {
+            for (int row = 0; row < height; row++) {
+                boolean keepGoing = iterator.iterate(data[row][column]);
+                if(keepGoing == false){
+                    return;
+                }
+            }
+        }
     }
     public Array2D copy(){
         Array2D arrayCopy = new Array2D(height, width);

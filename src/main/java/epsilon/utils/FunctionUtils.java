@@ -109,7 +109,7 @@ public class FunctionUtils{
 	}
 	public static NumericArray generateRandomIntegers(int minNumber, int maxNumber, int arraySize){
 		int difference = maxNumber-minNumber;
-		if(Math.abs(difference) < arraySize){
+		if(Math.abs(difference) > arraySize){
 			NumericArray randomNumbers = new NumericArray(arraySize);
 			while (randomNumbers.isFilled() == false){
 				int randomNumber = randomNumber(minNumber, maxNumber);

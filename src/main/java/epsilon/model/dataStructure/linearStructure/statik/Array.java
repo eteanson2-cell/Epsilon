@@ -20,6 +20,9 @@ public class Array implements DataList{
         upperIndex = -1;
         iterator = -1;
     }
+    public Array(){
+        this(1);
+    }
     @Override
     public boolean isEmpty(){
         return (upperIndex == -1);
@@ -82,14 +85,28 @@ public class Array implements DataList{
             return false;
         }
     }
-    public boolean push(Object object){
+    public void push(Object object){
         if(isFilled()){
             data[upperIndex-1] = object;
-            return true;
         }
         else{
-            return add(object);
+            add(object);
         }
+    }
+    public void shove(Object object){
+        if(isFilled()){
+            rotate(-1);
+            data[upperIndex-1] = object;
+        }
+        else{
+            add(object);
+        }
+    }
+    public void append(Object object){
+        if(isFilled()){
+            resize(capacity*2);
+        }
+        add(object);
     }
     public boolean modify(Object object, int index){
         if(validIndex(index)){
@@ -174,13 +191,42 @@ public class Array implements DataList{
     }
     @Override
     public void reverse(){
-        Queue queue = new Queue(getQuantity());
-        while (isEmpty() == false) { 
-            queue.add(remove());
+        reverse(0,upperIndex);
+    }
+    public boolean reverse(int startIndex, int endIndex){
+        if(validIndex(startIndex) && validIndex(endIndex)){
+            if(startIndex > endIndex){
+                int temp = endIndex;
+                endIndex = startIndex;
+                startIndex = temp;
+            }
+            int start = startIndex;
+            int end = endIndex;
+            while(start < end){
+                Object temp = data[end];
+                data[end] = data[start];
+                data[start] = temp;
+                start++;
+                end--;
+            }
+            return true;
         }
-        while(queue.isEmpty() == false){
-            add(queue.remove());
+        else{
+            return false;
         }
+    }
+    @Override
+    public void rotate(int rotations) {
+        int index = rotations%size();
+        if(index < 0){
+            index+= size();
+        }
+        else if(index == 0){
+            return;
+        }
+        reverse();
+        reverse(0, index-1);
+        reverse(index,upperIndex);
     }
     @Override
     public void print(){
@@ -395,4 +441,50 @@ public class Array implements DataList{
             return arrayString;
         }
     }    
+
+    @Override
+    public DataList[] slice(int index) {
+        if(validIndex(index)){
+            Array first = new Array(size());
+            Array second = new Array(size());
+            for (int i = 0; i < index; i++) {
+                first.add(data[i]);
+            }
+            for (int i = index; i < size(); i++) {
+                second.add(data[i]);
+            }
+            DataList[] lists = {first,second};
+            return lists;
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public LinkedList split(Object object, Comparator comparator) {
+        LinkedList arrays = new LinkedList();
+        Array currentArray = new Array(size());
+        for (int i = 0; i < size(); i++) {
+            Object currentData = data[i];
+            if(comparator.compare(currentData, object) == 0){
+                if(currentArray.isEmpty() == false){
+                    arrays.add(currentArray);
+                    currentArray = new Array(size()-i);
+                }
+            }
+            else{
+                currentArray.add(currentData);
+            }
+        }
+        if(currentArray.isEmpty() == false){
+            arrays.add(currentArray);
+        }
+        return arrays;
+    }
+
+    @Override
+    public LinkedList split(Object object) {
+        return split(object, new BaseObjectComparator());
+    }
 }

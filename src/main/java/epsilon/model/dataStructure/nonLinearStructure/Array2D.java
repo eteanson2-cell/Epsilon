@@ -2,7 +2,6 @@ package epsilon.model.dataStructure.nonLinearStructure;
 
 import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
-import epsilon.model.dataStructure.linearStructure.statik.Stack;
 import static epsilon.utils.FunctionUtils.getMin;
 import static epsilon.utils.FunctionUtils.isInRange;
 
@@ -106,7 +105,6 @@ public class Array2D{
         }
         redefine(transposed);
     }
-    //@SuppressWarnings("ManualArrayToCollectionCopy")
     public boolean resize(int height, int width){
         if(height > 0 && width > 0){
             Object[][] newData = new Object[height][width];
@@ -226,11 +224,64 @@ public class Array2D{
             return null;
         }
     }
+    public boolean reverseColumn(int column){
+        return reverseColumn(column, 0, height-1);
+    }
+    public boolean reverseRow(int row){
+        return reverseRow(row, 0, width-1);
+    }
+    public boolean reverseColumn(int column, int minRow, int maxRow){
+        if (validIndex(column, width) && validIndex(minRow, height) && validIndex(maxRow, height)) {
+            if(minRow > maxRow){
+                int temp = maxRow;
+                maxRow = minRow;
+                minRow = temp;
+            }
+            while(minRow < maxRow){
+                Object temp = data[maxRow][column];
+                data[maxRow][column] = data[minRow][column];
+                data[minRow][column] = temp;
+                minRow++;
+                maxRow--;
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean reverseRow(int row, int minColumn, int maxColumn){
+        if (validIndex(row, height) && validIndex(minColumn, width) && validIndex(maxColumn, width)) {
+            if(minColumn > maxColumn){
+                int temp = maxColumn;
+                maxColumn = minColumn;
+                minColumn = temp;
+            }
+            while(minColumn < maxColumn){
+                Object temp = data[row][maxColumn];
+                data[row][maxColumn] = data[row][minColumn];
+                data[row][minColumn] = temp;
+                minColumn++;
+                maxColumn--;
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public boolean rotateColumn(int rotations, int column){
-        Array arrayColumn = getColumn(column);
-        if(arrayColumn != null){
-            arrayColumn.rotate(rotations);
-            overrideRow(arrayColumn, column);
+        if(validIndex(column, width)){
+            rotations = rotations%height;
+            if(rotations < 0){
+                rotations += height;
+            }
+            else if(rotations == 0){
+                return true;
+            }
+            reverseColumn(column);
+            reverseColumn(column, 0, rotations-1);
+            reverseColumn(column, rotations, height-1);
             return true;
         }
         else{
@@ -238,10 +289,17 @@ public class Array2D{
         }
     }
     public boolean rotateRow(int rotations, int row){
-        Array arrayRow = getRow(row);
-        if(arrayRow != null){
-            arrayRow.rotate(rotations);
-            overrideRow(arrayRow, row);
+        if(validIndex(row, height)){
+            rotations = rotations%width;
+            if(rotations < 0){
+                rotations += width;
+            }
+            else if(rotations == 0){
+                return true;
+            }
+            reverseRow(row);
+            reverseRow(row, 0, rotations-1);
+            reverseRow(row, rotations, width-1);
             return true;
         }
         else{
@@ -250,16 +308,12 @@ public class Array2D{
     }
     public void rotateColumns(int rotations){
         for (int row = 0; row < height; row++) {
-            Array currentRow = getRow(row);
-            currentRow.rotate(rotations);
-            overrideRow(currentRow, row);
+            rotateRow(rotations, row);
         } 
     }
     public void rotateRows(int rotations){
           for (int column = 0; column < width; column++) {
-            Array currentColumn = getColumn(column);
-            currentColumn.rotate(rotations);
-            overrideColumn(currentColumn, column);
+            rotateColumn(rotations, column);
         }     
     }
     public boolean overrideColumn(Array newColumn, int column){
@@ -311,21 +365,13 @@ public class Array2D{
         }
     }
     public void horizontalInvert(){
-        Stack columns = new Stack(width);
-        while(width > 1){
-            columns.add(removeColumn(0));
-        }
-        while (columns.isEmpty() == false) { 
-            addColumn((Array)columns.remove());
+        for (int row = 0; row < height; row++) {
+            reverseRow(row);
         }
     }
     public void verticalInvert(){
-        Stack rows = new Stack(height);
-        while (height > 1) { 
-            rows.add(removeRow(0));
-        }
-        while (rows.isEmpty() == false) { 
-            addRow((Array)rows.remove());
+        for (int column = 0; column < width; column++) {
+            reverseColumn(column);
         }
     }
     public void rotateLeft(){

@@ -490,7 +490,7 @@ public class LinkedList implements DataList{
     }
 
     @Override
-    public LinkedList split(Object object, Comparator comparator) {
+    public DataList[] split(Object object, Comparator comparator) {
         LinkedList lists = new LinkedList();
         LinkedList currentLinkedList = new LinkedList();
         Node tempNode = first;
@@ -510,11 +510,19 @@ public class LinkedList implements DataList{
         if(currentLinkedList.isEmpty() == false){
             lists.add(currentLinkedList);
         }
-        return lists;
+        DataList[] datalists = new DataList[lists.size()];
+        lists.initializeIterator();
+        int i = 0;
+        while(lists.validIterator()){
+            datalists[i] = (DataList)lists.getIterator();
+            i++;
+            lists.moveIteratorToRight();
+        }
+        return datalists;
     }
 
     @Override
-    public LinkedList split(Object object) {
+    public DataList[] split(Object object) {
         return split(object, new BaseObjectComparator());
     }
 

@@ -1,24 +1,20 @@
 package epsilon.program;
 
 import epsilon.model.dataStructure.interfaces.DataList;
-import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
 public class splitListTest{
     public static void main(String[] args) {
-        Array arr = new Array(10);
-        for (int i = 0; i <= 10; i++) {
-            arr.add(randomNumber(0,11));
+        Array arr = new Array(30);
+        while(arr.isFilled() == false) {
+            arr.add(randomNumber(0,3));
         }
         System.out.println(arr);
-        LinkedList splitArr = arr.split(0);
-        System.out.println(splitArr);
-        DataList[] slicedList = splitArr.slice(1);
-        if(slicedList != null){
-            System.out.println(slicedList[0] + " | " + slicedList[1] + "\n");
+        DataList[] splitArr = arr.split(0);
+        for (DataList splitArr1 : splitArr) {
+            System.out.print(splitArr1); 
         }
-        arr.rotate(4);
-        System.out.println(arr);
+        
     }
 }

@@ -462,7 +462,7 @@ public class Array implements DataList{
     }
 
     @Override
-    public LinkedList split(Object object, Comparator comparator) {
+    public DataList[] split(Object object, Comparator comparator) {
         LinkedList arrays = new LinkedList();
         Array currentArray = new Array(size());
         for (int i = 0; i < size(); i++) {
@@ -480,11 +480,19 @@ public class Array implements DataList{
         if(currentArray.isEmpty() == false){
             arrays.add(currentArray);
         }
-        return arrays;
+        DataList[] arrs = new DataList[arrays.size()];
+        arrays.initializeIterator();
+        int i = 0;
+        while(arrays.validIterator()){
+            arrs[i] = (DataList)arrays.getIterator();
+            i++;
+            arrays.moveIteratorToRight();
+        }
+        return arrs;
     }
 
     @Override
-    public LinkedList split(Object object) {
+    public DataList[] split(Object object) {
         return split(object, new BaseObjectComparator());
     }
 }

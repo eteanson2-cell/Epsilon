@@ -1,7 +1,5 @@
 package epsilon.model.dataStructure.interfaces;
 
-import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
-
 public interface DataList{
     boolean isEmpty();
     void clear();
@@ -20,8 +18,8 @@ public interface DataList{
     boolean equals(DataList dataList);
     DataList copy();
     DataList[] slice(int index);
-    LinkedList split(Object object, Comparator comparator);
-    LinkedList split(Object object);
+    DataList[] split(Object object, Comparator comparator);
+    DataList[] split(Object object);
     boolean replace(DataList dataList);
     void print();
     void reversePrint();

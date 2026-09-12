@@ -29,21 +29,21 @@ public class hashTableTest{
                         hash = hash * prime;
                     }
                 }
-                return hash;
+                return new int[]{hash};
             }
             else{
                 throw new Error("The object is null");
             }
         },200000000);
-        int randomNumber = randomNumber(-2000000,20000000);
+        double randomNumber = randomNumber(-2000000.0,20000000.0);
         while(hashTable.add(randomNumber) == true){
             System.out.println("no collision");
-            randomNumber = randomNumber(-2000000,20000000);
+            randomNumber = randomNumber(-2000000.0,20000000.0);
         }
         System.out.print("a collision has ocurred with the number " + randomNumber);
         System.out.println(" at " + hashTable.find(randomNumber));
         System.out.println("Key = " + hashTable.find(randomNumber) + 
-                         "| Number = " + hashTable.get(hashTable.find(randomNumber)));
+                         "| Number = " + hashTable.get((int)hashTable.find(randomNumber).get(0)));
         //hashTable.print();
         
     }

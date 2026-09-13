@@ -47,6 +47,23 @@ public class DynamicGraph{
     public boolean hasNode(Object key){
         return nodes.hasKey(key);
     }
+    public boolean areConnected(Object node1, Object node2){
+        if(hasNode(node1) && hasNode(node2)){
+            LinkedList connectedEdges = getConnectedNodes(node1);
+            Array boolArray = new Array(1);
+            connectedEdges.iterateList((Object nodeObject) -> {
+                if(nodes.getComparator().compare(nodeObject, node2) == 0){
+                    boolArray.add(true);
+                    return false;
+                }
+                return true;
+            });
+            return boolArray.isFilled();
+        }
+        else{
+            return false;
+        }
+    }
     public Object find(Object data, Object startNode, Comparator comparator, TreeTraversal treeTraversal){
         if(nodes.hasKey(startNode)){
             DataBatch batch = selectBatch(treeTraversal);
@@ -92,6 +109,42 @@ public class DynamicGraph{
     }
     public Object find(Object data){
         return find(data, nodes.getRootKey());
+    }
+    public Object getWeight(Object node1, Object node2){
+        if(hasNode(node1) && hasNode(node2)){
+            Array object = new Array(1);
+            nodes.getList(node1).iterateList((Object nodeObject) -> {
+                GraphEdge edge = (GraphEdge)nodeObject;
+                if(nodes.getComparator().compare(edge.getKey(), node2) == 0){
+                    object.add(edge.getWeight());
+                    return true;
+                }
+                return true;
+            });
+            return object.get(0);
+        }
+        else{
+            return null;
+        }
+    }
+    public boolean setDirectedEdgeWeight(Object node1, Object node2, Object newWeight){
+        if(hasNode(node1) && hasNode(node2)){
+            nodes.getList(node1).iterateList((Object nodeObject) -> {
+                GraphEdge edge = (GraphEdge)nodeObject;
+                if(nodes.getComparator().compare(edge.getKey(), node2) == 0){
+                    edge.setWeight(newWeight);
+                }
+                return true;
+            });
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean setEdgeWeight(Object node1, Object node2, Object newWeight){
+        return setDirectedEdgeWeight(node1, node2, newWeight) && 
+               setDirectedEdgeWeight(node2, node1, newWeight);
     }
     public boolean removeNode(Object node){
         if(nodes.hasKey(node)){
@@ -144,7 +197,7 @@ public class DynamicGraph{
         }
     }
     public void iterateGraph(Iterator iterator, Object startNode, TreeTraversal treeTraversal){
-        if(nodes.hasKey(startNode)){
+        if(hasNode(startNode)){
             DataBatch batch = selectBatch(treeTraversal);
             SetTree scannedNodes = new SetTree(nodes.getComparator());
             batch.add(startNode);

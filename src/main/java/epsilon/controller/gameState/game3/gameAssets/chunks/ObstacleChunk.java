@@ -33,10 +33,10 @@ public abstract class ObstacleChunk{
         return metallicEdges;
     }
     public Array exportRocks(){
-        Array newRocks = new Array(rockPoints.getQuantity());
+        Array newRocks = new Array(100);
         rockPoints.iterateList((Object nodeObject) -> {
             Point rockPoint = (Point)nodeObject;
-            newRocks.add(new MetallicRock(
+            newRocks.append(new MetallicRock(
                 rockPoint.getX(),
                 benchmark-rockPoint.getY()));
             return true;
@@ -50,8 +50,33 @@ public abstract class ObstacleChunk{
         seed = (seed*seed)%101;
     }
     public Array exportLasers(){
-        LinkedList laserLines = lasers.getKeys();
-        Array newLasers = new Array(laserLines.size());
+        Array newLasers = new Array(100);
+        lasers.iteration((Object nodeObject) -> {
+            Array mapNode = (Array)nodeObject;
+            Line laserLine = (Line)mapNode.get(0);
+            LaserBarrier newLaser = new LaserBarrier(
+                laserLine.getFirstX(),
+                benchmark-laserLine.getFirstY(),
+                laserLine.getSecondX(),
+                benchmark-laserLine.getSecondY()
+            );
+            LinkedList laserMovements = (LinkedList)mapNode.get(1);
+            laserMovements.iterateList((Object nodeObject1) -> {
+                switch (nodeObject1) {
+                    case LaserMovement lm -> {  
+                        lm.fixToBenchmark(benchmark);
+                        newLaser.addMovement(lm);
+                    }
+                    case Number number -> newLaser.addNumber(number.intValue());
+                    case Boolean bool -> newLaser.addBoolean(bool);
+                    default -> {}
+                }
+                return true;
+            });
+            newLasers.append(newLaser);
+            return true;
+        });
+        /*LinkedList laserLines = lasers.getKeys();
         laserLines.iterateList((Object nodeObject) -> {
             Line laserLine = (Line)nodeObject;
             LaserBarrier newLaser = new LaserBarrier(
@@ -75,7 +100,7 @@ public abstract class ObstacleChunk{
             });
             newLasers.add(newLaser);
             return true;
-        });
+        });*/
         return newLasers;
     }
 }

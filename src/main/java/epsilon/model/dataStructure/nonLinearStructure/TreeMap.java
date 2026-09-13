@@ -166,6 +166,24 @@ public class TreeMap extends AbstractBinaryTree<MapNode>{
             }
         }
     }
+    public void iterateKeys(Iterator iterator, TreeTraversal treeTraversal){
+        iteration((Object nodeObject) -> {
+            Array mapNode = (Array)nodeObject;
+            return iterator.iterate(mapNode.get(0));
+        }, treeTraversal);
+    }
+    public void iterateLists(Iterator iterator, TreeTraversal treeTraversal){
+        iteration((Object nodeObject) -> {
+            Array mapNode = (Array)nodeObject;
+            return iterator.iterate(mapNode.get(1));
+        }, treeTraversal);
+    }
+    public void iterateKeys(Iterator iterator){
+        iterateKeys(iterator, TreeTraversal.BREADTH_FIRST_SEARCH);
+    }
+    public void iterateLists(Iterator iterator){
+        iterateLists(iterator, TreeTraversal.BREADTH_FIRST_SEARCH);
+    }
     public LinkedList getKeys(){
         return getKeys(TreeTraversal.BREADTH_FIRST_SEARCH);
     }

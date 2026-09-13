@@ -1,13 +1,14 @@
 package epsilon.model.dataStructure.linearStructure.statik;
 
 import epsilon.model.dataStructure.interfaces.DataList;
+import epsilon.model.dataStructure.interfaces.NumberList;
 import epsilon.model.enums.Operation;
 import static epsilon.utils.FunctionUtils.isNumeric;
 import static epsilon.utils.FunctionUtils.isNumericList;
 import static epsilon.utils.FunctionUtils.objectToDouble;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
-public class NumericArray extends Array{
+public class NumericArray extends Array implements NumberList{
     public NumericArray(int capacity){
         super(capacity);
     }
@@ -122,20 +123,20 @@ public class NumericArray extends Array{
     public boolean powScalar(Number scalar){
         return scalarOperation(scalar, Operation.POW);
     }
-    public boolean addScalars(NumericArray array){
-        return totalOperation(array, Operation.ADITTION);
+    public boolean addScalars(NumberList numbers){
+        return totalOperation(numbers, Operation.ADITTION);
     }
-    public boolean subtractScalars(NumericArray array){
-        return totalOperation(array, Operation.SUBTRACTION);
+    public boolean subtractScalars(NumberList numbers){
+        return totalOperation(numbers, Operation.SUBTRACTION);
     }
-    public boolean multiplyScalars(NumericArray array){
-        return totalOperation(array, Operation.MULTIPLICATION);
+    public boolean multiplyScalars(NumberList numbers){
+        return totalOperation(numbers, Operation.MULTIPLICATION);
     }
-    public boolean divideScalars(NumericArray array){
-        return totalOperation(array, Operation.DIVISION);
+    public boolean divideScalars(NumberList numbers){
+        return totalOperation(numbers, Operation.DIVISION);
     }
-    public boolean powScalars(NumericArray array){
-        return totalOperation(array, Operation.POW);
+    public boolean powScalars(NumberList numbers){
+        return totalOperation(numbers, Operation.POW);
     }
     public NumericArray ArrayPlusScalar(Number scalar){
         NumericArray copy = (NumericArray)copy();
@@ -157,31 +158,32 @@ public class NumericArray extends Array{
         copy.powScalar(scalar);
         return copy;
     }
-    public NumericArray ArrayPlusArray(NumericArray array){
+    public NumericArray ArrayPlusArray(NumberList numbers){
         NumericArray copy = (NumericArray)copy();
-        copy.addScalars(array);
+        copy.addScalars(numbers);
         return copy;
     }
-    public NumericArray ArrayMinusArray(NumericArray array){
+    public NumericArray ArrayMinusArray(NumberList numbers){
         NumericArray copy = (NumericArray)copy();
-        copy.subtractScalars(array);
+        copy.subtractScalars(numbers);
         return copy;
     }
-    public NumericArray ArrayForArray(NumericArray array){
+    public NumericArray ArrayForArray(NumberList numbers){
         NumericArray copy = (NumericArray)copy();
-        copy.multiplyScalars(array);
+        copy.multiplyScalars(numbers);
         return copy;
     }
-    public NumericArray ArrayDividedArray(NumericArray array){
+    public NumericArray ArrayDividedArray(NumberList numbers){
         NumericArray copy = (NumericArray)copy();
-        copy.divideScalars(array);
+        copy.divideScalars(numbers);
         return copy;
     }
-    public NumericArray ArrayPowArray(NumericArray array){
+    public NumericArray ArrayPowArray(NumberList numbers){
         NumericArray copy = (NumericArray)copy();
-        copy.powScalars(array);
+        copy.powScalars(numbers);
         return copy;
     }
+    @Override
     public boolean scalarOperation(Number scalar, Operation operation){
         if(isEmpty() == false){
             for (int index = 0; index < size(); index++) {
@@ -195,13 +197,16 @@ public class NumericArray extends Array{
             return false;
         }
     }
-    public boolean totalOperation(NumericArray array, Operation operation){
-        if(isEmpty() == false && array.size() == size()){
+    @Override
+    public boolean totalOperation(NumberList numbers, Operation operation){
+        if(isEmpty() == false && numbers.size() == size()){
+            numbers.initializeIterator();
             for (int index = 0; index < size(); index++) {
                 double number1 = objectToDouble(get(index));
-                double number2 = objectToDouble(array.get(index));
+                double number2 = objectToDouble(numbers.getIterator());
                 double result = operation.solveOperation(number1, number2);
                 modify(result, index);
+                numbers.moveIteratorToRight();
             }
             return true;
         }
@@ -209,6 +214,7 @@ public class NumericArray extends Array{
             return false;
         }
     }
+    @Override
     public double getTotal(){
         double total = 0;
         for (int i = 0; i < size(); i++) {
@@ -217,6 +223,7 @@ public class NumericArray extends Array{
         }
         return total;
     }
+    @Override
     public double getAverage(){
         if(isEmpty() == false){
             double average = getTotal();
@@ -226,6 +233,7 @@ public class NumericArray extends Array{
             return 0;
         }
     }
+    @Override
     public double getHighestNumber(){
         if(isEmpty() == false){
             double highest = objectToDouble(get(0));
@@ -241,6 +249,7 @@ public class NumericArray extends Array{
             return 0;
         }
     }
+    @Override
     public double getLowestNumber(){
         if(isEmpty() == false){
             double lowest = objectToDouble(get(0));
@@ -256,7 +265,8 @@ public class NumericArray extends Array{
             return 0;
         }
     }
-    public NumericArray getDistances(){
+    @Override
+    public NumberList getDistances(){
         if(isEmpty() == false && size() > 1){
             NumericArray distances = new NumericArray(size());
             for (int i = 1; i < size(); i++) {
@@ -271,48 +281,55 @@ public class NumericArray extends Array{
             return null;
         }
     }
+    @Override
     public double getNorm(){
         NumericArray copy = (NumericArray)copy();
         copy.powScalar(2);
         double total = copy.getTotal();
         return Math.sqrt(total);
     }
-    public double scalarProduct(NumericArray array){
-        if(isEmpty() == false && array.size() == size()){
-            array.multiplyScalars(this);
-            return array.getTotal();
+    @Override
+    public double scalarProduct(NumberList numbers){
+        if(isEmpty() == false && numbers.size() == size()){
+            numbers.totalOperation(this, Operation.MULTIPLICATION);
+            return numbers.getTotal();
         }
         else{
             return 0;
         }
     }
-    public double euclideanDistance(NumericArray array){
-        if(isEmpty() == false && array.size() == size()){
-            array.subtractScalars(this);
-            array.powScalar(2);
-            double total = array.getTotal();
+    @Override
+    public double euclideanDistance(NumberList numbers){
+        if(isEmpty() == false && numbers.size() == size()){
+            numbers.totalOperation(this, Operation.SUBTRACTION);
+            numbers.scalarOperation(2, Operation.POW);
+            double total = numbers.getTotal();
             return Math.sqrt(total);
         }
         else{
             return 0;
         }
     }
-    public boolean isOrthogonal(NumericArray array){
-        if(isEmpty() == false && size() == array.size()){
-            double scalarProduct = scalarProduct(array);
+    @Override
+    public boolean isOrthogonal(NumberList numbers){
+        if(isEmpty() == false && size() == numbers.size()){
+            double scalarProduct = scalarProduct(numbers);
             return scalarProduct == 0;
         }
         else{
             return false;
         }
     }
-    public boolean isParallel(NumericArray array){
-        if(isEmpty() == false && size() == array.size()){
-            array.divideScalars(this);
-            double firstNumber = objectToDouble(array.get(0));
-            for (int i = 1; i < array.size(); i++) {
-                if(firstNumber != objectToDouble(array.get(i))){
-                    return false;
+    @Override
+    public boolean isParallel(NumberList numbers){
+        if(isEmpty() == false && size() == numbers.size()){
+            if(numbers instanceof NumericArray array){
+                array.divideScalars(this);
+                double firstNumber = objectToDouble(array.get(0));
+                for (int i = 1; i < array.size(); i++) {
+                    if(firstNumber != objectToDouble(array.get(i))){
+                        return false;
+                    }
                 }
             }
             return true;
@@ -321,6 +338,7 @@ public class NumericArray extends Array{
             return false;
         }
     }
+    @Override
     public boolean isSorted(){
         for (int i = 1; i < size(); i++) {
             double number1 = objectToDouble(data[i-1]);

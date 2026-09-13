@@ -84,12 +84,7 @@ public class Array2D{
         if(matrix != null){
             this.width = matrix.width;
             this.height = matrix.height;
-            data = new Object[height][width];
-            for (int row = 0; row < height; row++) {
-                for (int column = 0; column < width; column++) {
-                    data[row][column] = matrix.getObject(row, column);
-                }
-            }
+            data = matrix.data;
             return true;
         }
         else{

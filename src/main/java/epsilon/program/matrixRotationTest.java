@@ -17,5 +17,6 @@ public class matrixRotationTest{
         arr.printRows();
         arr.rotateColumns(1);
         arr.printRows();
+        arr.getSubArray(0, 1, 2, 1).printRows();
     }
 }

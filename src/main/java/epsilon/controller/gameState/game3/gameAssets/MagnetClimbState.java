@@ -81,29 +81,7 @@ public class MagnetClimbState implements GameState{
         }
         rocks = new LinkedList();
         lasers = new LinkedList();
-        points = new DynamicGraph((Object obj1, Object obj2) -> {
-            Array arr1 = (Array)obj1;
-            Array arr2 = (Array)obj2;
-            Point p1 = (Point)arr1.get(1);
-            Point p2 = (Point)arr2.get(1);
-            if(p1.getY() < p2.getY()){
-                return -1;
-            }
-            else if(p1.getY() > p2.getY()){
-                return 1;
-            }
-            else{
-                if(p1.getX() < p2.getX()){
-                    return -1;
-                }
-                else if(p1.getX() > p2.getX()){
-                    return 1;
-                }
-                else{
-                    return 0;
-                }
-            }
-        });
+        points = new DynamicGraph(new PointGraphComparator());
         killerLaser = new LaserBarrier(-10, 200, 650, 200);
         killerLaser.addMovement(new LaserMovement(
             new Point(0,-1), new Point(0, -1), true, null, null, null, null));
@@ -237,18 +215,27 @@ public class MagnetClimbState implements GameState{
             if(oc.hasMetallicEdges() == true 
             && (newLaser.getPointA().getX() != newLaser.getPointB().getX() 
             ||  newLaser.getPointA().getY() != newLaser.getPointB().getY())){
-                addToGraph(newLaser.getPointA(), newLaser.getPointB());
+                addToGraph(newLaser);
             }
         }
         benchMark -= oc.getHeight()+100;
 
     }
-    private void addToGraph(Point pointA, Point pointB){
+    private void addToGraph(LaserBarrier laserBarrier){
+        Point pointA = laserBarrier.getPointA(); 
+        Point pointB = laserBarrier.getPointB();
         Array arr1 = pointToArray(pointA);
         Array arr2 = pointToArray(pointB);
         points.addNode(arr1);
         points.addNode(arr2);
-        points.addEdge(arr1, arr2);
+        if(laserBarrier.hasMovements()){
+            points.addEdge(arr1, arr2);
+        }
+        else{
+            points.addDirectedWeightedEdge(arr1, arr2, pointA.getAngle(pointB));
+            points.addDirectedWeightedEdge(arr2, arr1, pointB.getAngle(pointA));
+        }
+        
     }
     private Array pointToArray(Point p1){
         Array arr = new Array(2);
@@ -357,8 +344,7 @@ public class MagnetClimbState implements GameState{
             || p1.getY() > killerLaser.getPointA().getY()){
                 return true;
             }
-            LinkedList connectedEdges = points.getConnectedNodes(keyPoint);
-            NumericArray angles = getAngles(p1, connectedEdges);
+            NumericArray angles = getAngles(keyPoint);
             Double freeAngle;
             if(angles.size() == 1){
                 freeAngle = objectToDouble(angles.get(0))+180;
@@ -370,10 +356,17 @@ public class MagnetClimbState implements GameState{
             return true;
         }, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
-    protected NumericArray getAngles(Point p1, LinkedList connectedEdges){
+    protected NumericArray getAngles(Array arr){
+        LinkedList connectedEdges = points.getConnectedNodes(arr);
+        Point p1 = (Point)arr.get(0);
         NumericArray angles = new NumericArray(connectedEdges.size());
         connectedEdges.iterateList((Object nodeObject) -> {
             Array keyPoint = (Array)nodeObject;
+            Object weight = points.getWeight(arr, keyPoint);
+            if(weight instanceof Number){
+                angles.add(weight);
+                return true;
+            }
             Point currentPoint = (Point)keyPoint.get(0);
             angles.add(p1.getAngle(currentPoint));
             return true;
@@ -383,7 +376,7 @@ public class MagnetClimbState implements GameState{
         return angles;
     }
     protected Double getEdgeAngle(NumericArray array){
-        NumericArray distances = array.getDistances();
+        NumericArray distances = (NumericArray)array.getDistances();
         if(distances == null){
             return null;
         }

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import epsilon.controller.GameStateManager;
+import epsilon.controller.gameState.game3.gameAssets.chunks.CrusherChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.HighwayChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.HorizontalChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.LaserShooterChunk;
@@ -117,8 +118,8 @@ public class MagnetClimbState implements GameState{
                 return;
             }
             if(player.circle.getYCenter() < benchMark+ySpawn){
-                int randomChunk = randomNumber(1, 10);
-                //randomChunk = 1;
+                int randomChunk = randomNumber(1, 11);
+                //randomChunk = 10;
                 generateChunk(randomChunk);
             }
             updateRocks();
@@ -198,6 +199,7 @@ public class MagnetClimbState implements GameState{
             case 7 -> newChunk = new HighwayChunk(benchMark,randomSeed);
             case 8 -> newChunk = new PropellerChunk(benchMark, randomSeed);
             case 9 -> newChunk = new PinballChunk(benchMark, randomSeed);
+            case 10 -> newChunk = new CrusherChunk(benchMark, randomSeed);
             default -> newChunk = new RotatingPipesChunk(benchMark, randomSeed);
         }
         pullChunk(newChunk);
@@ -219,7 +221,6 @@ public class MagnetClimbState implements GameState{
             }
         }
         benchMark -= oc.getHeight()+100;
-
     }
     private void addToGraph(LaserBarrier laserBarrier){
         Point pointA = laserBarrier.getPointA(); 
@@ -266,6 +267,8 @@ public class MagnetClimbState implements GameState{
         drawLasers(g2d);
         drawEdges(g2d);
         killerLaser.draw(g2d);
+        g2d.setColor(Color.WHITE);
+        g2d.drawLine(0, (int)(benchMark+ySpawn), 650, (int)(benchMark+ySpawn));
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);

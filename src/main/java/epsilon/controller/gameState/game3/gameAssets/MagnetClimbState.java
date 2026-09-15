@@ -21,6 +21,7 @@ import epsilon.controller.gameState.game3.menu.GameOverMenu;
 import epsilon.controller.gameState.game3.menu.PauseMenu;
 import epsilon.controller.interfaces.ActionMenu;
 import epsilon.controller.interfaces.GameState;
+import epsilon.model.dataStructure.auxiliar.GraphEdge;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
@@ -360,21 +361,23 @@ public class MagnetClimbState implements GameState{
         }, TreeTraversal.BREADTH_FIRST_SEARCH);
     }
     protected NumericArray getAngles(Array arr){
-        LinkedList connectedEdges = points.getConnectedNodes(arr);
+        LinkedList connectedEdges = points.getEdges(arr);
         Point p1 = (Point)arr.get(0);
-        NumericArray angles = new NumericArray(connectedEdges.size());
+        NumericArray angles = new NumericArray(10);
         connectedEdges.iterateList((Object nodeObject) -> {
-            Array keyPoint = (Array)nodeObject;
-            Object weight = points.getWeight(arr, keyPoint);
+            GraphEdge graphEdge = (GraphEdge)nodeObject;
+            Object weight = graphEdge.getWeight();
             if(weight instanceof Number){
-                angles.add(weight);
-                return true;
+                angles.append(weight);
             }
-            Point currentPoint = (Point)keyPoint.get(0);
-            angles.add(p1.getAngle(currentPoint));
+            else{
+                Array keyPoint = (Array)graphEdge.getKey();
+                Point currentPoint = (Point)keyPoint.get(0);
+                angles.append(p1.getAngle(currentPoint));
+            }
             return true;
         });
-        angles.quickSort();
+        angles.mergeSort();
         //angles.add((double)angles.get(0)+360);
         return angles;
     }

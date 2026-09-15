@@ -196,6 +196,9 @@ public class DynamicGraph{
             return null;
         }
     }
+    public LinkedList getEdges(Object node){
+        return nodes.getList(node);
+    }
     public void iterateGraph(Iterator iterator, Object startNode, TreeTraversal treeTraversal){
         if(hasNode(startNode)){
             DataBatch batch = selectBatch(treeTraversal);

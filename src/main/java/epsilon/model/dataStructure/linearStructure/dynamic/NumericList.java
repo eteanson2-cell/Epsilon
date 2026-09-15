@@ -391,4 +391,74 @@ public class NumericList extends LinkedList implements NumberList{
         }
         return false;
     }
+    public void quickSort(){
+        if(first != last){
+            Object pivot = first.getData();
+            double pivotDouble = objectToDouble(pivot);
+            Node temp = first.getRightNode();
+            NumericList leftList = new NumericList();
+            NumericList rightList = new NumericList();
+            while (temp != null) { 
+                Object tempObj = temp.getData();
+                double tempDouble = objectToDouble(tempObj);
+                if(tempDouble < pivotDouble){
+                    leftList.add(tempObj);
+                }
+                else if(tempDouble >= pivotDouble){
+                    rightList.add(tempObj);
+                }
+                temp = temp.getRightNode();
+            }
+            leftList.quickSort();
+            rightList.quickSort();
+            clear();
+            addList(leftList);
+            add(pivot);
+            addList(rightList);
+        }
+    }
+    public void mergeSort(){
+        if(first != last){
+            Node middleNode = getNodePos(size()/2);
+            NumericList leftHalf = new NumericList();
+            NumericList rightHalf = new NumericList();
+
+            Node leftNode = middleNode.getLeftNode();
+            while (leftNode != null) { 
+                leftHalf.addAtStart(leftNode.getData());
+                leftNode = leftNode.getLeftNode();
+            }
+            Node rightNode = middleNode;
+            while (rightNode != null) { 
+                rightHalf.add(rightNode.getData());
+                rightNode = rightNode.getRightNode();
+            }
+            clear();
+            leftHalf.mergeSort();
+            rightHalf.mergeSort();
+            leftNode = leftHalf.first;
+            rightNode = rightHalf.first;
+            while (leftNode != null && rightNode != null) { 
+                Object obj1 = leftNode.getData();
+                Object obj2 = rightNode.getData();
+                if(objectToDouble(obj1) <= objectToDouble(obj2)){
+                    add(obj1);
+                    leftNode = leftNode.getRightNode();
+                }
+                else{
+                    add(obj2);
+                    rightNode = rightNode.getRightNode();
+                }
+            }
+            while(leftNode != null){
+                add(leftNode.getData());
+                leftNode = leftNode.getRightNode();
+            }
+            while (rightNode != null) { 
+                add(rightNode.getData());
+                rightNode = rightNode.getRightNode();
+            }
+        }
+        
+    }
 }

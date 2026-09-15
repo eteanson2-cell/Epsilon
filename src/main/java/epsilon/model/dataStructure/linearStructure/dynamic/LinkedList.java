@@ -7,7 +7,6 @@ import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.Stack;
-import static epsilon.utils.FunctionUtils.isInRange;
 
 public class LinkedList implements DataList{
     protected Node first;
@@ -109,18 +108,13 @@ public class LinkedList implements DataList{
         }
     }
     protected Node getNodePos(int index){
-        if(isEmpty() == false && isInRange(0,getQuantity()-1,index)){
-            int counter = 0;
-            Node tempNode = first;
-            while(counter < index){
-                tempNode = tempNode.getRightNode();
-                counter += 1;
-            }
-            return tempNode;
+        int counter = 0;
+        Node tempNode = first;
+        while(counter < index && tempNode != null){
+            tempNode = tempNode.getRightNode();
+            counter += 1;
         }
-        else{
-            return null;
-        }
+        return tempNode;
     }
     @Override
     public Object find(Object object){
@@ -337,8 +331,25 @@ public class LinkedList implements DataList{
     }
     @Override
     public boolean addList(DataList dataList){
-        dataList.iterateList(this::add);
-        return true;
+        if(dataList != null && dataList.isEmpty() == false){
+            if(dataList instanceof LinkedList list){
+                if(isEmpty()){
+                    first = list.first;
+                }
+                else{
+                    last.setRightNode(list.first);
+                }
+                last = list.last;
+            }
+            else{
+                dataList.iterateList(this::add);
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+        
     }
     @Override
     public int count(Object object){

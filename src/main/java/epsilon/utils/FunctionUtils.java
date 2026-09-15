@@ -2,10 +2,10 @@ package epsilon.utils;
 
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
+import epsilon.model.dataStructure.interfaces.NumberList;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
-import epsilon.model.dataStructure.linearStructure.dynamic.NumericList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.entities.figures.Point;
@@ -138,7 +138,7 @@ public class FunctionUtils{
     }
 	public static boolean isNumericList(DataList dataList){
 		if(dataList != null){
-			if(dataList instanceof NumericArray || dataList instanceof NumericList){
+			if(dataList instanceof NumberList){
 				return true;
 			}
 			else{

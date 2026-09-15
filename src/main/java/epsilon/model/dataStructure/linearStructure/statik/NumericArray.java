@@ -6,7 +6,6 @@ import epsilon.model.enums.Operation;
 import static epsilon.utils.FunctionUtils.isNumeric;
 import static epsilon.utils.FunctionUtils.isNumericList;
 import static epsilon.utils.FunctionUtils.objectToDouble;
-import static epsilon.utils.FunctionUtils.randomNumber;
 
 public class NumericArray extends Array implements NumberList{
     public NumericArray(int capacity){
@@ -351,7 +350,7 @@ public class NumericArray extends Array implements NumberList{
     }
     public void quickSort(){
         if(size() > 1){
-            int index = randomNumber(0,size());
+            int index = 0;
             double pivot = objectToDouble(get(index));
             NumericArray leftArray = new NumericArray(size());
             NumericArray rightArray = new NumericArray(size());
@@ -369,12 +368,49 @@ public class NumericArray extends Array implements NumberList{
                 }
             }
             obj = get(index);
-            clear();
             leftArray.quickSort();
+            rightArray.quickSort();
+            clear();
             addList(leftArray);
             add(obj);
-            rightArray.quickSort();
             addList(rightArray);
+        }
+    }
+    public void mergeSort(){
+        if(size() > 1){
+            int half = size()/2;
+            NumericArray half1 = new NumericArray(size());
+            for (int i = 0; i < half; i++) {
+                half1.add(data[i]);
+            }
+            NumericArray half2 = new NumericArray(size());
+            for (int i = half; i < size(); i++) {
+                half2.add(data[i]);
+            }
+            clear();
+            half1.mergeSort();
+            half2.mergeSort();
+            int i = 0, j = 0;
+            while(i < half1.size() && j < half2.size()){
+                Object obj1 = half1.get(i);
+                Object obj2 = half2.get(j);
+                if(objectToDouble(obj1) <= objectToDouble(obj2)){
+                    add(obj1);
+                    i++;
+                }
+                else{
+                    add(obj2);
+                    j++;
+                }
+            }
+            while(i < half1.size()){
+                add(half1.get(i));
+                i++;
+            }
+            while (j < half2.size()) { 
+                add(half2.get(j));
+                j++;
+            }
         }
     }
 }

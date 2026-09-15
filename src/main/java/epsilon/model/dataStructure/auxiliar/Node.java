@@ -50,4 +50,38 @@ public class Node{
     public void cleanLeft(){
         prev = null;
     }
+    public int countLeftNodes(){
+        int counter = 0;
+        Node leftNode = prev;
+        while(leftNode != null){
+            counter++;
+            leftNode = leftNode.getLeftNode();
+        }
+        return counter;
+    }
+    public int countRightNodes(){
+        int counter = 0;
+        Node rightNode = next;
+        while(rightNode != null){
+            counter++;
+            rightNode = rightNode.getRightNode();
+        }
+        return counter;
+    }
+    public Node getFarRightNode(){
+        if(next == null){
+            return this;
+        }
+        else{
+            return next.getFarRightNode();
+        }
+    }
+    public Node getFarLeftNode(){
+        if(prev == null){
+            return this;
+        }
+        else{
+            return prev.getFarLeftNode();
+        }
+    }
 }

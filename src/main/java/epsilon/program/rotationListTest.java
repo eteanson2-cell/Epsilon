@@ -1,7 +1,5 @@
 package epsilon.program;
 
-
-
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import static epsilon.utils.FunctionUtils.randomNumber;
@@ -16,11 +14,12 @@ public class rotationListTest{
         list.rotate(4);
         System.out.println(list + "\n");
         Array arr = new Array(10);
-        while (arr.isFilled() == false) { 
+        while (!arr.isFilled()) { 
             arr.add(randomNumber(0,100));
         }
         System.out.println(arr);
         arr.append(9732);
         System.out.println(arr);
+        System.out.println(arr.subList(5, -4).toString());
     }
 }

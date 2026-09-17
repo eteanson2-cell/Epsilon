@@ -379,17 +379,17 @@ public class LinkedList implements DataList{
         });
     }
     public boolean equals(DataList dataList, Comparator comparator){
-        if(dataList instanceof LinkedList list && list.size() == size()){
+        if(dataList.size() == size()){
             initializeIterator();
             dataList.initializeIterator();
             while (validIterator() == true) { 
                 Object obj1 = getIterator();
-                Object obj2 = list.getIterator();
+                Object obj2 = dataList.getIterator();
                 if(comparator.compare(obj1, obj2) != 0){
                     return false;
                 }
                 moveIteratorToRight();
-                list.moveIteratorToRight();
+                dataList.moveIteratorToRight();
             }
             return true;
         }
@@ -409,9 +409,20 @@ public class LinkedList implements DataList{
     }
     @Override
     public boolean replace(DataList dataList){
-        clear();
-        dataList.iterateList(this::add);
-        return true;
+        if(dataList != null){
+            if(dataList instanceof LinkedList list){
+                first = list.first;
+                last = list.last;
+            }
+            else{
+                clear();
+                dataList.iterateList(this::add);
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     @Override
     public void initializeIterator(){
@@ -557,5 +568,28 @@ public class LinkedList implements DataList{
             last.cleanRight();
         }
         
+    }
+    @Override
+    public DataList subList(int index, int width) {
+        Node temp = getNodePos(index);
+        if(temp != null && width != 0){
+            LinkedList sublist = new LinkedList();
+            int counter = 0;
+            while (temp != null && counter != width) { 
+                sublist.add(temp.getData());
+                if(width > 0){
+                    temp = temp.getRightNode();
+                    counter++;
+                }
+                else{
+                    temp = temp.getLeftNode();
+                    counter--;
+                }
+            }
+            return sublist;
+        }
+        else{
+            return null;
+        }
     }
 }

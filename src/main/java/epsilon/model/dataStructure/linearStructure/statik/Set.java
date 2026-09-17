@@ -1,12 +1,20 @@
 package epsilon.model.dataStructure.linearStructure.statik;
 
+import epsilon.model.dataStructure.auxiliar.BaseObjectComparator;
+import epsilon.model.dataStructure.interfaces.Comparator;
+
 public class Set extends Array{
-    public Set(int capacity){
+    protected Comparator comparator;
+    public Set(int capacity, Comparator comparator){
         super(capacity);
+        this.comparator = comparator;
+    }
+    public Set(int capacity){
+        this(capacity, new BaseObjectComparator());
     }
     @Override
     public boolean add(Object object){
-        int objectPosition = (int)find(object);
+        int objectPosition = (int)find(object, comparator);
         if(objectPosition == -1){
             return super.add(object);
         }

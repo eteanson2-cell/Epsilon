@@ -7,6 +7,7 @@ import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import static epsilon.utils.FunctionUtils.getMin;
+import static epsilon.utils.FunctionUtils.getSign;
 import static epsilon.utils.FunctionUtils.isInRange;
 
 public class Array implements DataList{
@@ -270,13 +271,11 @@ public class Array implements DataList{
             data[i] = object;
         }
     }
-    @SuppressWarnings("ManualArrayToCollectionCopy")
+    //@SuppressWarnings("ManualArrayToCollectionCopy")
     public boolean resize(int size){
         if(size > 0){
             Object[] newData = new Object[size];
-            for (int i = 0; i < getMin(size(),size); i++) {
-                newData[i] = data[i];
-            }
+            System.arraycopy(data, 0, newData, 0, (int)getMin(size(),size));
             data = newData;
             capacity = size;
             if(upperIndex >= size){
@@ -373,13 +372,31 @@ public class Array implements DataList{
     }
     @Override
     public boolean replace(DataList dataList){
-        clear();
-        dataList.iterateList(this::add);
-        return true;
+        if(dataList != null){
+            if(dataList instanceof Array arr){
+                data = arr.data;
+                upperIndex = arr.upperIndex;
+                capacity = arr.capacity;
+            }
+            else{
+                capacity = dataList.size();
+                data = new Object[capacity];
+                upperIndex = -1;
+                dataList.iterateList(this::add);
+            }
+            
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     @Override
     public void initializeIterator(){
         iterator = 0;
+    }
+    public void initializeIterator(int initialIndex){
+        iterator = initialIndex;
     }
     @Override
     public void moveIteratorToRight(){
@@ -494,5 +511,20 @@ public class Array implements DataList{
     @Override
     public DataList[] split(Object object) {
         return split(object, new BaseObjectComparator());
+    }
+
+    @Override
+    public DataList subList(int index, int width) {
+        if(validIndex(index) && width != 0){
+            Array subArray = new Array(Math.abs(width));
+            int fixer = getSign(width);
+            for (int i = index; validIndex(i) && !subArray.isFilled(); i+= fixer) {
+                subArray.add(data[i]);
+            }
+            return subArray;
+        }
+        else{
+            return null;
+        }
     }
 }

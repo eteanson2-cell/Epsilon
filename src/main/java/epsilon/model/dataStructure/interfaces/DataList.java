@@ -17,6 +17,7 @@ public interface DataList{
     int count(Object object, Comparator comparator);
     boolean equals(DataList dataList);
     DataList copy();
+    DataList subList(int index, int width);
     DataList[] slice(int index);
     DataList[] split(Object object, Comparator comparator);
     DataList[] split(Object object);

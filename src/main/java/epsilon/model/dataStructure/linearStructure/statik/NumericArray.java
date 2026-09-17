@@ -20,6 +20,25 @@ public class NumericArray extends Array implements NumberList{
             return false;
         }
     }
+    @Override
+    public void push(Object object){
+        if(isNumeric(object)){
+            super.push(object);
+        }
+
+    }
+    @Override
+    public void shove(Object object){
+        if(isNumeric(object)){
+            super.shove(object);
+        }
+    }
+    @Override
+    public void append(Object object){
+        if(isNumeric(object)){
+            super.append(object);
+        }
+    }
     public boolean addSorted(Object object){
         if(isNumeric(object) && isFilled() == false){
             Number number = (Number)object;

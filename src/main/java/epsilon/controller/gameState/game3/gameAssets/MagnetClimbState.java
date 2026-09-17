@@ -268,8 +268,8 @@ public class MagnetClimbState implements GameState{
         drawLasers(g2d);
         drawEdges(g2d);
         killerLaser.draw(g2d);
-        g2d.setColor(Color.WHITE);
-        g2d.drawLine(0, (int)(benchMark+ySpawn), 650, (int)(benchMark+ySpawn));
+        /*g2d.setColor(Color.WHITE);
+        g2d.drawLine(0, (int)(benchMark+ySpawn), 650, (int)(benchMark+ySpawn));*/
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);
@@ -321,11 +321,11 @@ public class MagnetClimbState implements GameState{
         double x;
         int colorSaturation = 255;
         if(currentLaser.getPointA().getX() < 0 && currentLaser.getPointB().getX() < 0){
-            x = 5;
+            x = 10;
             colorSaturation += (int)currentLaser.getPointA().getX()/10;
         }
         else {
-            x = 635;
+            x = 630;
             colorSaturation = 255 - ((int)(currentLaser.getPointA().getX()-640)/10);
         }
         if(colorSaturation < 10){

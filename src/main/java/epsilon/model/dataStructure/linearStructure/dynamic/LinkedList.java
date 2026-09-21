@@ -244,7 +244,8 @@ public class LinkedList implements DataList{
         Node tempNode = getNode(object, comparator);
         return removeNode(tempNode);
     }
-    public LinkedList removeAll(Object object, Comparator comparator){
+    @Override
+    public DataList removeAll(Object object, Comparator comparator){
         LinkedList objects = new LinkedList();
         LinkedList nodes = getNodes(object, comparator);
         nodes.initializeIterator();

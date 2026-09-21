@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 
 import epsilon.model.dataStructure.auxiliar.VoidComparator;
 import epsilon.model.dataStructure.interfaces.Comparator;
+import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.entities.figures.auxiliar.Particle;
 import epsilon.model.entities.interfaces.IEntity;
@@ -121,6 +122,9 @@ public class ParticleSpawn implements IEntity{
     public void setAllRanges(double range){
         setAllRanges(range, new VoidComparator());
     }
+    public void iterateParticles(Iterator iterator){
+        entities.iterateList(iterator);
+    }
     @Override
     public void draw(Graphics2D g2d){
         entities.iterateList((Object nodeObject) ->{
@@ -129,6 +133,7 @@ public class ParticleSpawn implements IEntity{
             return true;
         });
     }
+    
     @Override
     public Point getCenter() {
         return origin;

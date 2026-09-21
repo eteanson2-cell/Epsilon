@@ -2,13 +2,12 @@ package epsilon.program;
 
 import java.nio.ByteBuffer;
 
-import epsilon.model.dataStructure.linearStructure.statik.HashTable;
+import epsilon.model.dataStructure.linearStructure.statik.HashMap;
 import static epsilon.utils.FunctionUtils.randomNumber;
 
 public class hashTableTest{
     public static void main(String[] args) {
-        HashTable hashTable = new HashTable(
-            (Object key) -> {
+        HashMap hashMap = new HashMap((Object key) -> {
             if(key != null){
                 int hash = 216613626;
                 int prime = 16777619;
@@ -29,22 +28,17 @@ public class hashTableTest{
                         hash = hash * prime;
                     }
                 }
-                return new int[]{hash};
+                return hash;
             }
             else{
                 throw new Error("The object is null");
             }
-        },200000000);
-        double randomNumber = randomNumber(-2000000.0,20000000.0);
-        while(hashTable.add(randomNumber) == true){
-            System.out.println("no collision");
-            randomNumber = randomNumber(-2000000.0,20000000.0);
+        },20000000);
+        double key = randomNumber(0.0,1000.0);
+        while(hashMap.addKey(key)){
+            hashMap.addObject(randomNumber(0, 100), key);
+            key = randomNumber(0.0,1000.0);
         }
-        System.out.print("a collision has ocurred with the number " + randomNumber);
-        System.out.println(" at " + hashTable.find(randomNumber));
-        System.out.println("Key = " + hashTable.find(randomNumber) + 
-                         "| Number = " + hashTable.get((int)hashTable.find(randomNumber).get(0)));
-        //hashTable.print();
-        
+        hashMap.print();
     }
 }

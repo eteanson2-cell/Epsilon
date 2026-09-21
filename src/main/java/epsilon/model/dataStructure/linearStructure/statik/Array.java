@@ -175,16 +175,17 @@ public class Array implements DataList{
             return null;
         }
     }
-    public LinkedList removeAll(Object object, Comparator comparator){
-        LinkedList removedList = new LinkedList();
+    @Override
+    public DataList removeAll(Object object, Comparator comparator){
+        Array removedArray = new Array(size());
         for (int i = 0; i < size(); i++) {
             int comparison = comparator.compare(object, data[i]);
             if(comparison == 0){
-                removedList.add(remove(i));
+                removedArray.add(remove(i));
                 i--;
             }
         }
-        return removedList;
+        return removedArray;
     }
     @Override
     public void clear(){

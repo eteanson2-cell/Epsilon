@@ -19,16 +19,14 @@ public class HashTable{
         reorganize();
     }
     public boolean add(Object newData){
-        int[] indexes = hashFunction.hash(newData);
-        boolean added = false;
-        for (int i = 0; i < indexes.length; i++) {
-            int index = fixIndex(indexes[i]);
-            if(data[index] == null){
-                data[index] = newData;
-                added = true;
-            }
+        int index = fixIndex(hashFunction.hash(newData));
+        if(data[index] == null){
+            data[index] = newData;
+            return true;
         }
-        return added;
+        else{
+            return false;
+        }
     }
     public LinkedList addList(DataList datalist){
         LinkedList booleans = new LinkedList();
@@ -38,18 +36,11 @@ public class HashTable{
         });
         return booleans;
     }
-    public LinkedList push(Object newData){
-        int[] indexes = hashFunction.hash(newData);
-        LinkedList pushedObjects= new LinkedList();
-        for (int i = 0; i < indexes.length; i++) {
-            int index = fixIndex(indexes[i]);
-            Object prevData = data[index];
-            if(prevData != null){
-                pushedObjects.add(prevData);
-            }
-            data[index] = newData;
-        }
-        return pushedObjects;
+    public Object push(Object newData){
+        int index = fixIndex(hashFunction.hash(newData));
+        Object prevData = data[index];
+        data[index] = newData;
+        return prevData;
     }
     public LinkedList pushList(DataList datalist){
         LinkedList removedObjects = new LinkedList();
@@ -62,27 +53,23 @@ public class HashTable{
         });
         return removedObjects;
     }
-    public LinkedList shove(Object newData){
-        int[] indexes = hashFunction.hash(newData);
-        LinkedList shovedObjects = new LinkedList();
-        for (int i = 0; i < indexes.length; i++) {
-            int index = fixIndex(indexes[i]);
-            Object prevData = data[index];
-            if(prevData != null){
-                int comparison = compareHashes(newData, prevData);
-                if(comparison < 0){
-                    shovedObjects.add(newData);
-                }
-                else{
-                    data[index] = newData;
-                    shovedObjects.add(prevData);
-                }
+    public Object shove(Object newData){
+        int index = fixIndex(hashFunction.hash(newData));
+        Object prevData = data[index];
+        if(prevData != null){
+            int comparison = compareHashes(newData, prevData);
+            if(comparison < 0){
+                return newData;
             }
             else{
                 data[index] = newData;
+                return prevData;
             }
         }
-        return shovedObjects;
+        else{
+            data[index] = newData;
+            return null;
+        }
     }
     public LinkedList shoveList(DataList datalist){
         LinkedList removedObjects = new LinkedList();
@@ -111,16 +98,14 @@ public class HashTable{
             return null;
         }
     }
-    public LinkedList find(Object obj){
-        int[] indexes = hashFunction.hash(obj);
-        LinkedList foundIndexes = new LinkedList();
-        for (int i = 0; i < indexes.length; i++) {
-            int index = fixIndex(indexes[i]);
-            if(data[index] != null){
-                foundIndexes.add(index);
-            }
+    public int find(Object obj){
+        int index = fixIndex(hashFunction.hash(obj));
+        if(data[index] != null){
+            return index;
         }
-        return foundIndexes;
+        else{
+            return -1;
+        }
     }
     public Object remove(int key){
         if(validIndex(key) == true){
@@ -132,17 +117,15 @@ public class HashTable{
             return null;
         }
     }
-    public LinkedList delete(Object obj){
-        int[] indexes = hashFunction.hash(obj);
-        LinkedList deletedIndexes = new LinkedList();
-        for (int i = 0; i < indexes.length; i++) {
-            int index = fixIndex(indexes[i]);
-            if(data[index] != null){
-                data[index] = null;
-                deletedIndexes.add(index);
-            }
+    public int delete(Object obj){
+        int index = fixIndex(hashFunction.hash(obj));
+        if(data[index] != null){
+            data[index] = null;
+            return index;
         }
-        return deletedIndexes;
+        else{
+            return -1;
+        }
     }
     public void clear(){
         clear(data.length);
@@ -150,7 +133,7 @@ public class HashTable{
     public void clear(int newSize){
         data = new Object[newSize];
     }
-    public int[] hashObject(Object obj){
+    public int hashObject(Object obj){
         return hashFunction.hash(obj);
     }
     public void resize(int newSize){
@@ -167,31 +150,8 @@ public class HashTable{
             return true;
         });
     }
-    public void resize(int newSize, boolean reorganize){
-        if(reorganize == true){
-            resize(newSize);
-        }
-        else{
-            Object[] newData = new Object[newSize];
-            for (int i = 0; i < data.length && i < newSize; i++) {
-                newData[i] = data[i];
-            }
-            data = newData;
-        }
-    }
     public void reorganize(){
-        LinkedList storedData = new LinkedList();
-        for (int i = 0; i < data.length; i++) {
-            if(data[i] != null){
-                Object currentData = data[i];
-                data[i] = null;
-                storedData.add(currentData);
-            }
-        }
-        storedData.iterateList((Object nodeObject) -> {
-            add(nodeObject);
-            return true;
-        });
+        resize(data.length);
     }
     public void print(){
         for (int i = 0; i < data.length; i++) {
@@ -202,27 +162,17 @@ public class HashTable{
         }
     }
     protected int compareHashes(Object obj1, Object obj2){
-        int[] indexes1 = hashFunction.hash(obj1);
-        int[] indexes2 = hashFunction.hash(obj2);
-        if(indexes1.length > indexes2.length){
+        int hash1 = hashFunction.hash(obj1);
+        int hash2 = hashFunction.hash(obj2);
+        if(hash1 > hash2){
             return -1;
         }
-        else if (indexes1.length < indexes2.length) {
+        else if(hash1 < hash2){
             return 1;
         }
         else{
-            for (int i = 0; i < indexes1.length; i++) {
-                int hash1 = indexes1[i];
-                int hash2 = indexes2[i];
-                if(hash1 > hash2){
-                    return -1;
-                }
-                else if(hash1 < hash2){
-                    return 1;
-                }
-            }
+            return 0;
         }
-        return 0;
     }
     protected int fixIndex(int index){
         return Math.abs(index)%data.length;

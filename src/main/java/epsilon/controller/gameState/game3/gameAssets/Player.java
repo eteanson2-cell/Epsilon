@@ -6,15 +6,23 @@ import java.awt.Graphics2D;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.Queue;
 import epsilon.model.entities.figures.Oval;
+import epsilon.model.entities.figures.ParticleSpawn;
+import epsilon.model.entities.figures.Point;
+import epsilon.model.entities.figures.Polygon;
+import epsilon.model.entities.figures.Rectangle;
+import static epsilon.utils.FunctionUtils.euclideanDistance;
+import static epsilon.utils.FunctionUtils.getMax;
 import static epsilon.utils.FunctionUtils.isInRange;
 
 public class Player{
     int maxSpeed;
     double deceleration;
     public Oval circle;
+    public Point center;
     public double speedx;
     public double speedy;
     private Queue traces;
+    protected ParticleSpawn particles;
     int xlimit;
     MetallicRock hookedRock;
     double maxHeight;
@@ -23,6 +31,7 @@ public class Player{
     }
     public final void init(){
         circle = new Oval(0, 0, 8);
+        center = new Point(0,0);
         traces = new Queue(10);
         speedx = 0;
         speedy = 0;
@@ -32,6 +41,11 @@ public class Player{
         xlimit = 640;
         maxHeight = 0;
         circle.setInsideColor(new Color(0, 0, 255));
+        Rectangle rect = new Rectangle(0, 0, 5, 5);
+        rect.setInsideColor(new Color(0, 255, 255, 192));
+        particles = new ParticleSpawn(
+            new Point(0,359), 0, 0, center, 10, rect, 1, 2
+        );
     }
     public double getMagnitude(){
         return Math.sqrt(Math.pow(speedx, 2) + Math.pow(speedy, 2));
@@ -51,10 +65,21 @@ public class Player{
     public void update(){
         traces.forceAdd(new Oval(circle.getXCenter(),circle.getYCenter(),8));
         if(hookedRock != null){
-            pullTowards(hookedRock);
+            MetallicRock copyRock = new MetallicRock(hookedRock.getXCenter(), hookedRock.getYCenter());
+            Point rockPoint = copyRock.getCircle().getCenter().copy();
+            double pullRate = copyRock.getPullRate();
+            pullTowards(rockPoint, pullRate);
+            double angle = center.getAngle(rockPoint);
+            double range = euclideanDistance(center, rockPoint);
+            setParticlesProperties(angle, angle+Double.MIN_NORMAL, range, getMax(particles.range/15,maxSpeed*3));
+            particles.update();           
         }
         else{
             setInertiaSpeed(); 
+            if(particles.range > 1){
+                setParticlesProperties(0, 359, 1, 10);
+                particles.clearParticles();
+            }
         }
         if(getMagnitude() > maxSpeed){
             setMagnitude(maxSpeed);
@@ -62,9 +87,10 @@ public class Player{
         fixSpeed();
         circle.move(speedx, speedy);
         if(circle.getYCenter() < maxHeight){
-            
             maxHeight = circle.getYCenter();
         }
+        center.setX(circle.getXCenter());
+        center.setY(circle.getYCenter());
     }
     public void setMagnitude(double newMagnitude){
         double magnitude = getMagnitude();
@@ -98,9 +124,9 @@ public class Player{
             speedy = 0;
         }
     }
-    private void pullTowards(MetallicRock metallicRock){
-        double y = metallicRock.getCircle().getYCenter()-circle.getYCenter();
-        double x = metallicRock.getCircle().getXCenter()-circle.getXCenter();
+    private void pullTowards(Point rockPoint, double pullRate){
+        double y = rockPoint.getY()-circle.getYCenter();
+        double x = rockPoint.getX()-circle.getXCenter();
         double theta = Math.atan2(y, x);
         double distA = Math.pow(x, 2);
         double distB = Math.pow(y, 2);
@@ -110,7 +136,6 @@ public class Player{
             speedy = y;
         }
         else{
-            double pullRate = metallicRock.getPullRate();
             speedx += Math.cos(theta)*pullRate;
             speedy += Math.sin(theta)*pullRate;
         }
@@ -134,6 +159,46 @@ public class Player{
             currCircle.setInsideColor(new Color(0, 0, 255, 255/(traceList.size()-i+1)));
             currCircle.fill(g2d);
         }
+        if(isHooked()){
+            drawHookLine(g2d);
+            particles.draw(g2d);
+        }
         circle.fill(g2d);
     }
+    private void drawHookLine(Graphics2D g2d){
+        Point rockPoint = hookedRock.getCircle().getCenter().copy();
+        double angle = Math.toRadians(circle.getCenter().getAngle(rockPoint));
+        for (int i = 1; i <= 5; i++) {
+            Point pts[] = new Point[4];
+            for (int j = -1; j < 2; j+=2) {
+                double tempAngle = angle + (j*1.5708);
+                double cos = i*Math.cos(tempAngle);
+                double sin = i*Math.sin(tempAngle);
+                Point pointA = new Point(
+                    circle.getXCenter()+cos, 
+                    circle.getYCenter()+sin);
+                Point pointB = new Point(
+                    rockPoint.getX()+cos, 
+                    rockPoint.getY()+sin);
+                if(j < 0){
+                    pts[j+1] = pointA;
+                    pts[j+2] = pointB;
+                }
+                else{
+                    pts[j+1] = pointB;
+                    pts[j+2] = pointA;
+                }
+            }
+            Polygon grossLine = new Polygon(pts);
+            grossLine.setInsideColor(new Color(0, 255, 255, 40));
+            grossLine.fill(g2d);
+        }
+    }
+    private void setParticlesProperties(double minAngle, double maxAngle, double range, double speed){
+        particles.minAngle = minAngle;
+        particles.maxAngle = maxAngle;
+        particles.range = range;
+        particles.speed = speed;
+    }
+
 }

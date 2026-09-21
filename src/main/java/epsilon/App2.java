@@ -16,7 +16,6 @@ public class App2 {
 		magnetClimbFrame.setResizable(false);
 		magnetClimbFrame.pack();
 		magnetClimbFrame.setVisible(true);
-
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		magnetClimbFrame.setLocation(dim.width / 2 - magnetClimbFrame.getSize().width / 2, 
                                     dim.height / 2 - magnetClimbFrame.getSize().height / 2);

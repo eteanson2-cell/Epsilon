@@ -9,6 +9,7 @@ public interface DataList{
     Object remove();
     Object remove(Object object);
     Object remove(Object object, Comparator comparator);
+    DataList removeAll(Object object, Comparator comparator);
     void reverse();
     void rotate(int rotations);
     boolean addList(DataList dataList);

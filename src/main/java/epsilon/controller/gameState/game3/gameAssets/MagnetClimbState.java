@@ -49,7 +49,7 @@ public class MagnetClimbState implements GameState{
     private LinkedList lasers;
     private LaserBarrier killerLaser;
     private final Image background;
-    private final Image[] rockSprites;
+    private final Image rockSprite;
     private DynamicGraph points;
     private double benchMark;
     private double bgBenchmark;
@@ -61,10 +61,7 @@ public class MagnetClimbState implements GameState{
     private GameOverMenu gameOverMenu;
     public MagnetClimbState(GameStateManager gsm){
         background = new Image(0, 0, "cbg1.jpg");
-        rockSprites = new Image[4];
-        for (int i = 0; i < 4; i++) {
-            rockSprites[i] = new Image(xOffset, yOffset, "rock" + i + ".png");
-        }
+        rockSprite = new Image(xOffset, yOffset, "rock0.png");
         this.gsm = gsm;
     }
 
@@ -78,9 +75,7 @@ public class MagnetClimbState implements GameState{
         player.circle.move(xOffset, 0);
         background.readImage();
         background.createNewImage();
-        for (Image image : rockSprites) {
-            image.createNewImage();
-        }
+        rockSprite.createNewImage();
         rocks = new LinkedList();
         lasers = new LinkedList();
         points = new DynamicGraph(new PointGraphComparator());
@@ -97,6 +92,9 @@ public class MagnetClimbState implements GameState{
     private void configureMenus(){
         Array pauseOptions = new Array(3);
         pauseOptions.add((ActionMenu) () -> {
+            if(player.isHooked()){
+                player.unhookRock();
+            }
             pause = false;
         });
         pauseOptions.add((ActionMenu) () -> {
@@ -134,7 +132,6 @@ public class MagnetClimbState implements GameState{
     private void updateRocks(){
         rocks.removeAll(killerLaser, (Object obj1, Object obj2) -> {
             MetallicRock currentRock = (MetallicRock)obj1;
-            currentRock.update();
             LaserBarrier killLaser = (LaserBarrier)obj2;
             if (currentRock.getCircle().getYCenter() > killLaser.getLine().getFirstY()) {
                 return 0;
@@ -152,7 +149,8 @@ public class MagnetClimbState implements GameState{
                 gameOver();
             }
             LaserBarrier killerLaser1 = (LaserBarrier)obj2;
-            if (currentLaser.getPointA().getY() > killerLaser1.getPointA().getY() && currentLaser.getPointB().getY() > killerLaser1.getPointA().getY()) {
+            if (currentLaser.getPointA().getY() > killerLaser1.getPointA().getY() 
+             && currentLaser.getPointB().getY() > killerLaser1.getPointA().getY()) {
                 return 0;
             }
             return 1;
@@ -287,7 +285,7 @@ public class MagnetClimbState implements GameState{
             MetallicRock currentRock = (MetallicRock)nodeObject;
             if(isInRange(player.circle.getYCenter()-370, player.circle.getYCenter()+170, 
                 currentRock.getCircle().getYCenter())){
-                    g2d.drawImage(rockSprites[currentRock.getRockType()].getBufferedImage(false), null, 
+                    g2d.drawImage(rockSprite.getBufferedImage(false), null, 
                         (int)currentRock.getCircle().getXCenter()-22, 
                         (int)currentRock.getCircle().getYCenter()-22
                 );
@@ -501,27 +499,32 @@ public class MagnetClimbState implements GameState{
 
     @Override
     public void mousePressed(int x, int y, int button) {
-        if(player.isHooked() == false){
-            Point mousePosition = new Point(x, y + player.circle.getYCenter()-yOffset);
-            rocks.iterateList((Object nodeObject) -> {
-                MetallicRock mr = (MetallicRock)nodeObject;
-                if(isInRange(player.circle.getYCenter()-350, 
-                             player.circle.getYCenter()+150, 
-                             mr.getCircle().getYCenter()) == false){
-                    return true;
-                }
-                else if(euclideanDistance(mousePosition, mr.getCircle().getCenter()) <= 30){
-                    player.hookRock(mr);
-                    return false;
-                }
-                return true;                
-            });
+        if (!pause && !isOver) {
+            if(player.isHooked() == false){
+                Point mousePosition = new Point(x, y + player.circle.getYCenter()-yOffset);
+                rocks.iterateList((Object nodeObject) -> {
+                    MetallicRock mr = (MetallicRock)nodeObject;
+                    if(isInRange(player.circle.getYCenter()-350, 
+                                player.circle.getYCenter()+150, 
+                                mr.getCircle().getYCenter()) == false){
+                        return true;
+                    }
+                    else if(euclideanDistance(mousePosition, mr.getCircle().getCenter()) <= 30){
+                        player.hookRock(mr);
+                        return false;
+                    }
+                    return true;                
+                });
+            }
         }
+        
     }
 
     @Override
     public void mouseReleased(int x, int y, int button) {
-        player.unhookRock();
+        if (!pause && !isOver) {
+            player.unhookRock();
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package epsilon.model.dataStructure.linearStructure.statik;
 import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.interfaces.NumberList;
 import epsilon.model.enums.Operation;
+import static epsilon.utils.FunctionUtils.getMin;
 import static epsilon.utils.FunctionUtils.isNumeric;
 import static epsilon.utils.FunctionUtils.isNumericList;
 import static epsilon.utils.FunctionUtils.objectToDouble;
@@ -10,6 +11,7 @@ import static epsilon.utils.FunctionUtils.objectToDouble;
 public class NumericArray extends Array implements NumberList{
     public NumericArray(int capacity){
         super(capacity);
+        data = new Number[capacity];
     }
     @Override
     public boolean add(Object object){
@@ -92,6 +94,22 @@ public class NumericArray extends Array implements NumberList{
     public boolean addList(DataList dataList){
         if(isNumericList(dataList)){
             return super.addList(dataList);
+        }
+        else{
+            return false;
+        }
+    }
+    @Override
+    public boolean resize(int size){
+        if(size > 0){
+            Object[] newData = new Number[size];
+            System.arraycopy(data, 0, newData, 0, (int)getMin(size(),size));
+            data = newData;
+            capacity = size;
+            if(upperIndex >= size){
+                upperIndex = size-1;
+            }
+            return true;
         }
         else{
             return false;

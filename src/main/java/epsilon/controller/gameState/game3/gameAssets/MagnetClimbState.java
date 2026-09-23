@@ -1,7 +1,6 @@
 package epsilon.controller.gameState.game3.gameAssets;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
@@ -19,6 +18,7 @@ import epsilon.controller.gameState.game3.gameAssets.chunks.RowsChunk;
 import epsilon.controller.gameState.game3.gameAssets.chunks.SpinningChunk;
 import epsilon.controller.gameState.game3.menu.GameOverMenu;
 import epsilon.controller.gameState.game3.menu.PauseMenu;
+import epsilon.controller.gameState.game3.menu.RedFontManager;
 import epsilon.controller.interfaces.ActionMenu;
 import epsilon.controller.interfaces.GameState;
 import epsilon.model.dataStructure.auxiliar.GraphEdge;
@@ -50,6 +50,7 @@ public class MagnetClimbState implements GameState{
     private LaserBarrier killerLaser;
     private final Image background;
     private final Image rockSprite;
+    private final RedFontManager rfm;
     private DynamicGraph points;
     private double benchMark;
     private double bgBenchmark;
@@ -63,6 +64,11 @@ public class MagnetClimbState implements GameState{
         background = new Image(0, 0, "cbg1.jpg");
         rockSprite = new Image(xOffset, yOffset, "rock0.png");
         this.gsm = gsm;
+        rfm = new RedFontManager(0, 0);
+        rfm.readImage("redFont.png");
+        rfm.rescale(0.25);
+        rfm.setLineSpacing(65);
+        rfm.setCharSpacing(1);
     }
 
     @Override
@@ -104,8 +110,10 @@ public class MagnetClimbState implements GameState{
             System.exit(0);
         });
         pauseMenu = new PauseMenu(pauseOptions);
+        pauseMenu.setFontManager(rfm);
         Array gameOverOptions = pauseOptions.getSublist(1, 2);
         gameOverMenu = new GameOverMenu(gameOverOptions);
+        gameOverMenu.setFontManager(rfm);
     }
     @Override
     public void update() {
@@ -266,8 +274,6 @@ public class MagnetClimbState implements GameState{
         drawLasers(g2d);
         drawEdges(g2d);
         killerLaser.draw(g2d);
-        /*g2d.setColor(Color.WHITE);
-        g2d.drawLine(0, (int)(benchMark+ySpawn), 650, (int)(benchMark+ySpawn));*/
         g2d.translate(0, player.circle.getYCenter() - yOffset); 
         if(pause == true){
             pauseMenu.draw(g2d);
@@ -276,9 +282,8 @@ public class MagnetClimbState implements GameState{
             gameOverMenu.draw(g2d);
         }
         double highScore = player.getMaxHeight();
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("",Font.PLAIN,24));
-        g2d.drawString("HIGHSCORE:" + (long)-highScore, 20, 20);
+        String[] highscoreText = {"HIGHSCORE:" + (long)-highScore};
+        rfm.draw(g2d, highscoreText);
     }
     private void drawRocks(Graphics2D g2d){
         rocks.iterateList((Object nodeObject) -> {

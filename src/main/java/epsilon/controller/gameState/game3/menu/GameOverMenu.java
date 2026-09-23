@@ -11,17 +11,20 @@ import epsilon.model.entities.figures.Polygon;
 
 public class GameOverMenu extends GameMenu{
     private final Polygon arrow;
+    private RedFontManager rfm;
     public GameOverMenu(Array options){
         super(options);
         arrow = new Polygon(new double[]{50,100,50},new double[]{100,125,150});
         arrow.moveFromCenter(150, 190);
-        //arrow.resizeYAxis(0.5, StretchingPoint.CENTER);
         arrow.setInsideColor(new Color(255, 255, 255));
+    }
+    public void setFontManager(RedFontManager rfm){
+        this.rfm = rfm;
     }
     @Override
     public void changeOption(byte optionNumber) {
         super.changeOption(optionNumber);
-        arrow.moveFromCenter(150, 190+(this.optionNumber*200));
+        arrow.moveFromCenter(150, 190+(this.optionNumber*160));
     }
     @Override
     public boolean showWarning() {
@@ -57,10 +60,10 @@ public class GameOverMenu extends GameMenu{
             g2d.setFont(new Font("",Font.PLAIN,24));
             g2d.setColor(new Color(0, 0, 0, 200));
             g2d.fillRect(0, 0, 640, 480);
-            g2d.setColor(new Color(255, 255, 255));
-            //g2d.drawString("FINAL SCORE: " + score, 250, 50);
-            g2d.drawString("RESTART", 250, 200);
-            g2d.drawString("EXIT", 250, 400);
+            String[] text = {"RESTART", "", "EXIT"};
+            rfm.draw(220, 180, g2d, text);
+            //g2d.drawString("RESTART", 250, 200);
+            //g2d.drawString("EXIT", 250, 400);
             arrow.fill(g2d);
         }
     }

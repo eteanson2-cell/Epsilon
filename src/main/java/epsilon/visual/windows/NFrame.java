@@ -9,7 +9,7 @@ import epsilon.visual.panels.Game3Panel;
 
 public class NFrame extends JFrame{
     public NFrame(){
-        setTitle("Frame");
+        setTitle("Magnet Climb");
         setContentPane(new Game3Panel());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);

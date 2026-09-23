@@ -272,7 +272,6 @@ public class Array implements DataList{
             data[i] = object;
         }
     }
-    //@SuppressWarnings("ManualArrayToCollectionCopy")
     public boolean resize(int size){
         if(size > 0){
             Object[] newData = new Object[size];
@@ -287,7 +286,6 @@ public class Array implements DataList{
         else{
             return false;
         }
-        
     }
     public Array getSublist(int firstIndex, int lastIndex){
         if(firstIndex < lastIndex && validIndex(lastIndex) && validIndex(firstIndex)){

@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import epsilon.model.dataStructure.nonLinearStructure.Array2D;
 import epsilon.model.entities.figures.auxiliar.Pixel;
 import epsilon.model.entities.interfaces.IEntity;
+import static epsilon.utils.FunctionUtils.isInRange;
 
 public class Image extends Figure{
     protected BufferedImage image;
@@ -41,8 +42,30 @@ public class Image extends Figure{
             System.exit(1);
         }
     }
+    public int getWidth(){
+        return width;
+    }
+    public int getHeight(){
+        return height;
+    }
     public Array2D getDataPixel(){
         return dataPixel;
+    }
+    public Image getSubimage(int y, int x, int height, int width){
+        if(isInRange(0,this.height-1,y) && isInRange(0, this.width-1, x)){
+            if(y + height >= this.height){
+                height = this.height-y-1;
+            }
+            if(x + width >= this.width){
+                width = this.width-x-1;
+            }
+            Image subImage = new Image(xCenter, yCenter, height, width);
+            subImage.dataPixel = dataPixel.getSubArray(y, x, y + height,  x + width);
+            return subImage;
+        }
+        else{
+            return null;
+        }
     }
     public void readImage(){
         height = image.getHeight();
@@ -124,6 +147,8 @@ public class Image extends Figure{
                 nImage.modify(pixel, y, x);
             }
         }
+        dataPixel.redefine(nImage);
+        reasignValues();
     }
     public BufferedImage getBufferedImage(boolean create){
         if(create){
@@ -136,6 +161,18 @@ public class Image extends Figure{
     }
     public void rotateColumns(int rotations){
         dataPixel.rotateColumns(rotations);
+    }
+    public void interchangePixel(Pixel color, Pixel newColor, double range){
+        range = Math.abs(range);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Pixel pixel = (Pixel)dataPixel.getObject(y,x);
+                double distance = pixel.euclideanDistance(color);
+                if(distance <= range){
+                    dataPixel.modify(newColor, y, x);
+                }
+            }
+        }
     }
     @Override
     public Point getCenter() {

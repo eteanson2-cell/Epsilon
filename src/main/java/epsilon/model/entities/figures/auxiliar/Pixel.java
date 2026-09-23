@@ -88,14 +88,21 @@ public class Pixel{
         setBlue(blue+brigthness);
         setGreen(green+brigthness);
     }
+    public double euclideanDistance(Pixel pixel){
+        double sqrAlpha = Math.pow(alpha-pixel.alpha,2); 
+        double sqrRed = Math.pow(red-pixel.red,2); 
+        double sqrGreen = Math.pow(green-pixel.green,2); 
+        double sqrBlue = Math.pow(blue-pixel.blue,2); 
+        return Math.sqrt(sqrAlpha + sqrRed + sqrGreen + sqrBlue);
+    }  
     public Array createGradient(Pixel pixel, int size){
         Array gradient = new Array(size);
         gradient.add(this);
         while (gradient.isFilled() == false) { 
-            int newAlpha = ((getAlpha()*(size-gradient.getQuantity()))+(pixel.getAlpha()*(gradient.getQuantity())))/size;
-            int newRed = ((getRed()*(size-gradient.getQuantity()))+(pixel.getRed()*(gradient.getQuantity())))/size;
-            int newGreen = ((getGreen()*(size-gradient.getQuantity()))+(pixel.getGreen()*(gradient.getQuantity())))/size;
-            int newBlue = ((getBlue()*(size-gradient.getQuantity()))+(pixel.getBlue()*(gradient.getQuantity())))/size;
+            int newAlpha = ((getAlpha()*(size-gradient.size()))+(pixel.getAlpha()*(gradient.size())))/size;
+            int newRed = ((getRed()*(size-gradient.size()))+(pixel.getRed()*(gradient.size())))/size;
+            int newGreen = ((getGreen()*(size-gradient.size()))+(pixel.getGreen()*(gradient.size())))/size;
+            int newBlue = ((getBlue()*(size-gradient.size()))+(pixel.getBlue()*(gradient.size())))/size;
             Pixel tempPixel = new Pixel(newAlpha,newRed,newGreen,newBlue);
             gradient.add(tempPixel);
         }

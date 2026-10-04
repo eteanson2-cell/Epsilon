@@ -2,6 +2,7 @@ package epsilon.utils;
 
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
+import epsilon.model.dataStructure.interfaces.Iterator;
 import epsilon.model.dataStructure.interfaces.NumberList;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicQueue;
 import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
@@ -49,6 +50,90 @@ public class FunctionUtils{
 		}
 		return min;
 	}
+	public static double[] quicksort(double[] array){
+		return quicksort(array, array.length);
+	}
+        @SuppressWarnings("ManualArrayToCollectionCopy")
+	private static double[] quicksort(double[] array, int length){
+		if(length > 1){
+			int pivot = randomNumber(0, length);
+			double[] leftArray = new double[length];
+			double[] rightArray = new double[length];
+			int leftIndex = 0;
+			int rightIndex = 0;
+			double dPivot = array[pivot];
+			for (int i = 0; i < length; i++) {
+				if(i != pivot){
+					if(array[i] < dPivot){
+						leftArray[leftIndex] = array[i];
+						leftIndex++;
+					}
+					else{
+						rightArray[rightIndex] = array[i];
+						rightIndex++;
+					}
+				}
+			}
+			quicksort(leftArray, leftIndex);
+			quicksort(rightArray, rightIndex);
+			for (int i = 0; i < leftIndex; i++) {
+				array[i] = leftArray[i];
+			}
+			array[leftIndex] = dPivot;
+			for (int i = 0; i < rightIndex; i++) {
+				array[i + leftIndex + 1] = rightArray[i];
+			}
+		}
+		return array;
+	}
+	public static double[] mergesort(double[] array){
+		return mergesort(array, array.length);
+	}
+	private static double[] mergesort(double[] array, int length){
+		if(length > 1){
+			int leftIndex = 0;
+			int rightIndex = 0;
+			double[] leftArray = new double[length];
+			double[] rightArray = new double[length];
+			int half = length/2;
+			for (int i = 0; i < half; i++) {
+				leftArray[leftIndex] = array[i];
+				leftIndex++;
+			}
+			for (int i = half; i < length; i++) {
+				rightArray[rightIndex] = array[i];
+				rightIndex++;
+			}
+			mergesort(leftArray, leftIndex);
+			mergesort(rightArray, rightIndex);
+			int i = 0, j = 0;
+			for (int k = 0; k < length; k++) {
+				boolean a = (i < leftIndex);
+				boolean b = (j < rightIndex);
+				if(a && b){
+					double num1 = leftArray[i];
+					double num2 = rightArray[j];
+					if(num1 <= num2){
+						array[k] = num1;
+						i++;
+					}
+					else{
+						array[k] = num2;
+						j++;
+					}
+				}
+				else if(a){
+					array[k] = leftArray[i];
+					i++;
+				}
+				else if(b){
+					array[k] = rightArray[j];
+					j++;
+				}
+			}
+		}
+		return array;
+	}
 	//prints a message
     public static void showMessage(String message){
         System.out.println(message);
@@ -92,11 +177,17 @@ public class FunctionUtils{
 	public static double radianSine(double radian){
 		return Math.sin(radian);
 	}
+	public static double radianTan(double radian){
+		return Math.tan(radian);
+	}
 	public static double degreeCosine(double degree){
 		return Math.cos(degreeToRadians(degree));
 	}
 	public static double degreeSine(double degree){
 		return Math.sin(degreeToRadians(degree));
+	}
+	public static double degreeTan(double degree){
+		return Math.tan(degreeToRadians(degree));
 	}
 	//returns a random number in between a minimum value and a maximum value
 	public static double randomNumber(double minNumber, double maxNumber){
@@ -239,13 +330,22 @@ public class FunctionUtils{
         }
         return batch;
     }
-	/*public static NumericArray getDistances(NumericArray array){
-		NumericArray distances = new NumericArray(array.size()-1);
-		for (int i = 1; i < array.size(); i++) {
-			double d1 = (double)array.get(i-1);
-			double d2 = (double)array.get(i);
-			distances.add(d2-d1);
+	public static void iterateLists(DataList[] lists, Iterator iterator){
+        for (DataList list : lists) {
+            list.initializeIterator();
+        }
+		boolean valid = true;
+		while (valid) { 
+			Array objects = new Array(lists.length);
+			for (DataList list : lists) {
+				if(list.validIterator() == false){
+					valid = false;
+					break;
+				}
+				objects.add(list.getIterator());
+			}
+			iterator.iterate(objects);
 		}
-		return distances;
-	}*/
+	}
+
 }

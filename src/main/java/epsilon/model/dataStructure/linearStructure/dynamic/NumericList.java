@@ -244,6 +244,39 @@ public class NumericList extends LinkedList implements NumberList{
         }
     }
     @Override
+    public NumberList convolution(NumberList numbers) {
+        if(!isEmpty()){
+            NumericList convolutedList = new NumericList();
+            NumberList numbersTemp = (NumberList)numbers.copy();
+            Node tempNode = first;
+            while (numbersTemp.isEmpty() == false) { 
+                double total = 0;
+                Node tempNode2 = tempNode;
+                numbersTemp.initializeIterator();
+                while (tempNode2 != null && numbersTemp.validIterator()) { 
+                    double num1 = objectToDouble(tempNode2.getData());
+                    double num2 = objectToDouble(numbersTemp.getIterator());
+                    total += num1*num2;
+                    numbersTemp.moveIteratorToRight();
+                    tempNode2 = tempNode2.getLeftNode();
+                }
+                convolutedList.add(total);
+                if(tempNode.getRightNode() != null){
+                    tempNode = tempNode.getRightNode();
+                }
+                else{
+                    numbersTemp.remove();
+                }
+                
+            }
+            return convolutedList;
+        }
+        else{
+            return null;
+        }
+        
+    }
+    @Override
     public double getTotal(){
         double total = 0;
         Node tempNode = first;

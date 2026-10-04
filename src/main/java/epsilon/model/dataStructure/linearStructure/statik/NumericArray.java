@@ -234,6 +234,29 @@ public class NumericArray extends Array implements NumberList{
         }
     }
     @Override
+    public NumberList convolution(NumberList numbers) {
+        if(!isEmpty()){
+            NumericArray convolutedArray = new NumericArray(size()+numbers.size());
+            for (int i = 0; i < size()+numbers.size()-1; i++) {
+                double total = 0;
+                numbers.initializeIterator();
+                for (int j = i; j >= 0 && numbers.validIterator(); j--) {
+                    if(j < size()){
+                        double num1 = objectToDouble(get(j));
+                        double num2 = objectToDouble(numbers.getIterator());
+                        total += num1*num2;
+                    }
+                    numbers.moveIteratorToRight();
+                }
+                convolutedArray.append(total);
+            }
+            return convolutedArray;
+        }
+        else{
+            return null;
+        }
+    }
+    @Override
     public boolean totalOperation(NumberList numbers, Operation operation){
         if(isEmpty() == false && numbers.size() == size()){
             numbers.initializeIterator();

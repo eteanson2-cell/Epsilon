@@ -1,5 +1,6 @@
 package epsilon.visual.panels;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -102,6 +103,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 	}
 	private void draw() {
 		gsm.draw(g2d);
+        g2d.setColor(new Color(255, 255, 255));
         g2d.drawString("FPS: " + FrameCounter, 20, 70);
 	}
     private void drawToScreen() {

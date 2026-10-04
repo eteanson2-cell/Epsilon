@@ -245,6 +245,28 @@ public class Matrix extends Array2D{
             return null;
         }
     }
+    public Matrix convolution(Matrix filter){
+        if(width > filter.getWidth() && height > filter.height){
+            Matrix convolutedMatrix = new Matrix(height-filter.getHeight()+1,width-filter.getWidth()+1);
+            for (int row = 0; row < height-filter.getHeight(); row++) {
+                for (int column = 0; column < width-filter.getWidth(); column++) {
+                    double total = 0;
+                    for (int rowFilter = 0; rowFilter < filter.getHeight(); rowFilter++) {
+                        for (int columnFilter = 0; columnFilter < filter.getWidth(); columnFilter++) {
+                            double num1 = objectToDouble(data[row+rowFilter][column+columnFilter]);
+                            double num2 = objectToDouble(filter.data[rowFilter][columnFilter]);
+                            total += num1*num2; 
+                        }
+                    }
+                    convolutedMatrix.data[row][column] = total;
+                }
+            }
+            return convolutedMatrix;
+        }
+        else{
+            return null;
+        }
+    }
     @Override
     public Array2D copy(){
         Matrix arrayCopy = new Matrix(height, width);

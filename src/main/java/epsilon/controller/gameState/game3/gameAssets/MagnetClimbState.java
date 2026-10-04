@@ -50,7 +50,7 @@ public class MagnetClimbState implements GameState{
     private LaserBarrier killerLaser;
     private final Image background;
     private final Image rockSprite;
-    private final RedFontManager rfm;
+    private RedFontManager rfm;
     private DynamicGraph points;
     private double benchMark;
     private double bgBenchmark;
@@ -58,17 +58,14 @@ public class MagnetClimbState implements GameState{
     private boolean pause;
     private boolean isOver;
     private boolean restart;
+    private boolean isInitialize = false;
     private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
     public MagnetClimbState(GameStateManager gsm){
         background = new Image(0, 0, "cbg1.jpg");
         rockSprite = new Image(xOffset, yOffset, "rock0.png");
+        configureMenus();
         this.gsm = gsm;
-        rfm = new RedFontManager(0, 0);
-        rfm.readImage("redFont.png");
-        rfm.rescale(0.25);
-        rfm.setLineSpacing(65);
-        rfm.setCharSpacing(1);
     }
 
     @Override
@@ -92,7 +89,7 @@ public class MagnetClimbState implements GameState{
         ySpawn = 500;
         benchMark = -150;
         bgBenchmark = -100;
-        configureMenus();
+        isInitialize = true;
     }
 
     private void configureMenus(){
@@ -107,16 +104,28 @@ public class MagnetClimbState implements GameState{
             restart();
         });
         pauseOptions.add((ActionMenu) () -> {
-            System.exit(0);
+            isInitialize = false;
+            rocks.clear();
+            lasers.clear();
+            points.clear();
+            gsm.setState(1);
+
         });
         pauseMenu = new PauseMenu(pauseOptions);
-        pauseMenu.setFontManager(rfm);
         Array gameOverOptions = pauseOptions.getSublist(1, 2);
         gameOverMenu = new GameOverMenu(gameOverOptions);
+        
+    }
+    public void setRedFontManager(RedFontManager rfm){
+        this.rfm = rfm;
+        pauseMenu.setFontManager(rfm);
         gameOverMenu.setFontManager(rfm);
     }
     @Override
     public void update() {
+        if(isInitialize == false){
+            return;
+        }
         if(pause == false && isOver == false){
             player.update();
             killerLaser.update();
@@ -260,6 +269,9 @@ public class MagnetClimbState implements GameState{
     }
     @Override
     public void draw(Graphics2D g2d) {
+        if(!isInitialize){
+            return;
+        }
         while(player.circle.getYCenter() < bgBenchmark){
             background.rotateRows(1);
             bgBenchmark -= 100;
@@ -281,9 +293,12 @@ public class MagnetClimbState implements GameState{
         else if(isOver == true){
             gameOverMenu.draw(g2d);
         }
-        double highScore = player.getMaxHeight();
-        String[] highscoreText = {"HIGHSCORE:" + (long)-highScore};
-        rfm.draw(g2d, highscoreText);
+        if(rfm != null){
+            double highScore = player.getMaxHeight();
+            String[] highscoreText = {"HIGHSCORE: " + (long)-highScore};
+            rfm.draw(g2d, highscoreText);
+        }
+        
     }
     private void drawRocks(Graphics2D g2d){
         rocks.iterateList((Object nodeObject) -> {

@@ -3,16 +3,16 @@ package epsilon.controller;
 import java.awt.Graphics2D;
 
 import epsilon.controller.interfaces.GameState;
-import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
+import epsilon.model.dataStructure.linearStructure.statik.Array;
 
 public class GameStateManager{
-    private final LinkedList gameStates;
+    private final Array gameStates;
     private int currentState;
     public GameStateManager(){
-        gameStates = new LinkedList();
+        gameStates = new Array(10);
     }
     public void addGameState(GameState gs){
-        gameStates.add(gs);
+        gameStates.append(gs);
     }
     public void setState(int state) {
 		currentState = state;

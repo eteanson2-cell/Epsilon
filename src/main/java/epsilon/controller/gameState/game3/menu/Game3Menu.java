@@ -6,11 +6,15 @@ import java.awt.event.KeyEvent;
 
 import epsilon.controller.GameMenu;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
+import epsilon.model.entities.audio.AudioTrack;
 import epsilon.model.entities.figures.Polygon;
+import static epsilon.utils.FunctionUtils.displaySFX;
 
 public abstract class Game3Menu extends GameMenu{
     protected Polygon highlight;
     protected RedFontManager rfm;
+    protected AudioTrack menuSFX;
+    protected AudioTrack menuSFX2;
     public Game3Menu(Array options) {
         super(options);
         highlight = new Polygon(
@@ -18,6 +22,10 @@ public abstract class Game3Menu extends GameMenu{
             new double[]{0,0,75,75});
         highlight.setInsideColor(new Color(0,255,255,128));
         highlight.moveFromCenter(350, 190);
+        menuSFX = new AudioTrack("menuSfx.wav");
+        menuSFX.readFile();
+        menuSFX2 = new AudioTrack("menuSfx2.wav");
+        menuSFX2.readFile();
     }
     public void setFontManager(RedFontManager rfm){
         this.rfm = rfm;
@@ -31,6 +39,9 @@ public abstract class Game3Menu extends GameMenu{
     public boolean showWarning() {
         return false;
     }
+    public AudioTrack getMenuSFX(){
+        return menuSFX;
+    }
     @Override
     public void selectOption() {
         super.selectOption();
@@ -40,18 +51,27 @@ public abstract class Game3Menu extends GameMenu{
     @Override
     public void KeyPressed(int k) {
         if(isEnabled){
-            if (k == KeyEvent.VK_S || k == KeyEvent.VK_DOWN)
+            if (k == KeyEvent.VK_S || k == KeyEvent.VK_DOWN){
                 changeOption((byte)(optionNumber+1));
-            if (k == KeyEvent.VK_W || k == KeyEvent.VK_UP)
+                displaySFX(menuSFX2);
+            }
+            if (k == KeyEvent.VK_W || k == KeyEvent.VK_UP){
                 changeOption((byte)(optionNumber-1));
-            if(k == KeyEvent.VK_SPACE || k == KeyEvent.VK_ENTER)
+                displaySFX(menuSFX2);
+            }
+            if(k == KeyEvent.VK_SPACE || k == KeyEvent.VK_ENTER){
+                displayMainSFX();
                 selectOption();
+            }
         }
     }
     @Override
     public void KeyTyped(int k) {
+        
     }
-
+    public void displayMainSFX(){
+        displaySFX(menuSFX);
+    }
     @Override
     public void KeyReleased(int k) {
     }

@@ -5,11 +5,13 @@ import java.awt.Graphics2D;
 
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.Queue;
+import epsilon.model.entities.audio.AudioTrack;
 import epsilon.model.entities.figures.Oval;
 import epsilon.model.entities.figures.ParticleSpawn;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.Polygon;
 import epsilon.model.entities.figures.Rectangle;
+import static epsilon.utils.FunctionUtils.displaySFX;
 import static epsilon.utils.FunctionUtils.euclideanDistance;
 import static epsilon.utils.FunctionUtils.getMax;
 import static epsilon.utils.FunctionUtils.isInRange;
@@ -23,6 +25,7 @@ public class Player{
     public double speedy;
     private Queue traces;
     protected ParticleSpawn particles;
+    private AudioTrack magnetSFX;
     int xlimit;
     MetallicRock hookedRock;
     double maxHeight;
@@ -43,6 +46,9 @@ public class Player{
         circle.setInsideColor(new Color(0, 0, 255));
         Rectangle rect = new Rectangle(0, 0, 5, 5);
         rect.setInsideColor(new Color(0, 255, 255, 192));
+        magnetSFX = new AudioTrack("gameSfx.wav");
+        magnetSFX.readFile();
+        magnetSFX.setLoop(0, magnetSFX.getLength()-1);
         particles = new ParticleSpawn(
             new Point(0,359), 0, 0, center, 10, rect, 1, 2
         );
@@ -80,6 +86,9 @@ public class Player{
             if(particles.range > 1){
                 setParticlesProperties(0, 359, 1, 10);
                 particles.clearParticles();
+            }
+            if(magnetSFX.isRunning()){
+                magnetSFX.pauseTrack();
             }
         }
         if(getMagnitude() > maxSpeed){
@@ -135,10 +144,16 @@ public class Player{
         if(distance < maxSpeed*2){
             speedx = x;
             speedy = y;
+            if(magnetSFX.isRunning()){
+                magnetSFX.pauseTrack();
+            }
         }
         else{
             speedx += Math.cos(theta)*pullRate;
             speedy += Math.sin(theta)*pullRate;
+            if(!magnetSFX.isRunning()){
+                displaySFX(magnetSFX);
+            }
         }
         
     }

@@ -26,6 +26,7 @@ import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.dataStructure.nonLinearStructure.DynamicGraph;
+import epsilon.model.entities.audio.AudioTrack;
 import epsilon.model.entities.figures.Image;
 import epsilon.model.entities.figures.Line;
 import epsilon.model.entities.figures.Oval;
@@ -34,6 +35,7 @@ import epsilon.model.entities.figures.Polygon;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.degreeCosine;
 import static epsilon.utils.FunctionUtils.degreeSine;
+import static epsilon.utils.FunctionUtils.displaySFX;
 import static epsilon.utils.FunctionUtils.euclideanDistance;
 import static epsilon.utils.FunctionUtils.isInRange;
 import static epsilon.utils.FunctionUtils.objectToDouble;
@@ -61,10 +63,13 @@ public class MagnetClimbState implements GameState{
     private boolean isInitialize = false;
     private PauseMenu pauseMenu;
     private GameOverMenu gameOverMenu;
+    private AudioTrack bgm;
     public MagnetClimbState(GameStateManager gsm){
         background = new Image(0, 0, "cbg1.jpg");
         rockSprite = new Image(xOffset, yOffset, "rock0.png");
         configureMenus();
+        bgm = new AudioTrack("bgm.wav");
+        bgm.readFile();
         this.gsm = gsm;
     }
 
@@ -90,6 +95,8 @@ public class MagnetClimbState implements GameState{
         benchMark = -150;
         bgBenchmark = -100;
         isInitialize = true;
+        displaySFX(bgm);
+        bgm.setLoop(0, bgm.getLength()-1);
     }
 
     private void configureMenus(){
@@ -99,6 +106,7 @@ public class MagnetClimbState implements GameState{
                 player.unhookRock();
             }
             pause = false;
+            bgm.resumeTrack();
         });
         pauseOptions.add((ActionMenu) () -> {
             restart();
@@ -262,6 +270,7 @@ public class MagnetClimbState implements GameState{
     }
     public void gameOver(){
         isOver = true;
+        bgm.pauseTrack();
         gameOverMenu.init();
     }
     public void restart(){
@@ -380,6 +389,9 @@ public class MagnetClimbState implements GameState{
     }
     protected NumericArray getAngles(Array arr){
         LinkedList connectedEdges = points.getEdges(arr);
+        if(connectedEdges == null){
+            return new NumericArray(1);
+        }
         Point p1 = (Point)arr.get(0);
         NumericArray angles = new NumericArray(10);
         connectedEdges.iterateList((Object nodeObject) -> {
@@ -497,6 +509,8 @@ public class MagnetClimbState implements GameState{
         }
         else{
             if (k == KeyEvent.VK_ESCAPE || k == KeyEvent.VK_SPACE){
+                pauseMenu.displayMainSFX();
+                bgm.pauseTrack();
                 pause = true;
                 pauseMenu.init();
             }

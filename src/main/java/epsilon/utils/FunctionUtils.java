@@ -9,6 +9,7 @@ import epsilon.model.dataStructure.linearStructure.dynamic.DynamicStack;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
+import epsilon.model.entities.audio.AudioTrack;
 import epsilon.model.entities.figures.Point;
 import epsilon.model.entities.figures.auxiliar.Pixel;
 import epsilon.model.enums.TreeTraversal;
@@ -347,5 +348,12 @@ public class FunctionUtils{
 			iterator.iterate(objects);
 		}
 	}
-
+	public static void displaySFX(AudioTrack sfx){
+		if(sfx.isOpen()){
+			sfx.restartTrack();
+		}
+		else{
+			sfx.startTrack();
+		}
+	}
 }

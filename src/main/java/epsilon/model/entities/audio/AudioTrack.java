@@ -85,6 +85,13 @@ public class AudioTrack{
             System.err.println(ex);
         }
     }
+    public void restartTrack(){
+        if(clip.isOpen()){
+            clip.stop();
+            clip.setFramePosition(0);
+            clip.start();
+        }
+    }
     public void pauseTrack(){
         if(clip.isOpen() && isRunning()){
             clip.stop();
@@ -105,6 +112,9 @@ public class AudioTrack{
     }
     public void stopTrack(){
         stopTrack(false);
+    }
+    public boolean isOpen(){
+        return clip.isOpen();
     }
     public boolean isRunning(){
         return clip.isRunning();
@@ -133,5 +143,18 @@ public class AudioTrack{
         }
         this.volume = volume;
         bufferArray.multiplyScalar(volume);
+    }
+    public void setLoop(int startFrame, int endFrame){
+        if(isOpen()){
+            clip.setLoopPoints(startFrame, endFrame);
+        }
+    }
+    public int getLength(){
+        if(isOpen()){
+            return clip.getFrameLength();
+        }
+        else{
+            return -1;
+        }
     }
 }

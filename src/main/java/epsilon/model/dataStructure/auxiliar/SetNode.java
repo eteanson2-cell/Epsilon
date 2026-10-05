@@ -2,7 +2,7 @@ package epsilon.model.dataStructure.auxiliar;
 
 import epsilon.model.dataStructure.interfaces.Comparator;
 
-public class SetNode extends BinaryNode{
+public class SetNode extends BinaryNode<SetNode>{
 
     public SetNode(Object data) {
         super(data);
@@ -21,14 +21,14 @@ public class SetNode extends BinaryNode{
         }
     }
     @Override
-    public void setRightBranch(BinaryNode rightBranch){
-        if(rightBranch != null && rightBranch instanceof SetNode){
+    public void setRightBranch(SetNode rightBranch){
+        if(rightBranch != null){
             this.rightBranch = rightBranch;
         }
     }
     @Override
-    public void setLeftBranch(BinaryNode leftBranch){
-        if(leftBranch != null && leftBranch instanceof SetNode){
+    public void setLeftBranch(SetNode leftBranch){
+        if(leftBranch != null){
             this.leftBranch = leftBranch;
         }
     }
@@ -45,7 +45,7 @@ public class SetNode extends BinaryNode{
                 validData = true;
             }
             else{
-                validData = ((SetNode)rightBranch).add(newData, comparator);
+                validData = rightBranch.add(newData, comparator);
                 balanceNode();
             }
         }
@@ -55,7 +55,7 @@ public class SetNode extends BinaryNode{
                 validData = true;
             }
             else{
-                validData = ((SetNode)leftBranch).add(newData, comparator);
+                validData = leftBranch.add(newData, comparator);
                 balanceNode();
             }
         }
@@ -65,7 +65,7 @@ public class SetNode extends BinaryNode{
         int comparison = comparator.compare(data, setData);
         if(comparison > 0){
             if(rightBranch != null){
-                return ((SetNode)rightBranch).hasObject(setData, comparator);
+                return rightBranch.hasObject(setData, comparator);
             }
             else{
                 return false;
@@ -73,7 +73,7 @@ public class SetNode extends BinaryNode{
         }
         else if (comparison < 0) {
             if(leftBranch != null){
-                return ((SetNode)leftBranch).hasObject(setData, comparator);
+                return leftBranch.hasObject(setData, comparator);
             }
             else{
                 return false;
@@ -84,7 +84,7 @@ public class SetNode extends BinaryNode{
         }
     }
     @Override
-    protected BinaryNode cloneNode() {
+    protected SetNode cloneNode() {
         SetNode copyNode = new SetNode(data);
         copyNode.rightBranch = rightBranch;
         copyNode.leftBranch = leftBranch;

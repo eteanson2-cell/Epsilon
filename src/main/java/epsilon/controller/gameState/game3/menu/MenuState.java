@@ -85,7 +85,9 @@ public final class MenuState implements GameState{
             mainMenu.draw(g2d);
         }
         for (LaserBarrier titleLine : titleLines) {
-            titleLine.draw(g2d);
+            if(titleLine != null){
+                titleLine.draw(g2d);
+            }
         }
     }
 
@@ -93,6 +95,26 @@ public final class MenuState implements GameState{
     public void keyPressed(int k) {
         if (mainMenu.isEnabled()) {
             mainMenu.KeyPressed(k);
+        }
+    }
+    private void drawBLine(int barriersIndex, int xOffset, int yOffset){
+        LaserBarrier[] barrierB = {
+            new LaserBarrier(xOffset, yOffset,  
+                             xOffset, yOffset + 40),
+            new LaserBarrier(xOffset, yOffset,  
+                             xOffset + 30, yOffset + 10),
+            new LaserBarrier(xOffset + 30, yOffset + 10, 
+                             xOffset + 15, yOffset + 20),
+            new LaserBarrier(xOffset, yOffset + 20, 
+                             xOffset + 15, yOffset + 20),
+            new LaserBarrier(xOffset + 15, yOffset + 20, 
+                             xOffset + 30, yOffset + 30),
+            new LaserBarrier(xOffset + 30, yOffset + 30, 
+                             xOffset, yOffset + 40)
+        };
+        for (LaserBarrier barrierB1 : barrierB) {
+            titleLines[barriersIndex] = barrierB1;
+            barriersIndex++;
         }
     }
 

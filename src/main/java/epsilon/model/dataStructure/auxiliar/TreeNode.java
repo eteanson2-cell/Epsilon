@@ -3,7 +3,7 @@ package epsilon.model.dataStructure.auxiliar;
 import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 
-public class TreeNode extends BinaryNode{
+public class TreeNode extends BinaryNode<TreeNode>{
     protected int counter;
     public TreeNode(Object data){
         super(data);
@@ -28,14 +28,14 @@ public class TreeNode extends BinaryNode{
         }
     }
     @Override
-    public void setRightBranch(BinaryNode rightBranch){
-        if(rightBranch instanceof TreeNode){
+    public void setRightBranch(TreeNode rightBranch){
+        if(rightBranch != null){
             this.rightBranch = rightBranch;
         }
     }
     @Override
-    public void setLeftBranch(BinaryNode leftBranch){
-        if (leftBranch instanceof TreeNode) {
+    public void setLeftBranch(TreeNode leftBranch){
+        if (leftBranch != null) {
             this.leftBranch = leftBranch;
         }
     }
@@ -45,10 +45,10 @@ public class TreeNode extends BinaryNode{
         if(counter == 1){
             if(hasNextBranch() == true){
                 if(rightBranch == null){
-                    counter = ((TreeNode)leftBranch).getCounter();
+                    counter = leftBranch.getCounter();
                 }
                 else if(leftBranch == null){
-                    counter = ((TreeNode)rightBranch).getCounter();
+                    counter = rightBranch.getCounter();
                 }
                 else{
                     Array lastNodes = rightBranch.minValueNode(null);
@@ -101,20 +101,20 @@ public class TreeNode extends BinaryNode{
     }
     @Override
     protected void LLRotation(){
-        TreeNode left = (TreeNode)leftBranch;
+        TreeNode left = leftBranch;
         int tempCounter = left.getCounter();
         super.LLRotation();
         counter = tempCounter;
     }
     @Override
     protected void RRRotation(){
-        TreeNode right = (TreeNode)rightBranch;
+        TreeNode right = rightBranch;
         int tempCounter = right.getCounter();
         super.RRRotation();
         counter = tempCounter;
     }
     @Override
-    protected BinaryNode cloneNode(){
+    protected TreeNode cloneNode(){
         TreeNode copy = new TreeNode(data);
         copy.rightBranch = rightBranch;
         copy.leftBranch = leftBranch;

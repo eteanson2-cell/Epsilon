@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 import epsilon.controller.GameStateManager;
 
 public class GraphicPanel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener{
-    public int WIDTH = 320;
-	public int HEIGHT = 240;
-	public int SCALE = 2;
+    public int panelWidth = 320;
+	public int panelHeight = 240;
+	public int panelScale= 2;
     protected Thread thread;
 	protected boolean running;
 	protected final int FPS = 60;
@@ -29,7 +29,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
     protected GameStateManager gsm;
     public GraphicPanel(){
         super();
-        setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+        setPreferredSize(new Dimension(panelWidth * panelScale, panelHeight * panelScale));
 		setFocusable(true);
 		requestFocus();
     }
@@ -51,7 +51,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 	}
     protected void init() {
 
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(panelWidth, panelHeight, BufferedImage.TYPE_INT_RGB);
 		g2d = (Graphics2D) image.getGraphics();
 
 		running = true;
@@ -96,6 +96,7 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 				Thread.sleep(wait);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+                running = false;
 			}
 
 		}
@@ -108,24 +109,24 @@ public class GraphicPanel extends JPanel implements Runnable, KeyListener, Mouse
 	}
     private void drawToScreen() {
 		Graphics g2 = getGraphics();
-		g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		g2.drawImage(image, 0, 0, panelWidth * panelScale, panelHeight * panelScale, null);
 		g2.dispose();
 	}
 
-    public int getWIDTH() {
-        return WIDTH;
+    public int getpanelWidth() {
+        return panelWidth;
     }
 
-    public void setWIDTH(int WIDTH) {
-        this.WIDTH = WIDTH;
+    public void setpanelWidth(int panelWidth) {
+        this.panelWidth = panelWidth;
     }
 
-    public int getHEIGHT() {
-        return HEIGHT;
+    public int getpanelHeight() {
+        return panelHeight;
     }
 
-    public void setHEIGHT(int HEIGHT) {
-        this.HEIGHT = HEIGHT;
+    public void setpanelHeight(int panelHeight) {
+        this.panelHeight = panelHeight;
     }
 	@Override
     public void keyTyped(KeyEvent key) {

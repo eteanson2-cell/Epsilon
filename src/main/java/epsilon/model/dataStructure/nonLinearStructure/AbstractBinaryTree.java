@@ -13,7 +13,7 @@ import epsilon.model.dataStructure.linearStructure.statik.Array;
 import epsilon.model.enums.TreeTraversal;
 import static epsilon.utils.FunctionUtils.selectBatch;
 
-public abstract class AbstractBinaryTree<Node extends BinaryNode> {
+public abstract class AbstractBinaryTree<Node extends BinaryNode<Node>> {
     protected Node root;
     protected Node iterator;
     protected Comparator comparator;
@@ -84,7 +84,7 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
         }
     }
     public Object getMinObject(){
-        Node tempNode = (Node)root;
+        Node tempNode = root;
         if(tempNode != null){
             while(tempNode.getLeftBranch() != null){
                 tempNode = (Node)tempNode.getLeftBranch();
@@ -96,7 +96,7 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
         }
     }
     public Object getMaxObject(){
-        Node tempNode = (Node)root;
+        Node tempNode = root;
         if(tempNode != null){
             while(tempNode.getRightBranch() != null){
                 tempNode = (Node)tempNode.getRightBranch();
@@ -172,12 +172,12 @@ public abstract class AbstractBinaryTree<Node extends BinaryNode> {
     }
     public void moveIteratorToLeft(){
         if(validIterator()){
-            iterator = (Node)iterator.getLeftBranch();
+            iterator = iterator.getLeftBranch();
         }
     }
     public void moveIteratorToRight(){
         if(validIterator()){
-            iterator = (Node)iterator.getRightBranch();
+            iterator = iterator.getRightBranch();
         }
     }
     public boolean validIterator(){

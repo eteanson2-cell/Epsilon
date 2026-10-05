@@ -10,16 +10,13 @@ import epsilon.controller.gameState.game3.menu.MenuState;
 import epsilon.controller.gameState.game3.menu.RedFontManager;
 
 public class Game3Panel extends GraphicPanel{
-    //public int WIDTH = 640;
-    //public int HEIGHT = 480;
-    //public int SCALE = 1;
     protected RedFontManager rfm;
     public Game3Panel(){
         super();
-        WIDTH = 640;
-        HEIGHT = 480;
-        SCALE = 1;
-        setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+        panelWidth = 640;
+        panelHeight = 480;
+        panelScale = 1;
+        setPreferredSize(new Dimension(panelWidth * panelScale, panelHeight * panelScale));
         setFocusable(true);
 		requestFocus();
     }
@@ -31,7 +28,7 @@ public class Game3Panel extends GraphicPanel{
         rfm.setLineSpacing(65);
         rfm.setCharSpacing(1);
 
-		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(panelWidth, panelHeight, BufferedImage.TYPE_INT_RGB);
 		g2d = (Graphics2D) image.getGraphics();
 
 		running = true;

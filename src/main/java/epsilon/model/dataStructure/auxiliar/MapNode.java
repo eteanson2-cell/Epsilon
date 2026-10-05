@@ -4,7 +4,7 @@ import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.linearStructure.dynamic.LinkedList;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 
-public class MapNode extends BinaryNode{
+public class MapNode extends BinaryNode<MapNode>{
     protected Object key;
     public MapNode(Object key){
         super(new LinkedList());
@@ -30,14 +30,14 @@ public class MapNode extends BinaryNode{
         this.data = data;
     }
     @Override
-    public void setRightBranch(BinaryNode rightBranch){
-        if(rightBranch != null && rightBranch instanceof MapNode){
+    public void setRightBranch(MapNode rightBranch){
+        if(rightBranch != null){
             this.rightBranch = rightBranch;
         }
     }
     @Override
-    public void setLeftBranch(BinaryNode leftBranch){
-        if(leftBranch != null && leftBranch instanceof MapNode){
+    public void setLeftBranch(MapNode leftBranch){
+        if(leftBranch != null){
             this.leftBranch = leftBranch;
         }
     }
@@ -61,7 +61,7 @@ public class MapNode extends BinaryNode{
         boolean validKey = false;
         if(comparation > 0){
             if(rightBranch != null){
-                validKey = ((MapNode)rightBranch).addKey(newKey, comparator);
+                validKey = rightBranch.addKey(newKey, comparator);
                 balanceNode();
             }
             else{
@@ -71,7 +71,7 @@ public class MapNode extends BinaryNode{
         }
         else if(comparation < 0){
             if(leftBranch != null){
-                validKey = ((MapNode)leftBranch).addKey(newKey, comparator);
+                validKey = leftBranch.addKey(newKey, comparator);
                 balanceNode();
             }
             else{
@@ -83,18 +83,18 @@ public class MapNode extends BinaryNode{
     }
     @Override
     protected void LLRotation(){
-        Object tempkey = ((MapNode)leftBranch).getKey();
+        Object tempkey = leftBranch.getKey();
         super.LLRotation();
         key = tempkey;
     }
     @Override
     protected void RRRotation(){
-        Object tempkey = ((MapNode)rightBranch).getKey();
+        Object tempkey = rightBranch.getKey();
         super.RRRotation();
         key = tempkey;
     }
     @Override
-    protected BinaryNode cloneNode(){
+    protected MapNode cloneNode(){
         MapNode copy = new MapNode(key);
         copy.rightBranch = rightBranch;
         copy.leftBranch = leftBranch;
@@ -106,10 +106,10 @@ public class MapNode extends BinaryNode{
         Object removedKey = key;
         if(hasNextBranch() == true){
             if(rightBranch == null){
-                key = ((MapNode)leftBranch).getKey();
+                key = leftBranch.getKey();
             }
             else if(leftBranch == null){
-                key = ((MapNode)rightBranch).getKey();
+                key = rightBranch.getKey();
             }
             else{
                 Array lastNodes = rightBranch.minValueNode(null);

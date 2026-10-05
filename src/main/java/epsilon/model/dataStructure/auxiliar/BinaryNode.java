@@ -4,9 +4,9 @@ import epsilon.model.dataStructure.interfaces.Comparator;
 import epsilon.model.dataStructure.linearStructure.statik.Array;
 import static epsilon.utils.FunctionUtils.getMax;
 
-public abstract class BinaryNode{
-    BinaryNode leftBranch;
-    BinaryNode rightBranch;
+public abstract class BinaryNode<N extends BinaryNode<N>>{
+    N leftBranch;
+    N rightBranch;
     Object data;
     public BinaryNode(Object data) {
         if(data != null){
@@ -21,10 +21,10 @@ public abstract class BinaryNode{
     public Object getData(){
         return data;
     }
-    public BinaryNode getRightBranch(){
+    public N getRightBranch(){
         return rightBranch;
     }
-    public BinaryNode getLeftBranch(){
+    public N getLeftBranch(){
         return leftBranch;
     }
     public void setData(Object data){
@@ -32,10 +32,10 @@ public abstract class BinaryNode{
             this.data = data;
         }
     }
-    public void setRightBranch(BinaryNode rightBranch){
+    public void setRightBranch(N rightBranch){
         this.rightBranch = rightBranch;
     }
-    public void setLeftBranch(BinaryNode leftBranch){
+    public void setLeftBranch(N leftBranch){
         this.leftBranch = leftBranch;
     }
     public abstract void addData(Object newData, Comparator comparator);
@@ -99,27 +99,27 @@ public abstract class BinaryNode{
         }
     }
     protected void LLRotation(){
-        BinaryNode keyNode = cloneNode();
+        N keyNode = cloneNode();
         keyNode.leftBranch = leftBranch.getRightBranch();
         data = leftBranch.getData();
         leftBranch = leftBranch.getLeftBranch();
         rightBranch = keyNode;
     }
     protected void RRRotation(){
-        BinaryNode keyNode = cloneNode();
+        N keyNode = cloneNode();
         keyNode.rightBranch = rightBranch.getLeftBranch();
         data = rightBranch.getData();
         rightBranch = rightBranch.getRightBranch();
         leftBranch = keyNode;
     }
     protected void LRRotation(){
-        BinaryNode keyNode = leftBranch.cloneNode();
+        N keyNode = leftBranch.cloneNode();
         keyNode.rightBranch = keyNode.rightBranch.leftBranch;
         leftBranch = leftBranch.getRightBranch();
         leftBranch.leftBranch = keyNode;
     }
     protected void RLRotation(){
-        BinaryNode keyNode = rightBranch.cloneNode();
+        N keyNode = rightBranch.cloneNode();
         keyNode.leftBranch = keyNode.leftBranch.rightBranch;
         rightBranch = rightBranch.getLeftBranch();
         rightBranch.rightBranch = keyNode;
@@ -150,7 +150,7 @@ public abstract class BinaryNode{
         }
         return null;
     }
-    protected abstract BinaryNode cloneNode();
+    protected abstract N cloneNode();
     public boolean hasNextBranch(){
         return (rightBranch != null || leftBranch != null);
     }
@@ -169,13 +169,13 @@ public abstract class BinaryNode{
             }
             else{
                 Array lastNodes = rightBranch.minValueNode(null);
-                BinaryNode minNode = (BinaryNode)lastNodes.get(0);
+                N minNode = (N)lastNodes.get(0);
                 data = minNode.data;
                 if(minNode.hasNextBranch()){
                     minNode.remove();
                 }
                 else{
-                    BinaryNode prevNode = (BinaryNode)lastNodes.get(1);
+                    N prevNode = (N)lastNodes.get(1);
                     if(prevNode != null){
                         prevNode.removeLeft();
                         prevNode.balanceNode();

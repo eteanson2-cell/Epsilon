@@ -65,14 +65,15 @@ public class Player{
     public void update(){
         traces.forceAdd(new Oval(circle.getXCenter(),circle.getYCenter(),8));
         if(hookedRock != null){
-            MetallicRock copyRock = new MetallicRock(hookedRock.getXCenter(), hookedRock.getYCenter());
-            Point rockPoint = copyRock.getCircle().getCenter().copy();
-            double pullRate = copyRock.getPullRate();
-            pullTowards(rockPoint, pullRate);
-            double angle = center.getAngle(rockPoint);
-            double range = euclideanDistance(center, rockPoint);
-            setParticlesProperties(angle, angle+Double.MIN_NORMAL, range, getMax(particles.range/15,maxSpeed*3));
-            particles.update();           
+            try {
+                Point rockPoint = new Point(hookedRock.getXCenter(), hookedRock.getYCenter());
+                double pullRate = hookedRock.getPullRate();
+                pullTowards(rockPoint, pullRate);
+                double angle = center.getAngle(rockPoint);
+                double range = euclideanDistance(center, rockPoint);
+                setParticlesProperties(angle, angle+Double.MIN_NORMAL, range, getMax(particles.range/15,maxSpeed*3));
+                particles.update();   
+            } catch (NullPointerException e) {}    
         }
         else{
             setInertiaSpeed(); 
@@ -166,7 +167,12 @@ public class Player{
         circle.fill(g2d);
     }
     private void drawHookLine(Graphics2D g2d){
-        Point rockPoint = hookedRock.getCircle().getCenter().copy();
+        Point rockPoint;
+        try {
+            rockPoint = hookedRock.getCircle().getCenter().copy();
+        } catch (Exception e) {
+            return;
+        }
         double angle = Math.toRadians(circle.getCenter().getAngle(rockPoint));
         for (int i = 1; i <= 5; i++) {
             Point pts[] = new Point[4];

@@ -1,5 +1,10 @@
 package epsilon.utils;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import epsilon.model.dataStructure.interfaces.DataBatch;
 import epsilon.model.dataStructure.interfaces.DataList;
 import epsilon.model.dataStructure.interfaces.Iterator;
@@ -355,5 +360,15 @@ public class FunctionUtils{
 		else{
 			sfx.startTrack();
 		}
+	}
+	public static File createTempFile(String file, String extension) throws Exception{
+        File tempFile;
+        try (InputStream is = FunctionUtils.class.getClassLoader().getResourceAsStream(file)) {
+			System.out.println(is.toString());
+            tempFile = File.createTempFile("tempFile", "extension");
+            tempFile.deleteOnExit();
+            Files.copy(is, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+		return tempFile;
 	}
 }

@@ -2,7 +2,6 @@ package epsilon.model.entities.audio;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
@@ -14,6 +13,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import epsilon.model.dataStructure.linearStructure.statik.NumericArray;
 import epsilon.model.entities.audio.wavFile.WavFile;
 import epsilon.model.entities.audio.wavFile.WavFileException;
+import static epsilon.utils.FunctionUtils.createTempFile;
 import static epsilon.utils.FunctionUtils.objectToDouble;
 
 public class AudioTrack{
@@ -30,11 +30,11 @@ public class AudioTrack{
     public AudioTrack(String file){
         try {
             url = this.getClass().getResource("/" + file);
-            File filed = new File(url.toURI());
+            File filed = createTempFile(file,".wav");
             wavFileRead = WavFile.openWavFile(filed);
             clip = AudioSystem.getClip();
-        } catch (WavFileException | IOException | URISyntaxException | LineUnavailableException ex) {
-            System.err.println(ex);
+        } catch (Exception ex) {
+            System.getLogger(AudioTrack.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         currentFrame = 0;
         volume = 1;

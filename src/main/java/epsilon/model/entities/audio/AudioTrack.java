@@ -26,6 +26,7 @@ public class AudioTrack{
     private WavFile wavFileRead;
     private double volume;
     private int currentFrame;
+    public int loopingTimes;
     public AudioTrack(String file){
         try {
             url = this.getClass().getResource("/" + file);
@@ -37,6 +38,7 @@ public class AudioTrack{
         }
         currentFrame = 0;
         volume = 1;
+        loopingTimes = Integer.MAX_VALUE;
         numChannels = wavFileRead.getNumChannels();
         numFrames = wavFileRead.getNumFrames();
     }
@@ -147,6 +149,7 @@ public class AudioTrack{
     public void setLoop(int startFrame, int endFrame){
         if(isOpen()){
             clip.setLoopPoints(startFrame, endFrame);
+            clip.loop(loopingTimes);
         }
     }
     public int getLength(){
